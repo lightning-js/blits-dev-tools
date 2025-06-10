@@ -1,0 +1,101 @@
+<template>
+  <Element 
+    :w="$panelWidth" 
+    :h="$panelHeight"
+    :color="$panelColor"
+  >
+    <Text 
+      :content="$title"
+      x="20"
+      y="20"
+    />
+    <Layout direction="column" gap="10" x="20" y="60">
+      <Text :content="'Area: ' + $calculatedArea" />
+      <Text :content="'Numbers: ' + $processedNumbers" />
+      <Text :content="'Status: ' + $status" />
+    </Layout>
+  </Element>
+</template>
+
+<script>
+import { Helpers } from '@utils/helpers';
+
+export default {
+  props: ['title', 'width', 'height'],
+  
+  state() {
+    return {
+      status: 'loading',
+      calculatedArea: 0,
+      processedNumbers: [],
+      panelColor: '#2d3748'
+    };
+  },
+
+  computed: {
+    panelWidth() {
+      return this.width || 400;
+    },
+
+    panelHeight() {
+      return this.height || 300;
+    },
+
+    size() {
+      return Helpers.createSize(this.panelWidth, this.panelHeight);
+    }
+  },
+
+  async ready() {
+    try {
+      // Test Math object and JSDoc types
+      const mathResult = Math.round(Math.random() * 100);
+      this.calculatedArea = Helpers.calculateArea(this.size);
+      
+      // Test Array methods and Math
+      const testNumbers = [1, -2, 3, 4, -5, 6];
+      const positiveNumbers = testNumbers.filter(n => n > 0);
+      this.processedNumbers = Helpers.processNumbers(testNumbers);
+      
+      // Test Promise and async/await
+      const result = await Helpers.wait(50);
+      console.log(result);
+      
+      // Test JSON and Date objects
+      const config = {
+        timestamp: new Date().toISOString(),
+        area: this.calculatedArea,
+        numbers: this.processedNumbers
+      };
+      
+      console.log('Panel config:', JSON.stringify(config, null, 2));
+      
+      // Test Object methods
+      const keys = Object.keys(config);
+      console.log('Config keys:', keys);
+      
+      this.status = 'ready';
+      
+    } catch (error) {
+      console.error('Panel initialization failed:', error);
+      this.status = 'error';
+    }
+  },
+
+  methods: {
+    /**
+     * @param {string} newTitle 
+     */
+    updateTitle(newTitle) {
+      this.title = newTitle;
+    },
+
+    /**
+     * @returns {boolean}
+     */
+    isLargePanel() {
+      return this.calculatedArea > 100000;
+    }
+  }
+};
+</script>

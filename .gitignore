@@ -8,5 +8,3 @@ backup
 .eslintcache
 .vscode-test/**
 src/parsers/testParser.js
-./test
-*.test.js

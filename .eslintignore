@@ -35,3 +35,6 @@ vsc-extension-quickstart.md
 
 # vscode test
 .vscode-test/**
+
+# Test fixture files - these intentionally have import errors for testing
+test/fixtures/**

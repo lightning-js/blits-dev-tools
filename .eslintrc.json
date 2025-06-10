@@ -81,6 +81,34 @@
         "no-unused-expressions": "off",
         "no-undef": "off"
       }
+    },
+    {
+      "files": [
+        "test/fixtures/**/*.js"
+      ],
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-expressions": "off",
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "import/no-unresolved": "off"
+      }
+    },
+    {
+      "files": [
+        "test/fixtures/**/*.blits"
+      ],
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-expressions": "off",
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "import/no-unresolved": "off"
+      }
     }
   ]
 }
