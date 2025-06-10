@@ -37,11 +37,17 @@ function createLanguageServiceHost(options) {
   return {
     getScriptFileNames: () => {
       const scriptFiles = vscode.workspace.textDocuments
-        .filter((doc) => ['javascript', 'typescript', 'blits'].includes(doc.languageId))
+        .filter((doc) => ['javascript', 'typescript'].includes(doc.languageId))
         .map((doc) => doc.uri.fsPath)
-      const blitsFiles = Array.from(getAllVirtualFiles().keys())
+
+      // Only include virtual files that actually exist
+      const virtualFiles = Array.from(getAllVirtualFiles().keys()).filter((fileName) => {
+        const virtualFile = getVirtualFile(fileName)
+        return virtualFile && virtualFile.content
+      })
+
       // Include lib files in the script files list
-      return [...scriptFiles, ...blitsFiles, ...libFileNames]
+      return [...scriptFiles, ...virtualFiles, ...libFileNames]
     },
     getScriptVersion: (fileName) => {
       // Lib files version never changes
@@ -69,6 +75,21 @@ function createLanguageServiceHost(options) {
         if (virtualFile) {
           content = virtualFile.content
         }
+      } else if (fileName.includes('.blits.')) {
+        // This is a virtual file generated from a .blits file
+        const virtualFile = getVirtualFile(fileName)
+        if (virtualFile) {
+          content = virtualFile.content
+        } else {
+          // Try to find the original .blits file and create virtual file
+          const blitsPath = fileName.replace(/\.blits\.(js|ts)$/, '.blits')
+          if (fs.existsSync(blitsPath)) {
+            const { virtualFile: newVirtualFile } = getOrCreateVirtualDocument(blitsPath) || {}
+            if (newVirtualFile) {
+              content = newVirtualFile.content
+            }
+          }
+        }
       } else {
         const virtualFile = getVirtualFile(fileName)
         if (virtualFile) {
@@ -86,9 +107,8 @@ function createLanguageServiceHost(options) {
       return content ? ts.ScriptSnapshot.fromString(content) : undefined
     },
     getCurrentDirectory: () => {
-      return vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
-        ? vscode.workspace.workspaceFolders[0].uri.fsPath
-        : process.cwd()
+      const workspaceFolders = vscode.workspace.workspaceFolders
+      return workspaceFolders && workspaceFolders.length > 0 ? workspaceFolders[0].uri.fsPath : process.cwd()
     },
     getCompilationSettings: () => options,
     getDefaultLibFileName: (options) => {
