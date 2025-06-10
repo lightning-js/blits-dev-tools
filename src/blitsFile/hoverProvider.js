@@ -35,15 +35,20 @@ function registerHoverProvider(context) {
 
       if (!languageService) return
 
-      const hoverInfo = languageService.getQuickInfoAtPosition(virtualFileName, offset)
+      try {
+        const hoverInfo = languageService.getQuickInfoAtPosition(virtualFileName, offset)
 
-      if (hoverInfo && hoverInfo.displayParts) {
-        const contents = hoverInfo.displayParts.map((part) => part.text).join('')
-        const markdown = new vscode.MarkdownString()
-        markdown.appendCodeblock(contents, scriptInfo.lang === 'ts' ? 'typescript' : 'javascript')
+        if (hoverInfo && hoverInfo.displayParts) {
+          const contents = hoverInfo.displayParts.map((part) => part.text).join('')
+          const markdown = new vscode.MarkdownString()
+          markdown.appendCodeblock(contents, scriptInfo.lang === 'ts' ? 'typescript' : 'javascript')
 
-        const range = document.getWordRangeAtPosition(position)
-        return new vscode.Hover(markdown, range)
+          const range = document.getWordRangeAtPosition(position)
+          return new vscode.Hover(markdown, range)
+        }
+      } catch (error) {
+        // Silently handle errors when virtual files don't exist
+        return
       }
     },
   })

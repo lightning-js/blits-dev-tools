@@ -42,29 +42,34 @@ function registerCompletionProvider(context) {
 
         if (!languageService) return
 
-        const completions = languageService.getCompletionsAtPosition(virtualFileName, offset, {
-          includeCompletionsWithInsertText: true,
-        })
+        try {
+          const completions = languageService.getCompletionsAtPosition(virtualFileName, offset, {
+            includeCompletionsWithInsertText: true,
+          })
 
-        if (!completions) return
+          if (!completions) return
 
-        return completions.entries.map((entry) => {
-          // Normalize the kind name to match VSCode's CompletionItemKind keys
-          const kindName = capitalizeFirstLetter(entry.kind.toLowerCase())
-          const mappedKind = vscode.CompletionItemKind[kindName]
+          return completions.entries.map((entry) => {
+            // Normalize the kind name to match VSCode's CompletionItemKind keys
+            const kindName = capitalizeFirstLetter(entry.kind.toLowerCase())
+            const mappedKind = vscode.CompletionItemKind[kindName]
 
-          /**
-           * @type {vscode.CompletionItemKind}
-           */
-          const kind = typeof mappedKind === 'number' ? mappedKind : vscode.CompletionItemKind.Variable
+            /**
+             * @type {vscode.CompletionItemKind}
+             */
+            const kind = typeof mappedKind === 'number' ? mappedKind : vscode.CompletionItemKind.Variable
 
-          const item = new vscode.CompletionItem(entry.name, kind)
-          item.detail = entry.kind
-          if (entry.kindModifiers) {
-            item.detail += ` (${entry.kindModifiers})`
-          }
-          return item
-        })
+            const item = new vscode.CompletionItem(entry.name, kind)
+            item.detail = entry.kind
+            if (entry.kindModifiers) {
+              item.detail += ` (${entry.kindModifiers})`
+            }
+            return item
+          })
+        } catch (error) {
+          // Silently handle errors when virtual files don't exist
+          return
+        }
       },
     },
     '.', // Trigger characters
