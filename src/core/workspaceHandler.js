@@ -31,6 +31,17 @@ const blitsProjects = new Map() // Maps project path to project metadata
 const filePathCache = new Map() // Maps file paths to project paths
 let projectWatcher = null
 
+/**
+ * When prettier plugin is available, we will remove the format template on save functionality to avoid conflicts eventually.
+ * Until then, we should check if the prettier plugin is available and skip the format template on save functionality.
+ */
+function checkForPrettierPlugin(pkg) {
+  return !!(
+    (pkg.devDependencies && pkg.devDependencies['@lightningjs/prettier-plugin-blits']) ||
+    (pkg.dependencies && pkg.dependencies['@lightningjs/prettier-plugin-blits'])
+  )
+}
+
 // Find all Blits projects in the workspace by scanning for package.json files
 async function discoverProjects() {
   if (discoveryPromise) {
@@ -61,9 +72,11 @@ async function discoverProjects() {
             // If this root folder is a Blits project, register it and skip deeper scanning
             if (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) {
               console.log(`Found Blits project at workspace root: ${folder.uri.fsPath}`)
+
               blitsProjects.set(folder.uri.fsPath, {
                 name: pkg.name || path.basename(folder.uri.fsPath),
                 path: folder.uri.fsPath,
+                hasPrettierPlugin: checkForPrettierPlugin(pkg),
               })
               rootProjectFound = true
             }
@@ -88,10 +101,11 @@ async function discoverProjects() {
             // Check for direct @lightningjs/blits dependency
             if (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) {
               const projectDir = path.dirname(fileUri.fsPath)
-              // console.log(`Found Blits project at ${projectDir}`)
+
               blitsProjects.set(projectDir, {
                 name: pkg.name || path.basename(projectDir),
                 path: projectDir,
+                hasPrettierPlugin: checkForPrettierPlugin(pkg),
               })
             }
           } catch (err) {
@@ -155,10 +169,15 @@ async function handlePackageJsonChange(uri) {
     if (isBlitsProject && !wasProject) {
       // New Blits project
       console.log(`Adding new Blits project at ${projectDir}`)
+
       blitsProjects.set(projectDir, {
         name: pkg.name || path.basename(projectDir),
         path: projectDir,
+        hasPrettierPlugin: checkForPrettierPlugin(pkg),
       })
+      console.log(
+        `Blits project at ${projectDir} has prettier-plugin-blits: ${blitsProjects.get(projectDir).hasPrettierPlugin}`
+      )
       clearFilePathCache() // Clear the file path cache to ensure reevaluation
     } else if (!isBlitsProject && wasProject) {
       // Removed Blits dependency
@@ -312,6 +331,14 @@ async function isFileInBlitsProjectAsync(filePath) {
   return getProjectForFile(filePath) !== null
 }
 
+function hasPrettierPlugin(filePath) {
+  const projectPath = getProjectForFile(filePath)
+  if (!projectPath) return false
+
+  const projectInfo = blitsProjects.get(projectPath)
+  return projectInfo && projectInfo.hasPrettierPlugin === true
+}
+
 module.exports = {
   dispose,
   isBlitsApp,
@@ -322,4 +349,5 @@ module.exports = {
   getBlitsProjects,
   clearFilePathCache,
   isFileInBlitsProjectAsync,
+  hasPrettierPlugin,
 }

@@ -154,9 +154,15 @@ module.exports = vscode.workspace.onWillSaveTextDocument((event) => {
   // Check if this document belongs to a Blits project
   if (!workspaceHandler.isBlitsApp(event.document.uri.fsPath)) return
 
-  // Check if auto-formatting is enabled in the extension’s settings
+  // Check if auto-formatting is enabled in the extension's settings
   const autoFormatEnabled = vscode.workspace.getConfiguration('blits').get('autoFormat')
   if (!autoFormatEnabled) return
+
+  // Skip formatting if prettier-plugin-blits is detected in the project
+  if (workspaceHandler.hasPrettierPlugin(event.document.uri.fsPath)) {
+    console.log('Skipping template formatting as @lightningjs/prettier-plugin-blits is detected in the project')
+    return
+  }
 
   // Get the document being saved
   const document = event.document
