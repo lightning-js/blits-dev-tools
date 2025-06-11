@@ -151,8 +151,8 @@ async function formatDocument(document) {
 
 module.exports = vscode.workspace.onWillSaveTextDocument((event) => {
   console.log('onWillSaveTextDocument 1', event.document.uri.path)
-  // Check if the workspace is a Blits app
-  if (!workspaceHandler.isBlitsApp()) return
+  // Check if this document belongs to a Blits project
+  if (!workspaceHandler.isBlitsApp(event.document.uri.fsPath)) return
 
   // Check if auto-formatting is enabled in the extension’s settings
   const autoFormatEnabled = vscode.workspace.getConfiguration('blits').get('autoFormat')

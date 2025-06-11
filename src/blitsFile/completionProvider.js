@@ -17,8 +17,9 @@
 
 const vscode = require('vscode')
 const { getVirtualFileName } = require('./utils/fileNameGenerator')
-const { getLanguageServiceInstance } = require('./languageService')
+const { getLanguageServiceInstance } = require('./languageServiceFactory')
 const { extractScriptContent } = require('./utils/scriptExtractor')
+const { isBlitsApp } = require('../core/workspaceHandler')
 
 function capitalizeFirstLetter(str) {
   if (!str) return ''
@@ -30,6 +31,15 @@ function registerCompletionProvider(context) {
     'blits',
     {
       provideCompletionItems(document, position) {
+        const filePath = document.uri.fsPath
+
+        // Check if the file belongs to a Blits project
+        const isBlits = isBlitsApp(filePath)
+
+        if (!isBlits) {
+          return null
+        }
+
         const scriptInfo = extractScriptContent(document.getText())
         if (!scriptInfo) return
 

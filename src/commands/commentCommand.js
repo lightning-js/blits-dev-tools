@@ -20,13 +20,14 @@ const templateHandler = require('../core/templateHandler')
 const workspaceHandler = require('../core/workspaceHandler')
 
 module.exports = vscode.commands.registerCommand('blits-vscode.commentCommand', async () => {
-  // check if the workspace is a Blits workspace
-  if (!workspaceHandler.isBlitsApp()) {
+  const editor = vscode.window.activeTextEditor
+  if (!editor) return
+
+  // Check if this document belongs to a Blits project
+  if (!workspaceHandler.isBlitsApp(editor.document.uri.fsPath)) {
     await vscode.commands.executeCommand('editor.action.commentLine')
     return
   }
-
-  const editor = vscode.window.activeTextEditor
 
   if (editor) {
     const document = editor.document

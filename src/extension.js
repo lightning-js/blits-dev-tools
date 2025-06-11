@@ -20,24 +20,30 @@ const workspaceHandler = require('./core/workspaceHandler')
 const templateCompletionProvider = require('./completionProviders/template')
 const commentCommand = require('./commands/commentCommand')
 const templateFormatterOnSave = require('./formatters/templateFormatterOnSave')
-const checkForLoopIndexAsKey = require('./errorChecking/checkForLoopIndexAsKey')
 const { registerDiagnostics } = require('./blitsFile/diagnostics')
 const { registerHoverProvider } = require('./blitsFile/hoverProvider')
 const { registerCompletionProvider } = require('./blitsFile/completionProvider')
 const { registerSignatureHelpProvider } = require('./blitsFile/signatureHelpProvider')
 // const { registerCodeActionsProvider } = require('./blitsFile/codeActionsProvider') // not working yet
 const fileTemplateProvider = require('./blitsFile/fileTemplateProvider')
-const { getLanguageServiceInstance } = require('./blitsFile/languageService')
+const { getLanguageServiceInstance } = require('./blitsFile/languageServiceFactory')
 const packageJSON = require('../package.json')
 
 async function activate(context) {
   console.log('Lightning Blits is being activated.')
 
-  // init blits dependency check
-  workspaceHandler.init()
-
   try {
-    // Blits file type features
+    // Begin project discovery in the background
+    workspaceHandler
+      .discoverProjects()
+      .then((projects) => {
+        console.log(`Found ${projects.size} Lightning Blits project(s) in workspace.`)
+      })
+      .catch((err) => {
+        console.error('Error discovering Lightning Blits projects:', err)
+      })
+
+    // Get global language service for backwards compatibility
     const languageService = getLanguageServiceInstance()
     if (!languageService) {
       throw new Error('Failed to initialize TypeScript language service')
@@ -52,6 +58,7 @@ async function activate(context) {
       },
     })
 
+    // Register all providers with the new project-aware architecture
     registerDiagnostics(context)
     registerHoverProvider(context)
     registerCompletionProvider(context)
@@ -62,9 +69,6 @@ async function activate(context) {
     context.subscriptions.push(templateCompletionProvider)
     context.subscriptions.push(commentCommand)
     context.subscriptions.push(templateFormatterOnSave)
-    const diagnosticsCollection = vscode.languages.createDiagnosticCollection('blits-template')
-    context.subscriptions.push(diagnosticsCollection)
-    checkForLoopIndexAsKey(context, diagnosticsCollection)
 
     // blits file template
     fileTemplateProvider(context)
@@ -80,6 +84,7 @@ async function activate(context) {
 
 function deactivate() {
   console.log('Lightning Blits is being deactivated.')
+  // Clean up resources
   workspaceHandler.dispose()
 }
 

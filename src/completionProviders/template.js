@@ -28,7 +28,7 @@ module.exports = vscode.languages.registerCompletionItemProvider(
   [{ language: 'javascript' }, { language: 'typescript' }, { language: 'blits' }],
   {
     async provideCompletionItems(document, position) {
-      if (!workspaceHandler.isBlitsApp()) {
+      if (!workspaceHandler.isBlitsApp(document.uri.fsPath)) {
         return undefined
       }
 
