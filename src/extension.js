@@ -33,6 +33,13 @@ async function activate(context) {
   console.log('Lightning Blits is being activated.')
 
   try {
+    // Create status bar item for extension info
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100)
+    statusBarItem.text = `$(zap) Lightning Blits v${packageJSON.version}`
+    statusBarItem.tooltip = `Lightning Blits Extension v${packageJSON.version}`
+    statusBarItem.show()
+    context.subscriptions.push(statusBarItem)
+
     // Begin project discovery in the background
     workspaceHandler
       .discoverProjects()
@@ -74,7 +81,6 @@ async function activate(context) {
     fileTemplateProvider(context)
 
     // extension activated
-    vscode.window.showInformationMessage(`Lightning Blits v${packageJSON.version} has been activated!`)
     console.log('Lightning Blits has been activated.')
   } catch (error) {
     console.error('Error activating Lightning Blits:', error)
