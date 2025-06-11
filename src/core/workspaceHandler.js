@@ -31,42 +31,6 @@ const blitsProjects = new Map() // Maps project path to project metadata
 const filePathCache = new Map() // Maps file paths to project paths
 let projectWatcher = null
 
-function checkPackageJson() {
-  if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-    isBlits = false
-    return
-  }
-
-  const workspaceFolder = vscode.workspace.workspaceFolders[0]
-  const packageJsonPath = path.join(workspaceFolder.uri.fsPath, 'package.json')
-
-  // Use promisified fs but handle the callback pattern for compatibility
-  fs.readFile(packageJsonPath, 'utf8')
-    .then((data) => {
-      try {
-        const pkg = JSON.parse(data)
-        isBlits = hasBlitsDependency(pkg)
-      } catch (parseError) {
-        console.error('Error parsing package.json:', parseError)
-        isBlits = false
-      }
-    })
-    .catch((err) => {
-      isBlits = false
-      if (err.code !== 'ENOENT') {
-        console.error('Error reading package.json:', err)
-      }
-    })
-}
-
-function hasBlitsDependency(pkg) {
-  const dependencyFields = ['dependencies', 'devDependencies', 'peerDependencies']
-  return dependencyFields.some((field) => {
-    return pkg[field] && pkg[field]['@lightningjs/blits']
-  })
-}
-const debouncedCheck = debounce(checkPackageJson, 300)
-
 // Find all Blits projects in the workspace by scanning for package.json files
 async function discoverProjects() {
   if (discoveryPromise) {
@@ -82,29 +46,61 @@ async function discoverProjects() {
     }
 
     try {
-      // Scan for all package.json files in the workspace with increased limit
-      const packageJsonFiles = await vscode.workspace.findFiles('**/package.json', '**/node_modules/**', 1000)
-      console.log(`Found ${packageJsonFiles.length} package.json files to scan`)
+      // First check if workspace roots contain Blits projects
+      let rootProjectFound = false
 
-      // Process each package.json file
-      for (const fileUri of packageJsonFiles) {
+      for (const folder of vscode.workspace.workspaceFolders) {
+        const rootPackageJsonPath = path.join(folder.uri.fsPath, 'package.json')
+
         try {
-          const content = await fs.readFile(fileUri.fsPath, 'utf8')
-          const pkg = JSON.parse(content)
+          // Check if package.json exists in the root folder
+          if (existsSync(rootPackageJsonPath)) {
+            const content = readFileSync(rootPackageJsonPath, 'utf8')
+            const pkg = JSON.parse(content)
 
-          // Check for direct @lightningjs/blits dependency
-          if (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) {
-            const projectDir = path.dirname(fileUri.fsPath)
-            // console.log(`Found Blits project at ${projectDir}`)
-            blitsProjects.set(projectDir, {
-              name: pkg.name || path.basename(projectDir),
-              path: projectDir,
-            })
+            // If this root folder is a Blits project, register it and skip deeper scanning
+            if (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) {
+              console.log(`Found Blits project at workspace root: ${folder.uri.fsPath}`)
+              blitsProjects.set(folder.uri.fsPath, {
+                name: pkg.name || path.basename(folder.uri.fsPath),
+                path: folder.uri.fsPath,
+              })
+              rootProjectFound = true
+            }
           }
         } catch (err) {
-          // Skip invalid package.json files
-          console.log(`Error processing ${fileUri.fsPath}: ${err.message}`)
+          console.log(`Error checking root package.json at ${rootPackageJsonPath}: ${err.message}`)
         }
+      }
+
+      // If we found Blits projects at the root level, skip deeper scanning
+      if (!rootProjectFound) {
+        // Scan for all package.json files in the workspace with increased limit
+        const packageJsonFiles = await vscode.workspace.findFiles('**/package.json', '**/node_modules/**', 1000)
+        console.log(`Found ${packageJsonFiles.length} package.json files to scan`)
+
+        // Process each package.json file
+        for (const fileUri of packageJsonFiles) {
+          try {
+            const content = await fs.readFile(fileUri.fsPath, 'utf8')
+            const pkg = JSON.parse(content)
+
+            // Check for direct @lightningjs/blits dependency
+            if (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) {
+              const projectDir = path.dirname(fileUri.fsPath)
+              // console.log(`Found Blits project at ${projectDir}`)
+              blitsProjects.set(projectDir, {
+                name: pkg.name || path.basename(projectDir),
+                path: projectDir,
+              })
+            }
+          } catch (err) {
+            // Skip invalid package.json files
+            console.log(`Error processing ${fileUri.fsPath}: ${err.message}`)
+          }
+        }
+      } else {
+        console.log('Skipped deep scanning since Blits project(s) found at workspace root level')
       }
 
       // Setup a file watcher for package.json changes in the workspace
@@ -182,35 +178,6 @@ async function handlePackageJsonChange(uri) {
 
 function clearFilePathCache() {
   filePathCache.clear()
-}
-
-function init() {
-  // Initialize legacy project detection
-  checkPackageJson()
-
-  if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-    console.warn('No workspace folder found.')
-    return
-  }
-
-  // Create a watcher for package.json in the workspace root.
-  const workspaceFolder = vscode.workspace.workspaceFolders[0]
-  const pattern = new vscode.RelativePattern(workspaceFolder, 'package.json')
-  packageJsonWatcher = vscode.workspace.createFileSystemWatcher(pattern)
-
-  // Listen for changes, creations, and deletions of package.json.
-  packageJsonWatcher.onDidChange(debouncedCheck)
-  packageJsonWatcher.onDidCreate(debouncedCheck)
-  packageJsonWatcher.onDidDelete(debouncedCheck)
-
-  // Initialize project discovery for multi-project support
-  ensureDiscoveryStarted()
-    .then(() => {
-      console.log(`Found ${blitsProjects.size} Lightning Blits project(s) in workspace.`)
-    })
-    .catch((error) => {
-      console.error(`Error during project discovery: ${error.message}`)
-    })
 }
 
 function getProjectForFile(filePath) {
@@ -346,7 +313,6 @@ async function isFileInBlitsProjectAsync(filePath) {
 }
 
 module.exports = {
-  init,
   dispose,
   isBlitsApp,
   getFrameworkAttributes,

@@ -31,15 +31,6 @@ function registerCompletionProvider(context) {
     'blits',
     {
       provideCompletionItems(document, position) {
-        const filePath = document.uri.fsPath
-
-        // Check if the file belongs to a Blits project
-        const isBlits = isBlitsApp(filePath)
-
-        if (!isBlits) {
-          return null
-        }
-
         const scriptInfo = extractScriptContent(document.getText())
         if (!scriptInfo) return
 
