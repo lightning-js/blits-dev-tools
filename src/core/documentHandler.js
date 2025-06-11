@@ -31,6 +31,31 @@ const getASTForDocument = (document) => {
   return AST
 }
 
+// const getAllTemplates = (document) => {
+//   const currentDoc = document.getText()
+
+//   if (document.languageId === 'blits') {
+//     const template = getBlitsTemplate(currentDoc, true)
+//     if (template) {
+//       return [
+//         {
+//           start: template.start,
+//           end: template.end,
+//           content: template.content,
+//           type: 'template',
+//         },
+//       ]
+//     }
+//     return []
+//   }
+
+//   const ast = getASTForDocument(document)
+//   return getAllComponentTemplates(ast, currentDoc).map((t) => ({
+//     ...t,
+//     type: 'template-literal',
+//   }))
+// }
+
 const getAllTemplates = (document) => {
   const currentDoc = document.getText()
 
@@ -49,13 +74,49 @@ const getAllTemplates = (document) => {
     return []
   }
 
-  const ast = getASTForDocument(document)
-  return getAllComponentTemplates(ast, currentDoc).map((t) => ({
+  // Try regex-based detection first
+  const regexResults = getAllComponentTemplatesRegex(currentDoc)
+
+  // Try AST-based detection as fallback/validation
+  // try {
+  //   const ast = getASTForDocument(document)
+  //   if (ast) {
+  //     const astResults = getAllComponentTemplates(ast, currentDoc)
+
+  //     // If AST parsing succeeded and found results, merge them
+  //     if (astResults.length > 0) {
+  //       // Merge results, preferring AST results for overlapping ranges
+  //       const mergedResults = [...regexResults]
+
+  //       astResults.forEach((astResult) => {
+  //         // Check if this AST result overlaps with any regex result
+  //         const overlapping = regexResults.some(
+  //           (regexResult) =>
+  //             Math.abs(astResult.start - regexResult.start) < 10 && Math.abs(astResult.end - regexResult.end) < 10
+  //         )
+
+  //         if (!overlapping) {
+  //           mergedResults.push(astResult)
+  //         }
+  //       })
+
+  //       return mergedResults.map((t) => ({
+  //         ...t,
+  //         type: 'template-literal',
+  //       }))
+  //     }
+  //   }
+  // } catch (error) {
+  //   // AST parsing failed, fall back to regex results
+  //   console.log('AST parsing failed, using regex-based template detection:', error.message)
+  // }
+
+  // Return regex results with proper type
+  return regexResults.map((t) => ({
     ...t,
     type: 'template-literal',
   }))
 }
-
 const isBlitsFile = (document) => {
   return document.languageId === 'blits'
 }
@@ -123,6 +184,115 @@ const getBlitsFileContent = (document) => {
   result.script = getBlitsScript(fileContent)
 
   return result
+}
+
+function getAllComponentTemplatesRegex(sourceCode) {
+  const ranges = []
+  const processedRanges = new Set()
+
+  // Find all 'template' followed by colon occurrences
+  const templateKeyRegex = /\btemplate\s*:/g
+  let match
+
+  while ((match = templateKeyRegex.exec(sourceCode)) !== null) {
+    const keyStart = match.index
+    const keyEnd = keyStart + match[0].length
+
+    // Move cursor to start looking for the value
+    let cursor = keyEnd
+
+    // Skip whitespace
+    while (cursor < sourceCode.length && /\s/.test(sourceCode[cursor])) {
+      cursor++
+    }
+
+    if (cursor >= sourceCode.length) continue
+
+    // Must find a quote character
+    const quoteChar = sourceCode[cursor]
+    if (!['"', "'", '`'].includes(quoteChar)) continue
+
+    // Extract the string value between quotes
+    const stringStartPos = cursor
+    cursor++ // Move past opening quote
+    const contentStartPos = cursor
+
+    // Handle different quote types differently for template literals
+    if (quoteChar === '`') {
+      // Template literal - need to handle ${} interpolations
+      let braceLevel = 0
+      let escaped = false
+
+      while (cursor < sourceCode.length) {
+        const char = sourceCode[cursor]
+
+        if (escaped) {
+          escaped = false
+        } else if (char === '\\') {
+          escaped = true
+        } else if (char === '`' && braceLevel === 0) {
+          // Found closing backtick
+          cursor++
+          break
+        } else if (char === '$' && cursor + 1 < sourceCode.length && sourceCode[cursor + 1] === '{') {
+          braceLevel++
+          cursor++ // Skip the {
+        } else if (char === '}' && braceLevel > 0) {
+          braceLevel--
+        }
+
+        cursor++
+      }
+    } else {
+      // Regular string - find matching quote
+      let escaped = false
+
+      while (cursor < sourceCode.length) {
+        const char = sourceCode[cursor]
+
+        if (escaped) {
+          escaped = false
+        } else if (char === '\\') {
+          escaped = true
+        } else if (char === quoteChar) {
+          // Found closing quote
+          cursor++
+          break
+        }
+
+        cursor++
+      }
+    }
+
+    // Check if we successfully found the closing quote
+    if (cursor <= contentStartPos || sourceCode[cursor - 1] !== quoteChar) {
+      continue
+    }
+
+    const contentEndPos = cursor - 1
+    const valueEnd = cursor
+
+    // Extract the content between quotes (not including the quotes themselves)
+    const templateContent = sourceCode.slice(contentStartPos, contentEndPos)
+
+    // Use existing validation to check if this is a valid template
+    if (templateContent && _isValidTemplateString(templateContent)) {
+      const rangeKey = `${stringStartPos}-${valueEnd}`
+
+      if (!processedRanges.has(rangeKey)) {
+        processedRanges.add(rangeKey)
+
+        // Create the range object matching the format expected by existing code
+        ranges.push({
+          start: stringStartPos,
+          end: valueEnd,
+          content: sourceCode.substring(stringStartPos, valueEnd), // Include quotes for compatibility
+        })
+      }
+    }
+  }
+
+  return ranges
 }
 
 const getAllComponentTemplates = (ast, sourceCode) => {

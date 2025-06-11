@@ -26,8 +26,11 @@ const isCursorInTemplate = (document, position) => {
     return _isCursorInsideTemplateForBlits(document, currentDoc, position)
   }
 
-  const ast = documentHandler.getASTForDocument(document)
-  return _isCursorInsideComponentTemplate(document, ast, position)
+  // Use the new getAllTemplates which handles both regex and AST
+  const templates = documentHandler.getAllTemplates(document)
+  const cursorOffset = document.offsetAt(position)
+
+  return templates.some(({ start, end }) => cursorOffset >= start && cursorOffset <= end)
 }
 
 const getTagAndAttributes = (document, position) => {
@@ -54,13 +57,13 @@ const _isCursorInsideTemplateForBlits = (document, text, position) => {
   return false
 }
 
-const _isCursorInsideComponentTemplate = (document, ast, position) => {
-  if (!ast) return false
+// const _isCursorInsideComponentTemplate = (document, ast, position) => {
+//   if (!ast) return false
 
-  const ranges = documentHandler.getAllComponentTemplates(ast)
-  const cursorOffset = document.offsetAt(position)
-  return ranges.some(({ start, end }) => cursorOffset >= start && cursorOffset <= end)
-}
+//   const ranges = documentHandler.getAllComponentTemplates(ast)
+//   const cursorOffset = document.offsetAt(position)
+//   return ranges.some(({ start, end }) => cursorOffset >= start && cursorOffset <= end)
+// }
 
 const _getExistingTagAndAttributes = (line) => {
   let result = {
