@@ -1,5 +1,20 @@
 # Change Log
 
+## v1.5.1
+
+- Fixes template detection issues caused by AST-based detection methods.
+- Fixes extension activation issues caused by opening a parent folder of a Blits project. Now nested project folders are supported if they have a Blits dependency in their `package.json`
+- Fixes bugs related to `.blits` file type implementation.
+- Adds integration tests
+- Removes the info notification displayed when the extension is activated. Now the extension name and version are displayed in the bottom right of the editor
+- Adds a check to see if the project uses `prettier-plugin-blits` (will be available soon). If so, the extension leaves template formatting to the prettier plugin.
+
+## v1.5.0
+
+- Fixes a crash issue during template parsing when the AST was invalid
+- Fixes module resolution issues for `.blits` files, including support for import aliases and standard libraries
+- Adds support for Blits v2-style props, now integrated into IntelliSense suggestions
+
 ## v1.4.0
 
 - Fixed syntax highlighting issue for `@updated` event attribute
