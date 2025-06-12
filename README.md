@@ -1,10 +1,8 @@
 # Blits Development Tools
 
-This repo contains official development tools for the [Lightning Blits](https://lightningjs.io/) framework.
+This repo contains official development tools for the [Lightning Blits](https://lightningjs.io/) framework, mainly the Lightning Blits VSCode extension and support packages for linting and formatting.
 
 ## Packages
-
-This repository includes the following packages:
 
 ### [VSCode Extension](./vscode-extension)
 
