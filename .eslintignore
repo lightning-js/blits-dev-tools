@@ -6,6 +6,9 @@
 out/**
 *.vsix
 *.zip
+dist/
+build/
+coverage/
 
 # Dependencies
 node_modules/**

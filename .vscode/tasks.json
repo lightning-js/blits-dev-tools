@@ -5,7 +5,7 @@
     {
       "label": "esbuild: watch",
       "type": "shell",
-      "command": "npm run esbuild-base -- --sourcemap --watch",
+      "command": "npm run esbuild-watch --workspace=vscode-extension",
       "isBackground": true,
       "problemMatcher": {
         "base": "$tsc-watch",

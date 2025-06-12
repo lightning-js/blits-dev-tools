@@ -1,5 +1,4 @@
 node_modules
-/*.vsix
 out
 .DS_Store
 backup
@@ -7,4 +6,3 @@ backup
 *.zip
 .eslintcache
 .vscode-test/**
-src/parsers/testParser.js

@@ -75,7 +75,7 @@
     },
     {
       "files": [
-        "test/**/*.js"
+        "vscode-extension/test/**/*.js"
       ],
       "rules": {
         "no-unused-expressions": "off",
@@ -84,7 +84,7 @@
     },
     {
       "files": [
-        "test/fixtures/**/*.js"
+        "vscode-extension/test/fixtures/**/*.js"
       ],
       "parserOptions": {
         "sourceType": "module"
@@ -98,7 +98,7 @@
     },
     {
       "files": [
-        "test/fixtures/**/*.blits"
+        "vscode-extension/test/fixtures/**/*.blits"
       ],
       "parserOptions": {
         "sourceType": "module"
