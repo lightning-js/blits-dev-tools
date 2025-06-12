@@ -38,3 +38,6 @@ yarn.lock
 
 # typescript standard libs
 !out/lib-files/*
+
+# do not include parent directory
+../**
