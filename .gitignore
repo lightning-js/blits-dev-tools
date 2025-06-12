@@ -5,4 +5,4 @@ backup
 *.vsix
 *.zip
 .eslintcache
-.vscode-test/**
+.vscode-test
