@@ -34,7 +34,6 @@
   "main": "./out/main.js",
   "scripts": {
     "lint": "eslint .",
-    "pretest": "npm run lint",
     "test": "node ./test/runTest.js",
     "run-tests": "node ./test/runTest.js",
     "build-lib-files": "node ./scripts/build-lib-files.js",
