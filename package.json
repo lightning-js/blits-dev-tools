@@ -1,241 +1,49 @@
 {
-  "name": "lightning-blits",
-  "publisher": "lightningjs",
-  "displayName": "Lightning Blits",
-  "description": "Template syntax highlighting and code completion for the Lightning Blits framework",
-  "version": "1.5.0",
+  "name": "blits-dev-tools",
+  "version": "1.0.0",
+  "description": "Development tools for the Lightning Blits framework",
+  "author": "Ugur Aslan <ugur@uguraslan.net>",
+  "license": "Apache-2.0",
+  "private": true,
+  "workspaces": [
+    "vscode-extension",
+    "eslint-plugin-blits",
+    "prettier-plugin-blits"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lightning-js/blits-vscode-extension.git"
+    "url": "https://github.com/lightning-js/blits-dev-tools.git"
   },
+  "bugs": {
+    "url": "https://github.com/lightning-js/blits-dev-tools/issues"
+  },
+  "homepage": "https://lightningjs.io/",
   "engines": {
-    "vscode": "^1.81.0"
+    "node": ">=16.0.0"
   },
-  "categories": [
-    "Other"
-  ],
   "keywords": [
-    "Lightning",
-    "LightningJS",
-    "Lightning 3.0",
-    "L3",
-    "L3.0",
-    "Blits",
-    "Blitz"
+    "blits",
+    "lightningjs",
+    "lightning",
+    "development tools",
+    "vscode",
+    "eslint",
+    "prettier"
   ],
-  "author": "Ugur Aslan <ugur@uguraslan.net>",
-  "license": "Apache-2",
-  "icon": "./icon.png",
-  "activationEvents": [
-    "onLanguage:javascript",
-    "onLanguage:typescript"
-  ],
-  "main": "./out/main.js",
   "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js",
-    "build-lib-files": "node ./scripts/build-lib-files.js",
-    "vscode:prepublish": "npm run esbuild-base -- --minify && npm run build-lib-files",
-    "esbuild-base": "npm run build-lib-files && esbuild ./src/extension.js --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run build-lib-files && npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "package": "vsce package",
-    "publish": "vsce publish"
-  },
-  "contributes": {
-    "languages": [
-      {
-        "id": "blits",
-        "extensions": [
-          ".blits"
-        ],
-        "aliases": [
-          "Blits",
-          "blits"
-        ],
-        "configuration": "./languages/blits-language-configuration.json",
-        "icon": {
-          "light": "./languages/icons/blits-icon.svg",
-          "dark": "./languages/icons/blits-icon.svg"
-        }
-      }
-    ],
-    "grammars": [
-      {
-        "injectTo": [
-          "source.js",
-          "source.ts"
-        ],
-        "scopeName": "inline.custom-blits-html",
-        "path": "./syntaxes/embedded-html.json"
-      },
-      {
-        "language": "blits",
-        "scopeName": "source.blits",
-        "path": "./syntaxes/blits.json",
-        "embeddedLanguages": {
-          "meta.embedded.block.javascript": "javascript",
-          "meta.embedded.block.typescript": "typescript",
-          "source.ts": "typescript",
-          "source.js": "javascript"
-        }
-      },
-      {
-        "scopeName": "markdown.blits.codeblock",
-        "path": "./syntaxes/blits-markdown.json",
-        "injectTo": [
-          "text.html.markdown"
-        ],
-        "embeddedLanguages": {
-          "meta.embedded.block.blits": "blits"
-        }
-      }
-    ],
-    "capabilities": {
-      "hoverProvider": "true"
-    },
-    "keybindings": [
-      {
-        "key": "ctrl+/",
-        "mac": "cmd+/",
-        "command": "blits-vscode.commentCommand",
-        "when": "editorTextFocus && (editorLangId == 'javascript' || editorLangId == 'typescript' || editorLangId == 'blits')"
-      }
-    ],
-    "configuration": {
-      "title": "Blits Extension Settings",
-      "properties": {
-        "blits.autoFormat": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically format the document on save."
-        },
-        "blits.format.printWidth": {
-          "type": "number",
-          "default": 120,
-          "description": "The line length that the printer will wrap on",
-          "minimum": 20,
-          "maximum": 1000
-        },
-        "blits.format.tabWidth": {
-          "type": "number",
-          "default": 2,
-          "description": "Indentation size.",
-          "minimum": 0,
-          "maximum": 8
-        },
-        "blits.format.useTabs": {
-          "type": "boolean",
-          "default": false,
-          "description": "Indent lines with tabs instead of spaces."
-        },
-        "blits.format.semi": {
-          "type": "boolean",
-          "default": false,
-          "description": "Print semicolons at the ends of statements."
-        },
-        "blits.format.singleQuote": {
-          "type": "boolean",
-          "default": true,
-          "description": "Use single quotes instead of double quotes."
-        },
-        "blits.format.quoteProps": {
-          "type": "string",
-          "default": "as-needed",
-          "enum": [
-            "as-needed",
-            "consistent",
-            "preserve"
-          ],
-          "enumDescriptions": [
-            "Only add quotes around object properties where required",
-            "If at least one property in an object requires quotes, quote all properties",
-            "Respect the input use of quotes in object properties"
-          ],
-          "description": "Change when properties in objects are quoted."
-        },
-        "blits.format.trailingComma": {
-          "type": "string",
-          "default": "all",
-          "enum": [
-            "all",
-            "es5",
-            "none"
-          ],
-          "enumDescriptions": [
-            "Trailing commas wherever possible",
-            "Trailing commas where valid in ES5",
-            "No trailing commas"
-          ],
-          "description": "Print trailing commas wherever possible in multi-line comma-separated syntactic structures."
-        },
-        "blits.format.bracketSpacing": {
-          "type": "boolean",
-          "default": true,
-          "description": "Print spaces between brackets in object literals."
-        },
-        "blits.format.bracketSameLine": {
-          "type": "boolean",
-          "default": false,
-          "description": "Put the > of a multi-line tag at the end of the last line instead of being alone on the next line."
-        },
-        "blits.format.arrowParens": {
-          "type": "string",
-          "default": "always",
-          "enum": [
-            "always",
-            "avoid"
-          ],
-          "enumDescriptions": [
-            "Always include parentheses",
-            "Omit parentheses when possible"
-          ],
-          "description": "Include parentheses around a sole arrow function parameter."
-        },
-        "blits.format.singleAttributePerLine": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enforce single attribute per line in templates."
-        }
-      }
-    },
-    "snippets": [
-      {
-        "language": "blits",
-        "path": "./snippets/blitsFile.json"
-      },
-      {
-        "language": "javascript",
-        "path": "./snippets/JSFile.json"
-      },
-      {
-        "language": "typescript",
-        "path": "./snippets/JSFile.json"
-      }
-    ]
-  },
-  "dependencies": {
-    "@babel/traverse": "^7.23.2",
-    "fs-extra": "^11.1.1",
-    "lodash": "^4.17.21",
-    "prettier": "^2.8.8",
-    "typescript": "^5.6.2"
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "vscode:package": "npm run package --workspace=vscode-extension",
+    "vscode:publish": "npm run publish --workspace=vscode-extension",
+    "vscode:test": "npm run run-tests --workspace=vscode-extension",
+    "eslint:build": "npm run build --workspace=eslint-plugin-blits",
+    "prettier:dev": "npm run dev --workspace=prettier-plugin-blits"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/parser": "^7.26.2",
-    "@babel/preset-typescript": "^7.26.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.108",
-    "@types/vscode": "^1.81.0",
-    "@vscode/test-electron": "^2.3.4",
-    "@vscode/vsce": "^2.32.0",
-    "esbuild": "^0.19.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "glob": "^10.3.3",
-    "mocha": "^10.7.3"
+    "prettier": "^2.8.8"
   }
 }

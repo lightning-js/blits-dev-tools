@@ -1,0 +1,3 @@
+# Ignore all files in fixture directories
+# These are test files that intentionally import non-existent modules
+**/*

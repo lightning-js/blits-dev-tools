@@ -3,31 +3,28 @@
 // Hover to view descriptions of existing attributes.
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-      "name": "Run Extension",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run VSCode Extension",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extension",
+      ],
       "preLaunchTask": "esbuild: watch",
-      "outFiles": ["${workspaceFolder}/out/**/*.js"]
+      "outFiles": ["${workspaceFolder}/vscode-extension/out/**/*.js"]
     },
     {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/test/suite/index"
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extension",
+        "--extensionTestsPath=${workspaceFolder}/vscode-extension/test/suite/index"
       ]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug test-template-errors",
-      "program": "${workspaceFolder}/test-template-errors.js"
     }
-	]
+  ]
 }

@@ -1,0 +1,43 @@
+.vscode/**
+.vscode-test/**
+src/**
+scripts/**
+test/**
+**/*.map
+backup
+*.vsix
+*.zip
+.vscode-test/**
+src/parsers/testParser.js
+
+# Source control
+.gitignore
+.yarnrc
+**/tsconfig.json
+**/jsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+
+# Exclude node_modules since we're bundling dependencies
+node_modules/**
+
+# Development files
+.github/**
+.travis.yml
+.gitlab-ci.yml
+appveyor.yml
+azure-pipelines.yml
+package-lock.json
+yarn.lock
+.eslintignore
+
+# Build artifacts
+*.vsix
+*.vsix.zip
+
+# typescript standard libs
+!out/lib-files/*
+
+# do not include parent directory
+../**

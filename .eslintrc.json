@@ -75,11 +75,39 @@
     },
     {
       "files": [
-        "test/**/*.js"
+        "vscode-extension/test/**/*.js"
       ],
       "rules": {
         "no-unused-expressions": "off",
         "no-undef": "off"
+      }
+    },
+    {
+      "files": [
+        "vscode-extension/test/fixtures/**/*.js"
+      ],
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-expressions": "off",
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "import/no-unresolved": "off"
+      }
+    },
+    {
+      "files": [
+        "vscode-extension/test/fixtures/**/*.blits"
+      ],
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-expressions": "off",
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "import/no-unresolved": "off"
       }
     }
   ]

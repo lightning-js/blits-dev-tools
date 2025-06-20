@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'vscode-extension/**'
 
 jobs:
   package:
@@ -21,30 +23,35 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    - name: Install monorepo dependencies
+      run: npm install --workspaces
+
     - name: Install vsce
       run: npm install -g @vscode/vsce
 
-    # Read package.json and set variables
+    # Read package.json from vscode-extension folder and set variables
     - name: Read package.json
       run: |
-        extension_name=$(node -p "require('./package.json').name")
-        extension_version=$(node -p "require('./package.json').version")
+        extension_name=$(node -p "require('./vscode-extension/package.json').name")
+        extension_version=$(node -p "require('./vscode-extension/package.json').version")
         echo "EXTENSION_NAME=$extension_name" >> $GITHUB_ENV
         echo "EXTENSION_VERSION=$extension_version" >> $GITHUB_ENV
 
     # fixme: run tests
-    # - name: Run Tests
-    #   run: npm run test
+    - name: Run Tests
+      run: npm run test --workspace=vscode-extension
 
     - name: Package Extension
-      run: npx vsce package
+      run: npm run vscode:package
 
-    # Rename the vsix file
+    # Rename the vsix file (adjusting path for monorepo)
     - name: Rename VSIX
+      working-directory: vscode-extension
       run: mv *.vsix ${{ env.EXTENSION_NAME }}.v${{ env.EXTENSION_VERSION }}.vsix
 
     # Create GitHub Pre Release and Upload VSIX
     - name: Create GitHub Pre Release and Upload VSIX
+      working-directory: vscode-extension
       run: |
         gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
         gh release create v${{ env.EXTENSION_VERSION }} ./${{ env.EXTENSION_NAME }}.v${{ env.EXTENSION_VERSION }}.vsix --prerelease -t "blits-vscode v${{ env.EXTENSION_VERSION }}" -n "Version ${{ env.EXTENSION_VERSION }} of ${{ env.EXTENSION_NAME }}"
