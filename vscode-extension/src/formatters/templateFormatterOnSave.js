@@ -60,14 +60,7 @@ function formatTemplate(template, parser, extraIndentation = '') {
   const trailingWhiteSpace = getTrailingWhiteSpace(template)
   template = modifyComments(template)
 
-  // Temporarily escape arrow functions in attributes to prevent
-  // Prettier from misinterpreting => as HTML tag end
-  const { template: escapedTemplate, arrowFunctions } = escapeArrowFunctions(template)
-
-  let formattedTemplate = prettier.format(escapedTemplate, { parser, ...config })
-
-  // Restore arrow functions
-  formattedTemplate = unescapeArrowFunctions(formattedTemplate, arrowFunctions)
+  let formattedTemplate = prettier.format(template, { parser, ...config })
 
   if (extraIndentation) {
     formattedTemplate = formattedTemplate.replace(/^/gm, extraIndentation)
