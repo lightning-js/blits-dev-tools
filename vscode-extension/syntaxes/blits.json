@@ -180,13 +180,37 @@
           }
         },
         {
-          "name": "invalid.illegal.handler-value",
-          "match": "\\B@(?:loaded|error|updated)\\s*=\\s*\"(?!\\$)[^\"]*\"",
-          "captures": {
-            "0": {
-              "name": "invalid.illegal.attribute.value.blits"
+          "name": "meta.attribute.handler.arrow-function.blits",
+          "begin": "\\B(@(?:loaded|error|updated))\\s*=\\s*\"",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control"
             }
-          }
+          },
+          "end": "\"",
+          "contentName": "meta.embedded.line.js",
+          "patterns": [
+            {
+              "match": "\\$[a-zA-Z][a-zA-Z0-9]*",
+              "name": "variable.parameter.blits"
+            },
+            {
+              "match": "\\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|throw|try|catch|finally|new|typeof|instanceof|this|super|class|extends|static|async|await|yield|import|export|from|default|as)\\b",
+              "name": "keyword.control.js"
+            },
+            {
+              "match": "=>",
+              "name": "storage.type.function.arrow.js"
+            },
+            {
+              "match": "[a-zA-Z_$][a-zA-Z0-9_$]*",
+              "name": "variable.other.js"
+            },
+            {
+              "match": "\\(|\\)",
+              "name": "meta.brace.round.js"
+            }
+          ]
         },
         {
           "name": "invalid.illegal.attribute.blits",
