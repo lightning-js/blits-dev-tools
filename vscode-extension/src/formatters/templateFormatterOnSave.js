@@ -19,7 +19,6 @@ const vscode = require('vscode')
 const prettier = require('prettier')
 const documentHandler = require('../core/documentHandler')
 const workspaceHandler = require('../core/workspaceHandler')
-const { escapeArrowFunctions, unescapeArrowFunctions } = require('../core/arrowFunctionEscaper')
 
 const diagnosticCollection = vscode.languages.createDiagnosticCollection('blits-template')
 
