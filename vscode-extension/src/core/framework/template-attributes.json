@@ -551,11 +551,12 @@
   "@loaded": {
     "attrType": "event",
     "types": [
-      "string"
+      "string",
+      "function"
     ],
     "defaultValue": null,
     "reactive": false,
-    "description": "Fires when an image or text element loads, providing its dimensions. Must be a function reference.",
+    "description": "Fires when an image or text element loads, providing its dimensions. Accepts a function reference (e.g., $handlerName) or an inline arrow function (e.g., () => $handler).",
     "usedIn": [
       "Element",
       "Text"
@@ -564,11 +565,12 @@
   "@error": {
     "attrType": "event",
     "types": [
-      "string"
+      "string",
+      "function"
     ],
     "defaultValue": null,
     "reactive": false,
-    "description": " Fires when an image fails to load, passing an error message. Must be a function reference.",
+    "description": "Fires when an image fails to load, passing an error message. Accepts a function reference (e.g., $handlerName) or an inline arrow function (e.g., () => $handler).",
     "usedIn": [
       "Element",
       "Text"
@@ -577,11 +579,12 @@
   "@updated": {
     "attrType": "event",
     "types": [
-      "string"
+      "string",
+      "function"
     ],
     "defaultValue": null,
     "reactive": false,
-    "description": " Fires when each update in Layout children. Must be a function reference.",
+    "description": "Fires when each update in Layout children. Accepts a function reference (e.g., $handlerName) or an inline arrow function (e.g., () => $handler).",
     "usedIn": [
       "Layout"
     ]
