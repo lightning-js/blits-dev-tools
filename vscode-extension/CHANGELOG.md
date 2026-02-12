@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.5.2
+
+- Adds arrow function support for `@loaded`, `@error`, and `@updated` event attributes
+- Adds syntax highlighting for arrow functions inside event attribute values
+
 ## v1.5.1
 
 - Fixes template detection issues caused by AST-based detection methods.

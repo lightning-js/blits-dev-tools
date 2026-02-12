@@ -58,7 +58,9 @@ function formatTemplate(template, parser, extraIndentation = '') {
   }
   const trailingWhiteSpace = getTrailingWhiteSpace(template)
   template = modifyComments(template)
+
   let formattedTemplate = prettier.format(template, { parser, ...config })
+
   if (extraIndentation) {
     formattedTemplate = formattedTemplate.replace(/^/gm, extraIndentation)
   }
