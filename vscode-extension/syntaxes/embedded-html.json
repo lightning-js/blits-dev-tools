@@ -55,7 +55,7 @@
             },
             {
               "name": "meta.attribute.handler.arrow-function.blits",
-              "begin": "\\B(@(?:loaded|error|updated))\\s*=\\s*\"",
+              "begin": "\\B(@(?:loaded|error|updated))\\s*=\\s*\"(?=[^\"]*=>)",
               "beginCaptures": {
                 "1": { "name": "keyword.control" }
               },
@@ -81,8 +81,28 @@
                 {
                   "match": "\\(|\\)",
                   "name": "meta.brace.round.js"
+                },
+                {
+                  "match": ",",
+                  "name": "punctuation.separator.comma.js"
+                },
+                {
+                  "match": "\\d+(?:\\.\\d+)?",
+                  "name": "constant.numeric.js"
+                },
+                {
+                  "match": "'[^']*'",
+                  "name": "string.quoted.single.js"
                 }
               ]
+            },
+            {
+              "name": "meta.attribute.handler.invalid.blits",
+              "match": "\\B(@(?:loaded|error|updated))\\s*=\\s*(\"[^\"]*\")",
+              "captures": {
+                "1": { "name": "keyword.control" },
+                "2": { "name": "invalid.illegal.handler-value.blits" }
+              }
             },
             {
               "name": "invalid.illegal.attribute.blits",
