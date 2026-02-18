@@ -101,7 +101,7 @@
     ],
     "defaultValue": 0,
     "reactive": true,
-    "description": "The width of the element in pixels or percentage. Alias for w.",
+    "description": "The width of the element in pixels or percentage. Allows negative values and decimals. Alias for w.",
     "usedIn": [
       "Element",
       "Text",
@@ -328,18 +328,6 @@
       "Element"
     ]
   },
-  "texture": {
-    "attrType": "regular",
-    "types": [
-      "object"
-    ],
-    "defaultValue": null,
-    "reactive": true,
-    "description": "A custom texture to apply to the Element. Accepts a Lightning 3 renderer texture object.",
-    "usedIn": [
-      "Element"
-    ]
-  },
   "fit": {
     "attrType": "regular",
     "types": [
@@ -383,28 +371,6 @@
     "defaultValue": "false",
     "reactive": true,
     "description": "Enables render-to-texture mode, rendering the element and its children to an off-screen texture.",
-    "usedIn": [
-      "Element"
-    ]
-  },
-  "shader": {
-    "attrType": "regular",
-    "types": [
-      {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "props": {
-            "type": "object"
-          }
-        }
-      }
-    ],
-    "defaultValue": null,
-    "reactive": true,
-    "description": "Applies a shader to the Element. Accepts an object {type, props} where type is the shader class and props are shader-specific properties. Set to null to remove.",
     "usedIn": [
       "Element"
     ]
