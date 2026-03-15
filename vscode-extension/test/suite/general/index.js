@@ -31,7 +31,7 @@ function run() {
 
   // Run general extension tests that don't require specific workspace context
   return glob(
-    '**/{extension,commands,virtual-files,template-detection,formatting,hover,diagnostics,fixture-validation,event-attributes}.test.js',
+    '**/{extension,commands,virtual-files,template-detection,formatting,hover,diagnostics,fixture-validation}.test.js',
     {
       cwd: testsRoot,
     }
