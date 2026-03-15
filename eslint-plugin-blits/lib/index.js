@@ -18,7 +18,7 @@
 const plugin = {
   meta: {
     name: '@lightningjs/eslint-plugin-blits',
-    version: '0.3.0',
+    version: '1.0.0',
   },
   processors: {
     blitsFile: require('./processor'),

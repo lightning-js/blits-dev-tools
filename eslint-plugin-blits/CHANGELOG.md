@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0
+## v1.0.0
 
 Initial release of `@lightningjs/eslint-plugin-blits`.
 
@@ -9,6 +9,5 @@ Initial release of `@lightningjs/eslint-plugin-blits`.
 - `only-valid-attributes-for-tags` — errors when a built-in tag (`<Element>`, `<Text>`, `<Layout>`, `<RouterView>`, `<Component>`) receives an attribute it doesn't support, using the Blits attribute schema as the source of truth
 - `valid-attribute-value` — validates static values against the attribute schema (enums, numeric ranges, positive/non-negative constraints, percentage strings, regex patterns, and object-form values like `{x: 0.5, y: 0}`)
 - `configs.recommended` — ESLint 9 flat config preset with all four rules set to `error`
-- `.blits` file processor — lets ESLint lint `.blits` single-file components
 - ESLint 8 supported; rules work but no preset is available
 - `docs/attributes/` — reference pages for all 47 Blits template attributes
