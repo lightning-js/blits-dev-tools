@@ -1,6 +1,6 @@
 # @lightningjs/eslint-plugin-blits
 
-An ESLint plugin for Blits apps, providing linting for `.blits` files and template syntax in JavaScript/TypeScript files.
+An ESLint plugin for Blits apps, linting Blits template syntax in JavaScript and TypeScript files.
 
 ## Installation
 
@@ -21,20 +21,7 @@ export default [
 ]
 ```
 
-This enables all rules for `.js` and `.ts` files. To also lint `.blits` files, add a second entry:
-
-```js
-// eslint.config.js
-import blits from '@lightningjs/eslint-plugin-blits'
-
-export default [
-  blits.configs.recommended,
-  {
-    files: ['**/*.blits'],
-    processor: blits.processors.blitsFile,
-  },
-]
-```
+This enables all rules for `.js` and `.ts` files.
 
 ### ESLint 8 (legacy config)
 
@@ -54,35 +41,7 @@ module.exports = {
         '@lightningjs/blits/valid-attribute-value': 'error',
       },
     },
-    {
-      files: ['**/*.blits'],
-      processor: '@lightningjs/blits/blitsFile',
-      rules: {
-        '@lightningjs/blits/valid-template-syntax': 'error',
-        '@lightningjs/blits/require-single-root-element': 'error',
-        '@lightningjs/blits/only-valid-attributes-for-tags': 'error',
-        '@lightningjs/blits/valid-attribute-value': 'error',
-      },
-    },
   ],
-}
-```
-
-### `.blits` file support in VSCode
-
-After installing the [Lightning Blits](https://marketplace.visualstudio.com/items?itemName=LightningJS.lightning-blits) VSCode extension, add `blits` to `eslint.validate` in your `.vscode/settings.json`:
-
-```json
-{
-  "eslint.validate": ["javascript", "blits"]
-}
-```
-
-Or for TypeScript projects:
-
-```json
-{
-  "eslint.validate": ["typescript", "blits"]
 }
 ```
 
