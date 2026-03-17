@@ -96,12 +96,29 @@ function buildValidator(descriptor) {
   }
 }
 
-// Extract key: value pairs from a Blits template object string like {x: 0.5, y: 0}
+// Extract top-level key: value pairs from a Blits template object string like {x: 0.5, y: 0}.
+// Nested objects (e.g. position: {x: 0, y: 0}) are collapsed to a placeholder so their inner
+// keys are not mistaken for top-level keys.
 function parseObjectValue(str) {
+  let flat = ''
+  let depth = 0
+  for (const ch of str) {
+    if (ch === '{') {
+      depth++
+      if (depth === 1) flat += ch
+      else if (depth === 2) flat += '_'
+    } else if (ch === '}') {
+      if (depth === 1) flat += ch
+      depth--
+    } else if (depth <= 1) {
+      flat += ch
+    }
+  }
+
   const re = /(\w[\w-]*)\s*:\s*([^,}]+)/g
   const pairs = {}
   let m
-  while ((m = re.exec(str)) !== null) {
+  while ((m = re.exec(flat)) !== null) {
     let val = m[2].trim()
     if ((val.startsWith("'") && val.endsWith("'")) || (val.startsWith('"') && val.endsWith('"'))) {
       val = val.slice(1, -1)
@@ -113,6 +130,7 @@ function parseObjectValue(str) {
 
 const scalarValidators = new Map()
 const objectValidators = new Map()
+const objectKeyAllowed = new Map()
 const usedInMap = new Map()
 
 for (const [name, def] of Object.entries(templateAttrs)) {
@@ -127,6 +145,7 @@ for (const [name, def] of Object.entries(templateAttrs)) {
       propValidators[key] = buildValidator(desc)
     }
     objectValidators.set(name, propValidators)
+    objectKeyAllowed.set(name, Object.keys(propValidators).join(', '))
   }
 }
 
@@ -147,6 +166,7 @@ module.exports = {
       notNonNegative: "'{{attr}}' value must be 0 or greater. Got '{{value}}'.",
       notInteger: "'{{attr}}' expects a whole number. Got '{{value}}'.",
       regexMismatch: '{{message}}',
+      unknownObjectKey: "'{{attr}}' does not accept '{{key}}' as a property. Valid properties are: {{allowed}}.",
     },
     schema: [],
   },
@@ -187,9 +207,17 @@ module.exports = {
               if (!propValidators) continue
 
               const pairs = parseObjectValue(value)
+              const allowedKeys = objectKeyAllowed.get(attrName)
               for (const [propKey, propVal] of Object.entries(pairs)) {
                 const propValidator = propValidators[propKey]
-                if (!propValidator) continue
+                if (!propValidator) {
+                  context.report({
+                    loc,
+                    messageId: 'unknownObjectKey',
+                    data: { attr: attrName, key: propKey, allowed: allowedKeys },
+                  })
+                  continue
+                }
                 const failure = propValidator(propVal)
                 if (failure !== null) {
                   context.report({

@@ -112,10 +112,14 @@ describe('valid-attribute-value: fit', () => {
     })
   })
 
-  test('object form is not checked', () => {
+  test('valid object keys and values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
         { code: tmpl('<Element fit="{type: cover, position: 0}" />') },
+        { code: tmpl('<Element fit="{type: contain}" />') },
+        { code: tmpl('<Element fit="{type: cover, position: {x: 0, y: 0}}" />') },
+        { code: tmpl('<Element fit="{type: cover, position: {x: 0.5}}" />') },
+        { code: tmpl('<Element fit="{type: contain, position: {y: 1}}" />') },
       ],
       invalid: [],
     })
@@ -388,7 +392,7 @@ describe('valid-attribute-value: mount', () => {
     })
   })
 
-  test('object form is not checked', () => {
+  test('valid object keys and values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [{ code: tmpl('<Element mount="{x: 0.5, y: 0}" />') }],
       invalid: [],
@@ -450,7 +454,7 @@ describe('valid-attribute-value: pivot', () => {
     })
   })
 
-  test('object form is not checked', () => {
+  test('valid object keys and values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [{ code: tmpl('<Element pivot="{x: 0.5, y: 0.5}" />') }],
       invalid: [],
@@ -526,10 +530,11 @@ describe('valid-attribute-value: placement', () => {
     })
   })
 
-  test('object form is not checked', () => {
+  test('valid object keys and values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
         { code: tmpl('<Element placement="{x: center, y: middle}" />') },
+        { code: tmpl('<Element placement="{x: right}" />') },
       ],
       invalid: [],
     })
@@ -759,7 +764,9 @@ describe('valid-attribute-value: object form — mount and pivot', () => {
       valid: [
         { code: tmpl('<Element mount="{x: 0.5, y: 0}" />') },
         { code: tmpl('<Element mount="{x: 0, y: 1}" />') },
+        { code: tmpl('<Element mount="{x: 0.5}" />') },
         { code: tmpl('<Element pivot="{x: 0.5, y: 0.5}" />') },
+        { code: tmpl('<Element pivot="{y: 1}" />') },
       ],
       invalid: [],
     })
@@ -860,6 +867,162 @@ describe('valid-attribute-value: object form — range', () => {
         { code: tmpl('<Element range="{from: 1.5, to: 10}" />'), errors: [{ messageId: 'notInteger' }] },
         { code: tmpl('<Element range="{from: 0, to: 1.5}" />'), errors: [{ messageId: 'notInteger' }] },
       ],
+    })
+  })
+})
+
+describe('valid-attribute-value: object form — unknown keys', () => {
+  test('all known keys pass without error', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element color="{top: red, bottom: blue, left: green, right: yellow}" />') },
+        { code: tmpl('<Element scale="{x: 1, y: 2}" />') },
+        { code: tmpl('<Element mount="{x: 0.5, y: 0}" />') },
+        { code: tmpl('<Element pivot="{x: 0.5, y: 0.5}" />') },
+        { code: tmpl('<Element placement="{x: center, y: middle}" />') },
+        { code: tmpl('<Layout padding="{top: 10, bottom: 20, left: 5, right: 5, x: 10, y: 10}" />') },
+        { code: tmpl('<Element range="{from: 0, to: 10}" />') },
+        { code: tmpl('<Element src="{src: image.png, type: svg}" />') },
+        { code: tmpl('<Element fit="{type: cover, position: 0}" />') },
+      ],
+      invalid: [],
+    })
+  })
+
+  test('unknown key in color object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element color="{t: red, b: blue}" />'), errors: [{ messageId: 'unknownObjectKey' }, { messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element color="{top: red, side: yellow}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element color="{gradient: red}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in scale object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element scale="{z: 1}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element scale="{x: 1, z: 1}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in mount object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element mount="{z: 0.5}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element mount="{x: 0.5, z: 0}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in pivot object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element pivot="{h: 0.5, v: 0.5}" />'), errors: [{ messageId: 'unknownObjectKey' }, { messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in placement object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element placement="{horizontal: center}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element placement="{horizontal: center, vertical: top}" />'), errors: [{ messageId: 'unknownObjectKey' }, { messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in padding object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Layout padding="{horizontal: 10}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Layout padding="{top: 10, vertical: 5}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in range object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element range="{start: 0, end: 10}" />'), errors: [{ messageId: 'unknownObjectKey' }, { messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element range="{from: 0, finish: 10}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in src object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element src="{url: image.png}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element src="{src: image.png, format: svg}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key in fit object is reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element fit="{mode: cover}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element fit="{type: cover, align: center}" />'), errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('unknown key and invalid value both reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        {
+          code: tmpl('<Element mount="{x: 1.5, z: 0}" />'),
+          errors: [{ messageId: 'outOfRange' }, { messageId: 'unknownObjectKey' }],
+        },
+        {
+          code: tmpl('<Element placement="{x: invalid, horizontal: center}" />'),
+          errors: [{ messageId: 'enumInvalid' }, { messageId: 'unknownObjectKey' }],
+        },
+      ],
+    })
+  })
+
+  test('inspector-data allows any keys', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element inspector-data="{testId: btn}" />') },
+        { code: tmpl('<Element inspector-data="{role: nav, testId: header, anything: foo}" />') },
+      ],
+      invalid: [],
+    })
+  })
+
+  test('reactive object binding is not checked', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element :color="{t: $top, b: $bottom}" />') },
+        { code: tmpl('<Element :mount="{x: $mx, z: $mz}" />') },
+      ],
+      invalid: [],
+    })
+  })
+
+  test('keys inside nested objects are not checked against parent', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element fit="{type: cover, position: {x: 0, y: 0}}" />') },
+        { code: tmpl('<Element fit="{type: cover, position: {x: 0.5, y: 0.5}}" />') },
+        { code: tmpl('<Element fit="{type: contain, position: {y: 1}}" />') },
+      ],
+      invalid: [],
     })
   })
 })
