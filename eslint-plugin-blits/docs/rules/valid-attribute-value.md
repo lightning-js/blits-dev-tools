@@ -98,14 +98,21 @@ Blits.Component('Card', {
 })
 ```
 
-**Object-form values** are not checked:
+**Object-form values** — property names are validated against the allowed set, but property values inside nested objects (e.g. `fit.position`) are not:
 
 ```js
-// ✓ not checked
+// ✓ ok — known keys
 Blits.Component('Card', {
   template: '<Element fit="{type: cover, position: 0}" />',
 })
+
+// ✗ error — 'mode' is not a valid key for 'fit'
+Blits.Component('Card', {
+  template: '<Element fit="{mode: cover}" />',
+})
 ```
+
+**`slot`** — value must match a `<Slot ref="...">` definition in the parent component; this cannot be verified at lint time.
 
 **Dollar-prefixed static values** are treated as variable references and skipped:
 
