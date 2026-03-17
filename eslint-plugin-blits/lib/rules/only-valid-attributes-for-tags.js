@@ -23,7 +23,7 @@ const attrTagMap = new Map(
   Object.entries(templateAttrs).map(([name, def]) => [name, new Set(def.usedIn)])
 )
 
-const BUILT_IN_TAGS = new Set(['Element', 'Text', 'Layout', 'RouterView', 'Component'])
+const BUILT_IN_TAGS = new Set(['Element', 'Text', 'Layout', 'RouterView'])
 
 module.exports = {
   meta: {
@@ -60,7 +60,17 @@ module.exports = {
               : attr.name.text
 
             const validTags = attrTagMap.get(lookup)
-            if (!validTags) continue // not in schema — unknown or custom attr
+            if (!validTags) {
+              // Event handlers (@) and transition modifiers (.transition etc.) are not in the schema.
+              if (!attr.name.text.startsWith('@') && !lookup.includes('.')) {
+                const loc = {
+                  start: indexToLoc(sourceText, contentOffset + attr.name.start),
+                  end: indexToLoc(sourceText, contentOffset + attr.name.end),
+                }
+                context.report({ loc, messageId: 'invalidAttr', data: { attr: lookup, tag: treeNode.tag } })
+              }
+              continue
+            }
 
             if (!validTags.has(treeNode.tag)) {
               const loc = {

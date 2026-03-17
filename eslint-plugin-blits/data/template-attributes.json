@@ -1252,6 +1252,24 @@
       { "value": "visible", "reason": "not a valid show value" }
     ]
   },
+  "slot": {
+    "attrType": "directive",
+    "types": ["string"],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Routes an Element or Component to a named slot in the parent component. The value must match the `ref` attribute of the target `<Slot ref=\"...\">` definition in the parent's template.",
+    "usedIn": ["Element", "Text", "Layout", "RouterView", "Component"],
+    "docRef": [],
+    "noValidateReason": "The slot attribute accepts any non-empty string that matches the ref attribute of a <Slot> definition in the parent component. The plugin cannot statically verify that the named slot exists in the parent — that is a runtime concern.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a non-empty slot name matching a <Slot ref=\"...\"> definition in the parent component."
+      }
+    },
+    "possibleValues": ["first", "second", "header", "footer", "content"]
+  },
   "@loaded": {
     "attrType": "event",
     "types": [

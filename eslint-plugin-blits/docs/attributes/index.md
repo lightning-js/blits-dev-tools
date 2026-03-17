@@ -39,6 +39,7 @@ All attributes available in Blits component templates, sourced from `data/templa
 | [`scale`](./scale.md) | `<Element>`, `<Text>`, `<Layout>`, `<RouterView>`, component | ✓ | number, object |
 | [`show`](./show.md) | all | ✓ | directive: `true`, `false` |
 | [`size`](./size.md) | `<Text>` | ✓ | number |
+| [`slot`](./slot.md) | `<Element>`, `<Text>`, `<Layout>`, `<RouterView>`, component | — | string |
 | [`src`](./src.md) | `<Element>` | ✓ | string, object |
 | [`textoverflow`](./textoverflow.md) | `<Text>` | ✓ | string, enum |
 | [`w`](./w.md) | `<Element>`, `<Text>`, `<RouterView>` | ✓ | number, string |

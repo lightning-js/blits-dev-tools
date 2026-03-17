@@ -89,7 +89,7 @@ describe('only-valid-attributes-for-tags: universal attributes', () => {
     })
   })
 
-  test('scale, rotation, mount, pivot are valid on all built-in tags except Component', () => {
+  test('scale, rotation, mount, pivot are valid on Element, Text, Layout, RouterView', () => {
     tester.run('only-valid-attributes-for-tags', rule, {
       valid: [
         { code: tmpl('<Element scale="2" rotation="45" />') },
@@ -97,16 +97,7 @@ describe('only-valid-attributes-for-tags: universal attributes', () => {
         { code: tmpl('<Layout rotation="90" />') },
         { code: tmpl('<RouterView mount="0.5" />') },
       ],
-      invalid: [
-        {
-          code: tmpl('<Component rotation="45" />'),
-          errors: [{ messageId: 'invalidAttr' }],
-        },
-        {
-          code: tmpl('<Component mount="0.5" />'),
-          errors: [{ messageId: 'invalidAttr' }],
-        },
-      ],
+      invalid: [],
     })
   })
 })
@@ -122,7 +113,6 @@ describe('only-valid-attributes-for-tags: Element-only attributes', () => {
         { code: tmpl('<Text src="img.png" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Layout src="img.png" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<RouterView src="img.png" />'), errors: [{ messageId: 'invalidAttr' }] },
-        { code: tmpl('<Component src="img.png" />'), errors: [{ messageId: 'invalidAttr' }] },
       ],
     })
   })
@@ -167,7 +157,6 @@ describe('only-valid-attributes-for-tags: Element-only attributes', () => {
       ],
       invalid: [
         { code: tmpl('<Layout @loaded="$onLoad" />'), errors: [{ messageId: 'invalidAttr' }] },
-        { code: tmpl('<Component @loaded="$onLoad" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Layout @error="$onErr" />'), errors: [{ messageId: 'invalidAttr' }] },
       ],
     })
@@ -286,21 +275,33 @@ describe('only-valid-attributes-for-tags: Layout-only attributes', () => {
       invalid: [
         { code: tmpl('<Element @updated="$onUpdate" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Text @updated="$onUpdate" />'), errors: [{ messageId: 'invalidAttr' }] },
-        { code: tmpl('<Component @updated="$onUpdate" />'), errors: [{ messageId: 'invalidAttr' }] },
       ],
     })
   })
 })
 
-describe('only-valid-attributes-for-tags: Component-only attributes', () => {
-  test('is is valid only on the built-in Component tag', () => {
+describe('only-valid-attributes-for-tags: Component tag behaviour', () => {
+  test('is is not valid on Element, Text, or Layout', () => {
     tester.run('only-valid-attributes-for-tags', rule, {
-      valid: [{ code: tmpl('<Component is="$comp" />') }],
+      valid: [
+        { code: tmpl('<Component is="$comp" />') },
+        { code: tmpl('<Component is="$comp" :index="$idx" color="#fff" />') },
+      ],
       invalid: [
         { code: tmpl('<Element is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Text is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Layout is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
       ],
+    })
+  })
+
+  test('Component tag attributes are not validated — any prop is allowed', () => {
+    tester.run('only-valid-attributes-for-tags', rule, {
+      valid: [
+        { code: tmpl('<Component is="$comp" rotation="45" mount="0.5" />') },
+        { code: tmpl('<Component is="$comp" :customProp="$val" />') },
+      ],
+      invalid: [],
     })
   })
 })
@@ -316,13 +317,23 @@ describe('only-valid-attributes-for-tags: general behaviour', () => {
     })
   })
 
-  test('attributes not in the schema are ignored', () => {
+  test('unknown event handlers (@) and transition modifiers (.) are allowed on built-in tags', () => {
     tester.run('only-valid-attributes-for-tags', rule, {
       valid: [
         { code: tmpl('<Element @tap="$onTap" />') },
         { code: tmpl('<Element .transition="{alpha: {value: 1}}" />') },
       ],
       invalid: [],
+    })
+  })
+
+  test('unknown plain attributes are not allowed on built-in tags', () => {
+    tester.run('only-valid-attributes-for-tags', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element dummyAttr="foo" />'), errors: [{ messageId: 'invalidAttr' }] },
+        { code: tmpl('<Text unknownProp="bar" />'), errors: [{ messageId: 'invalidAttr' }] },
+      ],
     })
   })
 
