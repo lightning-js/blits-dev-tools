@@ -496,6 +496,14 @@
       "Component"
     ]
   },
+  "slot": {
+    "attrType": "directive",
+    "types": ["string"],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Routes an Element or Component to a named slot in the parent component. The value must match the ref attribute of the target <Slot> definition in the parent's template.",
+    "usedIn": ["Element", "Text", "Layout", "RouterView", "Component"]
+  },
   "align-items": {
     "attrType": "regular",
     "types": [
