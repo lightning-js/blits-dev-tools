@@ -11,3 +11,11 @@ Initial release of `@lightningjs/eslint-plugin-blits`.
 - `configs.recommended` — ESLint 9 flat config preset with all four rules set to `error`
 - ESLint 8 supported; rules work but no preset is available
 - `docs/attributes/` — reference pages for all 47 Blits template attributes
+- Blits v2 support — auto-detects version from `package.json`, loads matching attribute schema. Use `settings: { blits: { version: 2 } }` to pin explicitly
+- `border`, `rounded`, `shadow`, `shader` added as v2-only attributes. `effects` and `wordwrap` removed in v2
+- `rounded` also accepts array form `[tl, tr, br, bl]` in v2
+- `slot` attribute added to schema
+- `Layout` added to valid tags for `w`, `h`, `width`, `height`, `clipping`, `overflow`
+- `valid-attribute-value` now validates object keys for attributes with a closed key set (`color`, `scale`, `mount`, `pivot`, `fit`, etc.)
+- `scale` and `mount` accept any numeric value, `letterspacing` accepts negative values
+- `$shallow` no longer triggers a false positive in `valid-template-syntax`
