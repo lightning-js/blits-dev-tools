@@ -28,7 +28,7 @@ function detectVersion() {
     const version =
       pkg.dependencies?.['@lightningjs/blits'] ||
       pkg.devDependencies?.['@lightningjs/blits']
-    _detected = parseInt(version.replace(/^[^\d]*/, ''), 10) || 2
+    _detected = version ? parseInt(version.replace(/^[^\d]*/, ''), 10) || 2 : 2
   } catch {
     _detected = 2
   }

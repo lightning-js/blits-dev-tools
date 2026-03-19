@@ -17,7 +17,7 @@
 
 const { test, describe } = require('node:test')
 const assert = require('node:assert/strict')
-const { getBlitsTemplate, indexToLoc, isValidTemplateString } = require('../lib/utils')
+const { getBlitsTemplate, indexToLoc } = require('../lib/utils')
 
 describe('getBlitsTemplate', () => {
   test('extracts content from <template> block', () => {
@@ -77,45 +77,3 @@ describe('indexToLoc', () => {
   })
 })
 
-describe('isValidTemplateString', () => {
-  test('returns true for simple tag', () => {
-    assert.equal(isValidTemplateString('<View />'), true)
-  })
-
-  test('returns true for nested tags', () => {
-    assert.equal(isValidTemplateString('<View><Text /></View>'), true)
-  })
-
-  test('returns true for reactive attribute', () => {
-    assert.equal(isValidTemplateString('<View :color="$c" />'), true)
-  })
-
-  test('returns true for event handler', () => {
-    assert.equal(isValidTemplateString('<View @click="$fn" />'), true)
-  })
-
-  test('returns true for comment-only string', () => {
-    assert.equal(isValidTemplateString('<!-- comment -->'), true)
-  })
-
-  test('returns false for plain string', () => {
-    assert.equal(isValidTemplateString('hello world'), false)
-  })
-
-  test('returns false for empty string', () => {
-    assert.equal(isValidTemplateString(''), false)
-  })
-
-  test('returns false for null', () => {
-    assert.equal(isValidTemplateString(null), false)
-  })
-
-  test('returns false for non-string', () => {
-    assert.equal(isValidTemplateString(42), false)
-  })
-
-  test('returns false for SQL-like string with angle brackets', () => {
-    // text before first < → not a template
-    assert.equal(isValidTemplateString('value < 10'), false)
-  })
-})

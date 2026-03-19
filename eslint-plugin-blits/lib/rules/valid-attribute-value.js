@@ -206,7 +206,7 @@ module.exports = {
 
             const attrName = attr.name.text
             const validTags = usedInMap.get(attrName)
-            if (validTags && !validTags.has(treeNode.tag)) continue // E-130 handles wrong-tag
+            if (validTags && !validTags.has(treeNode.tag)) continue // wrong-tag validation is out of scope for this rule
 
             const value = attr.value.text.trim()
             if (value.startsWith('$')) continue // variable reference

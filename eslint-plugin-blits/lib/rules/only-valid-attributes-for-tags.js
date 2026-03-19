@@ -30,6 +30,7 @@ function getAttrTagMap(context) {
   return map
 }
 
+// Component is excluded — it accepts arbitrary custom props, so attribute validation doesn't apply
 const BUILT_IN_TAGS = new Set(['Element', 'Text', 'Layout', 'RouterView'])
 
 module.exports = {

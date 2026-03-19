@@ -39,69 +39,6 @@ function indexToLoc(text, index) {
   }
 }
 
-// from the vscode extension, checks template values outside of component configs
-function isValidTemplateString(str) {
-  // Early returns for empty or non-string inputs
-  if (!str || typeof str !== 'string') {
-    return false
-  }
-
-  // Trim whitespace but preserve newlines
-  str = str.replace(/^\s+|\s+$/gm, '')
-
-  // Quick checks for obvious template indicators
-  if (str.startsWith('<!--')) {
-    return true
-  }
-
-  // Look for reactive bindings or event handlers
-  if (str.includes(':') || str.includes('@')) {
-    const hasAttribute = /[:@][a-zA-Z][^=]*=/.test(str)
-    if (hasAttribute) {
-      return true
-    }
-  }
-
-  // Look for any tag-like structures, being permissive with whitespace
-  const hasTagLikeStructure =
-    /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*?>/.test(str) || /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*$/.test(str)
-
-  if (!hasTagLikeStructure) {
-    return false
-  }
-
-  // Check for template structure indicators (including incomplete)
-  const templateIndicators = [
-    // Complete tag with attributes across multiple lines
-    /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*?>/,
-    // Self-closing tag across multiple lines
-    /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*?\/>/,
-    // Closing tag (even incomplete)
-    /<\/[a-zA-Z][a-zA-Z0-9_-]*/,
-    // Incomplete opening tag with attributes
-    /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*$/,
-    // Tag with reactive binding or event handler
-    /<[a-zA-Z][a-zA-Z0-9_-]*[\s\S]*?[:@][a-zA-Z]/,
-  ]
-
-  // If we match any of these patterns, consider it a template
-  for (const pattern of templateIndicators) {
-    if (pattern.test(str)) {
-      // Check for text before the first '<'
-      const firstTagIndex = str.indexOf('<')
-      if (firstTagIndex > 0) {
-        const preText = str.slice(0, firstTagIndex).trim()
-        if (preText && !preText.startsWith('<!--')) {
-          return false
-        }
-      }
-      return true
-    }
-  }
-
-  return false
-}
-
 function isBlitsCall(node) {
   return (
     node.callee &&
@@ -147,4 +84,4 @@ function getTemplateInfo(callNode) {
   return { templateStr, contentOffset }
 }
 
-module.exports = { getBlitsTemplate, indexToLoc, isValidTemplateString, isBlitsCall, getTemplateInfo }
+module.exports = { getBlitsTemplate, indexToLoc, isBlitsCall, getTemplateInfo }

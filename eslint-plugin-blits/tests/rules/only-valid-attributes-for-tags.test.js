@@ -83,6 +83,7 @@ describe('only-valid-attributes-for-tags: universal attributes', () => {
         { code: tmpl('<Element :for="item in $list" key="$item.id" />') },
         { code: tmpl('<Text :for="item in $list" key="$item.id" />') },
         { code: tmpl('<Layout :for="item in $list" key="$item.id" />') },
+        { code: tmpl('<RouterView :for="item in $list" key="$item.id" />') },
         { code: tmpl('<Component :for="item in $list" key="$item.id" />') },
       ],
       invalid: [],
@@ -292,6 +293,7 @@ describe('only-valid-attributes-for-tags: Component tag behaviour', () => {
         { code: tmpl('<Element is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Text is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
         { code: tmpl('<Layout is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
+        { code: tmpl('<RouterView is="$comp" />'), errors: [{ messageId: 'invalidAttr' }] },
       ],
     })
   })

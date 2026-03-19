@@ -15,22 +15,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const fs = require('fs')
-const path = require('path')
 const parseTemplate = require('./parser')
 const { getBlitsTemplate, indexToLoc } = require('./utils')
 
+let _fileText = null
+
 module.exports = {
-  // we don’t actually need to transform the text for linting—
+  // we don't actually need to transform the text for linting
   // we'll ignore `messagesLists` entirely and re-run our parser
   preprocess(text, filename) {
+    _fileText = text
     return [text]
   },
 
   postprocess(_messagesLists, filename) {
-    const fileText = fs.readFileSync(filename, 'utf8')
+    const fileText = _fileText
     const tpl = getBlitsTemplate(fileText)
-    if (!tpl) return [] // no <template> block → no errors
+    if (!tpl) return [] // no <template> block -> no errors
 
     const result = parseTemplate(tpl.content)
     if (result.status) return []
@@ -42,7 +43,7 @@ module.exports = {
       const endLoc = indexToLoc(fileText, absEnd)
 
       return {
-        ruleId: 'blits/template-validate',
+        ruleId: '@lightningjs/blits/template-validate',
         message: result.error.info,
         severity: 2, // error
         line: startLoc.line,

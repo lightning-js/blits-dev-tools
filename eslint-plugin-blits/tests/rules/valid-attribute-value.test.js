@@ -264,7 +264,7 @@ describe('valid-attribute-value: general behaviour', () => {
   test('placement on wrong tag is not double-reported', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
-        // placement is not valid on Component — E-130 handles it, this rule stays silent
+        // wrong-tag case is handled by the other rule; this rule stays silent
         { code: tmpl('<Component placement="invalid" />') },
       ],
       invalid: [],
@@ -274,7 +274,7 @@ describe('valid-attribute-value: general behaviour', () => {
   test('attributes on wrong tag are not double-reported', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
-        // align is not valid on Element — E-130 handles it, this rule stays silent
+        // wrong-tag case is handled by the other rule; this rule stays silent
         { code: tmpl('<Element align="invalid" />') },
         // direction is not valid on Text — same
         { code: tmpl('<Text direction="bad" />') },
@@ -775,11 +775,18 @@ describe('valid-attribute-value: object form — mount and pivot', () => {
     })
   })
 
-  test('out-of-range property value is reported', () => {
+  test('mount object accepts any numeric value', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
         { code: tmpl('<Element mount="{x: 1.5, y: 0}" />') },
       ],
+      invalid: [],
+    })
+  })
+
+  test('pivot object enforces 0–1 range per property', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
       invalid: [
         { code: tmpl('<Element pivot="{x: 0.5, y: -0.1}" />'), errors: [{ messageId: 'outOfRange' }] },
       ],
