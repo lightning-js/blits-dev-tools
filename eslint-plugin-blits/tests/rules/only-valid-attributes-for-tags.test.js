@@ -137,12 +137,13 @@ describe('only-valid-attributes-for-tags: Element-only attributes', () => {
     })
   })
 
-  test('effects is valid only on Element', () => {
+  test('effects is valid only on Element (v1)', () => {
+    const v1 = { settings: { blits: { version: 1 } } }
     tester.run('only-valid-attributes-for-tags', rule, {
-      valid: [{ code: tmpl('<Element effects="{}" />') }],
+      valid: [{ code: tmpl('<Element effects="{}" />'), ...v1 }],
       invalid: [
-        { code: tmpl('<Text effects="{}" />'), errors: [{ messageId: 'invalidAttr' }] },
-        { code: tmpl('<Layout effects="{}" />'), errors: [{ messageId: 'invalidAttr' }] },
+        { code: tmpl('<Text effects="{}" />'), ...v1, errors: [{ messageId: 'invalidAttr' }] },
+        { code: tmpl('<Layout effects="{}" />'), ...v1, errors: [{ messageId: 'invalidAttr' }] },
       ],
     })
   })
@@ -358,6 +359,44 @@ describe('only-valid-attributes-for-tags: general behaviour', () => {
           errors: [{ messageId: 'invalidAttr' }],
         },
       ],
+    })
+  })
+})
+
+describe('only-valid-attributes-for-tags: Blits v2 attribute support', () => {
+  const v2 = { settings: { blits: { version: 2 } } }
+  const v1 = { settings: { blits: { version: 1 } } }
+
+  test('border, rounded, shadow, shader are valid on Element in v2', () => {
+    tester.run('only-valid-attributes-for-tags', rule, {
+      valid: [
+        { code: tmpl('<Element border="10" />'), ...v2 },
+        { code: tmpl('<Element :border="{w: 4}" />'), ...v2 },
+        { code: tmpl('<Element rounded="10" />'), ...v2 },
+        { code: tmpl('<Element shadow="{blur: 10}" />'), ...v2 },
+        { code: tmpl('<Element shader="rhombus" />'), ...v2 },
+      ],
+      invalid: [],
+    })
+  })
+
+  test('effects and wordwrap are invalid on v2 projects', () => {
+    tester.run('only-valid-attributes-for-tags', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Element effects="foo" />'), ...v2, errors: [{ messageId: 'invalidAttr' }] },
+        { code: tmpl('<Text wordwrap="200" />'), ...v2, errors: [{ messageId: 'invalidAttr' }] },
+      ],
+    })
+  })
+
+  test('effects and wordwrap are still valid on v1 projects', () => {
+    tester.run('only-valid-attributes-for-tags', rule, {
+      valid: [
+        { code: tmpl('<Element effects="foo" />'), ...v1 },
+        { code: tmpl('<Text wordwrap="200" />'), ...v1 },
+      ],
+      invalid: [],
     })
   })
 })

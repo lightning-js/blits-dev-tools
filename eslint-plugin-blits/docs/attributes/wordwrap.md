@@ -1,10 +1,10 @@
 # wordwrap
 
-> **DEPRECATED**: The `wordwrap` attribute is deprecated. Use `maxwidth` instead.
+> **Removed in Blits v2.** The `wordwrap` attribute was deprecated in Blits v1 and removed in Blits v2. Use `maxwidth` instead.
 
 Sets the maximum line width in pixels for text wrapping.
 
-**Attribute** · Reactive
+**Attribute** · Reactive · **Blits version:** v1 only
 
 ---
 

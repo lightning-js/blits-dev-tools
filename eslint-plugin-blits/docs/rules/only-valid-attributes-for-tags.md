@@ -12,12 +12,16 @@ Blits' built-in tags (`<Element>`, `<Text>`, `<Layout>`, `<RouterView>`, `<Compo
 
 ---
 
+## Version-aware
+
+This rule loads the attribute schema based on the detected Blits version (`blitsVersion` setting or auto-detected from `package.json`). In Blits v2, `effects` and `wordwrap` are removed and `border`, `rounded`, `shadow`, `shader` are added.
+
 ## Built-in tags and their attribute sets
 
 | Tag | Purpose | Example-only attributes |
 |---|---|---|
-| `<Element>` | Base renderer node | `src`, `fit`, `rtt`, `effects` |
-| `<Text>` | Text rendering | `content`, `font`, `size`, `align`, `maxwidth` |
+| `<Element>` | Base renderer node | `src`, `fit`, `rtt`, `effects` (v1) / `border`, `rounded`, `shadow`, `shader` (v2+) |
+| `<Text>` | Text rendering | `content`, `font`, `size`, `align`, `maxwidth`, `wordwrap` (v1 only) |
 | `<Layout>` | Auto-layout container | `direction`, `gap`, `align-items`, `padding` |
 | `<RouterView>` | Router outlet | — |
 | `<Component>` | Dynamic component instantiation (via `is`) | `is` |

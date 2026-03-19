@@ -18,6 +18,8 @@ The strategy for containing text within bounds. Usually set automatically by Bli
 
 **Enum:** `none`, `width`, `both`
 
+> **Blits v2:** The `height` value is also accepted in Blits v2 — `none`, `width`, `both`, `height`.
+
 ---
 
 ## Examples

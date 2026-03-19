@@ -1,0 +1,2375 @@
+{
+  "x": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The x position of the Element in pixels (or percentage), relative to its parent - allows negative values and decimals.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "100",
+      "-50",
+      "1920",
+      "50%",
+      "100%",
+      "-10%"
+    ],
+    "invalidValues": [
+      {
+        "value": "50 %",
+        "reason": "space before % sign"
+      },
+      {
+        "value": "100px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "y": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The y position of the Element in pixels (or percentage), relative to its parent - allows negative values and decimals.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "100",
+      "-50",
+      "1080",
+      "50%",
+      "25%"
+    ],
+    "invalidValues": [
+      {
+        "value": "50 %",
+        "reason": "space before % sign"
+      },
+      {
+        "value": "100px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "top",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "z": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The z index of the element.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric",
+        "integer": true
+      }
+    },
+    "possibleValues": [
+      "0",
+      "1",
+      "10",
+      "-1",
+      "100"
+    ],
+    "invalidValues": [
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "1.5",
+        "reason": "z-index is semantically integer-only"
+      }
+    ]
+  },
+  "w": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The width of the element in pixels or percentage (e.g., \"50%\"). Allows decimals.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "400",
+      "1920",
+      "50%",
+      "100%"
+    ],
+    "invalidValues": [
+      {
+        "value": "400px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "50 %",
+        "reason": "space before % sign"
+      }
+    ]
+  },
+  "h": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The height of the element in pixels or percentage (e.g., \"50%\"). Allows decimals.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "200",
+      "1080",
+      "50%",
+      "100%"
+    ],
+    "invalidValues": [
+      {
+        "value": "200px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "50 %",
+        "reason": "space before % sign"
+      }
+    ]
+  },
+  "zIndex": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The z-index of the element. Alias for z.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric",
+        "integer": true
+      }
+    },
+    "possibleValues": [
+      "0",
+      "1",
+      "10",
+      "-1",
+      "100"
+    ],
+    "invalidValues": [
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "1.5",
+        "reason": "z-index is semantically integer-only"
+      }
+    ]
+  },
+  "width": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The width of the element in pixels or percentage. Allows negative values and decimals. Alias for w.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "400",
+      "1920",
+      "50%",
+      "100%"
+    ],
+    "invalidValues": [
+      {
+        "value": "400px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "height": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "string"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "The height of the element in pixels or percentage. Alias for h.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numericOrPercent"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "200",
+      "1080",
+      "50%",
+      "100%"
+    ],
+    "invalidValues": [
+      {
+        "value": "200px",
+        "reason": "px suffix not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "color": {
+    "attrType": "regular",
+    "types": [
+      "string",
+      {
+        "type": "object",
+        "properties": {
+          "top": {
+            "type": "string"
+          },
+          "bottom": {
+            "type": "string"
+          },
+          "left": {
+            "type": "string"
+          },
+          "right": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "defaultValue": "transparent",
+    "reactive": true,
+    "description": "The color of the Element. Accepts hexadecimal, hex with alpha, hex shorthands, RGB, RGBA, HTML color names, or an object with top/bottom/left/right keys for linear gradients.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "noValidateReason": "Scalar color forms (hex, rgb(), rgba(), 140+ named colors) are too numerous to enumerate reliably \u2014 a named-color enum needs ~140 entries and breaks with future CSS additions. The permissive regex below documents the structure without enforcing specific formats; value correctness is deferred to runtime.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a valid color string (hex, rgb(), rgba(), or named color)."
+      },
+      "object": {
+        "top": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]+$",
+          "message": "Expected a valid color string."
+        },
+        "bottom": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]+$",
+          "message": "Expected a valid color string."
+        },
+        "left": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]+$",
+          "message": "Expected a valid color string."
+        },
+        "right": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]+$",
+          "message": "Expected a valid color string."
+        }
+      }
+    },
+    "possibleValues": [
+      "#ff4433",
+      "#55553380",
+      "#333",
+      "rgb(180,30,50)",
+      "rgba(40,30,180,0.5)",
+      "red",
+      "transparent",
+      "skyblue",
+      "{top: 'red', bottom: 'blue'}",
+      "{left: 'rgba(255,255,255,0.5)', right: '#000'}"
+    ],
+    "invalidValues": [
+      {
+        "value": "red-ish",
+        "reason": "not a valid CSS color name or format"
+      },
+      {
+        "value": "#GGHHII",
+        "reason": "invalid hex digits"
+      }
+    ]
+  },
+  "alpha": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 1,
+    "reactive": true,
+    "description": "The alpha attribute controls the opacity of the element. Allows values between 0 (fully transparent) and 1 (fully visible).",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "range",
+        "min": 0,
+        "max": 1
+      }
+    },
+    "possibleValues": [
+      "0",
+      "0.5",
+      "1",
+      "0.25",
+      "0.99"
+    ],
+    "invalidValues": [
+      {
+        "value": "1.5",
+        "reason": "exceeds maximum of 1"
+      },
+      {
+        "value": "-0.1",
+        "reason": "below minimum of 0"
+      },
+      {
+        "value": "full",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "rotation": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "Rotates the Element. Accepts positive and negative values in degrees.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "90",
+      "180",
+      "270",
+      "360",
+      "-45",
+      "33.5"
+    ],
+    "invalidValues": [
+      {
+        "value": "90deg",
+        "reason": "deg suffix not accepted"
+      },
+      {
+        "value": "quarter turn",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "scale": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        }
+      }
+    ],
+    "defaultValue": 1,
+    "reactive": true,
+    "description": "Scales the element. Accepts a single number for uniform scaling or an object {x, y} for independent axis scaling. Values below 1 scale down, above 1 scale up.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric"
+      },
+      "object": {
+        "x": {
+          "type": "numeric"
+        },
+        "y": {
+          "type": "numeric"
+        }
+      }
+    },
+    "possibleValues": [
+      "1",
+      "0.5",
+      "2",
+      "2.3",
+      "0.1",
+      "{x: 1, y: 2}",
+      "{x: 0.5, y: 1}"
+    ],
+    "invalidValues": [
+      {
+        "value": "large",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "2x",
+        "reason": "x suffix not accepted"
+      }
+    ]
+  },
+  "mount": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        }
+      }
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "Sets the mount point of the Element. Accepts a single number or an object {x, y} with values between 0 and 1. Default {x: 0, y: 0} is the top-left corner.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric"
+      },
+      "object": {
+        "x": {
+          "type": "numeric"
+        },
+        "y": {
+          "type": "numeric"
+        }
+      }
+    },
+    "possibleValues": [
+      "0",
+      "0.5",
+      "1",
+      "0.25",
+      "{x: 0, y: 0}",
+      "{x: 0.5, y: 0.8}",
+      "{y: 1}"
+    ],
+    "invalidValues": [
+      {
+        "value": "center",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "top-left",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "pivot": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        }
+      }
+    ],
+    "defaultValue": 0.5,
+    "reactive": true,
+    "description": "Sets the pivot point for rotation and scaling. Accepts a single number or an object {x, y} with values between 0 and 1. Default {x: 0.5, y: 0.5} is the center.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "range",
+        "min": 0,
+        "max": 1
+      },
+      "object": {
+        "x": {
+          "type": "range",
+          "min": 0,
+          "max": 1
+        },
+        "y": {
+          "type": "range",
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    "possibleValues": [
+      "0",
+      "0.5",
+      "1",
+      "0.9",
+      "0.25",
+      "{x: 0.5, y: 0.5}",
+      "{y: 1}",
+      "{x: 0, y: 0}"
+    ],
+    "invalidValues": [
+      {
+        "value": "1.5",
+        "reason": "exceeds maximum of 1"
+      },
+      {
+        "value": "-0.1",
+        "reason": "below minimum of 0"
+      },
+      {
+        "value": "center",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "clipping": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "true",
+      "false"
+    ],
+    "defaultValue": "false",
+    "reactive": true,
+    "description": "Clips child content to the element's width and height boundaries.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
+    },
+    "possibleValues": [
+      "true",
+      "false"
+    ],
+    "invalidValues": [
+      {
+        "value": "yes",
+        "reason": "only 'true' or 'false' accepted"
+      },
+      {
+        "value": "1",
+        "reason": "numeric string not accepted"
+      },
+      {
+        "value": "clip",
+        "reason": "not a valid enum value"
+      }
+    ]
+  },
+  "overflow": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "true",
+      "false"
+    ],
+    "defaultValue": "true",
+    "reactive": true,
+    "description": "Allows content to extend beyond the element's width and height. Inverse of clipping.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
+    },
+    "possibleValues": [
+      "true",
+      "false"
+    ],
+    "invalidValues": [
+      {
+        "value": "yes",
+        "reason": "only 'true' or 'false' accepted"
+      },
+      {
+        "value": "visible",
+        "reason": "CSS overflow value not accepted"
+      },
+      {
+        "value": "hidden",
+        "reason": "CSS overflow value not accepted"
+      }
+    ]
+  },
+  "src": {
+    "attrType": "regular",
+    "types": [
+      "string",
+      {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "svg",
+              "compressed"
+            ]
+          }
+        }
+      }
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "The image source URL. Can be a string path or an object {src, type} where type is 'regular', 'svg', or 'compressed' (for cases where file type can't be derived from the file name).",
+    "usedIn": [
+      "Element"
+    ],
+    "docRef": [
+      "essentials/displaying_images.md"
+    ],
+    "noValidateReason": "The string scalar form is documented in displaying_images.md. The object form {src, type} was added in v1.44.0 (changelog confirmed) and is implemented in element.js, but is not yet reflected in the markdown docs. Both forms are fully validated \u2014 this field is retained for transparency.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a non-empty image path or URL."
+      },
+      "object": {
+        "src": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]+$",
+          "message": "'src' object must have a non-empty 'src' property."
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "regular",
+            "svg",
+            "compressed"
+          ]
+        }
+      }
+    },
+    "possibleValues": [
+      "assets/logo.png",
+      "https://example.com/img.jpg",
+      "assets/icon.svg",
+      "{src: 'assets/icon.svg', type: 'svg'}",
+      "{src: 'img.compressed', type: 'compressed'}"
+    ],
+    "invalidValues": [
+      {
+        "value": "",
+        "reason": "empty string is not a valid src"
+      },
+      {
+        "value": "{type: 'png'}",
+        "reason": "type must be 'regular', 'svg', or 'compressed'"
+      }
+    ]
+  },
+  "fit": {
+    "attrType": "regular",
+    "types": [
+      "enum",
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "values": [
+      "cover",
+      "contain"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Controls how an image is resized to fit the Element's dimensions. Accepts 'cover' or 'contain', or an object {type, position} where position is either a number 0\u20131 (applies to both axes) or {x?, y?} with values 0\u20131 to control the clip anchor point independently.",
+    "usedIn": [
+      "Element"
+    ],
+    "docRef": [],
+    "noValidateReason": "Added in v1.4.0 (changelog confirmed), implemented in element.js, heavily used in the example app (Resize.js). Not yet in the markdown docs. The scalar enum form is strictly validated. The object form's 'position' key accepts either a plain number (sets both axes) or {x?, y?} \u2014 a nested shape that cannot be expressed in the current flat descriptor schema, so a permissive regex is used for position.",
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "cover",
+          "contain"
+        ]
+      },
+      "object": {
+        "type": {
+          "type": "enum",
+          "values": [
+            "cover",
+            "contain"
+          ]
+        },
+        "position": {
+          "type": "regex",
+          "pattern": "^[\\s\\S]*$",
+          "message": "Expected a position object with optional x and/or y keys (0\u20131), e.g. {x: 0.5} or {y: 1}."
+        }
+      }
+    },
+    "possibleValues": [
+      "cover",
+      "contain",
+      "{type: 'cover', position: {y: 0}}",
+      "{type: 'cover', position: {x: 0.5}}",
+      "{type: 'cover', position: {y: 0.5, x: 0.5}}",
+      "{type: 'contain', position: {x: 0}}",
+      "{type: 'cover', position: 0.5}"
+    ],
+    "invalidValues": [
+      {
+        "value": "fill",
+        "reason": "not a valid fit value"
+      },
+      {
+        "value": "stretch",
+        "reason": "not a valid fit value"
+      },
+      {
+        "value": "none",
+        "reason": "not a valid fit value"
+      }
+    ]
+  },
+  "rtt": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "true",
+      "false"
+    ],
+    "defaultValue": "false",
+    "reactive": true,
+    "description": "Enables render-to-texture mode, rendering the element and its children to an off-screen texture.",
+    "usedIn": [
+      "Element"
+    ],
+    "docRef": [],
+    "noValidateReason": "Added in v0.9.9 (changelog confirmed), implemented in element.js. Not yet in the markdown docs. The source setter checks strict boolean equality (v === true), so this attribute is primarily intended for reactive bindings (:rtt=\"$bool\"). The 'true'/'false' string enum covers the static template use case.",
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
+    },
+    "possibleValues": [
+      "true",
+      "false"
+    ],
+    "invalidValues": [
+      {
+        "value": "yes",
+        "reason": "only 'true' or 'false' accepted"
+      },
+      {
+        "value": "1",
+        "reason": "numeric string not accepted"
+      }
+    ]
+  },
+  "border": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "object"
+    ],
+    "defaultValue": "undefined",
+    "reactive": true,
+    "description": "Apply an inner border to an Element. Accepts a width number or an object with keys: w, top, right, bottom, left, color.",
+    "usedIn": [
+      "Element",
+      "Layout"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric"
+      },
+      "object": {
+        "w": {
+          "type": "numeric"
+        },
+        "top": {
+          "type": "numeric"
+        },
+        "right": {
+          "type": "numeric"
+        },
+        "bottom": {
+          "type": "numeric"
+        },
+        "left": {
+          "type": "numeric"
+        },
+        "color": {}
+      }
+    },
+    "possibleValues": [
+      "20",
+      "{w: 4, color: '#fff'}",
+      "{top: 2, bottom: 2, color: '#60a5fa'}"
+    ],
+    "invalidValues": [
+      {
+        "value": "solid",
+        "reason": "Must be a number or object, not a bare string."
+      }
+    ]
+  },
+  "rounded": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      "array",
+      "object"
+    ],
+    "defaultValue": "undefined",
+    "reactive": true,
+    "description": "Round the corners of an Element. Accepts a single radius number, an array of four corner radii [top-left, top-right, bottom-right, bottom-left], or a per-corner object.",
+    "usedIn": [
+      "Element",
+      "Layout"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": [
+        {
+          "type": "numeric"
+        },
+        {
+          "type": "regex",
+          "pattern": "^\\[\\s*\\d+(?:\\.\\d+)?(?:\\s*,\\s*\\d+(?:\\.\\d+)?)*\\s*\\]$",
+          "message": "'rounded' must be a number, an array of numbers (e.g. [10,10,0,0]), or an object with corner keys."
+        }
+      ],
+      "object": {
+        "radius": {
+          "type": "numeric"
+        },
+        "top-left": {
+          "type": "numeric"
+        },
+        "top-right": {
+          "type": "numeric"
+        },
+        "bottom-right": {
+          "type": "numeric"
+        },
+        "bottom-left": {
+          "type": "numeric"
+        }
+      }
+    },
+    "possibleValues": [
+      "10",
+      "[10, 10, 0, 0]",
+      "{radius: 10}",
+      "{top-left: 10, top-right: 10, bottom-right: 0, bottom-left: 0}"
+    ],
+    "invalidValues": [
+      {
+        "value": "round",
+        "reason": "Must be a number, array, or object — not a bare string."
+      }
+    ]
+  },
+  "shadow": {
+    "attrType": "regular",
+    "types": [
+      "object"
+    ],
+    "defaultValue": "undefined",
+    "reactive": true,
+    "description": "Apply a box shadow behind an Element. Accepts an object with keys: x, y, blur, spread, color.",
+    "usedIn": [
+      "Element",
+      "Layout"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "object": {
+        "x": {
+          "type": "numeric"
+        },
+        "y": {
+          "type": "numeric"
+        },
+        "blur": {
+          "type": "numeric"
+        },
+        "spread": {
+          "type": "numeric"
+        },
+        "color": {}
+      }
+    },
+    "possibleValues": [
+      "{x: 2, y: 2, blur: 8, color: '#000'}",
+      "{x: 0, y: 4, blur: 12, spread: 2, color: 'rgba(0,0,0,0.5)'}"
+    ],
+    "invalidValues": []
+  },
+  "shader": {
+    "attrType": "regular",
+    "types": [
+      "string",
+      "object"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Apply a custom shader to an Element. Accepts a shader name string or an object with type and props. Mutually exclusive with rounded, border, and shadow.",
+    "usedIn": [
+      "Element",
+      "Layout"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "noValidateReason": "Shader names and props are open-ended \u2014 cannot be statically validated.",
+    "validate": {},
+    "possibleValues": [
+      "'RoundedRectangle'",
+      "{type: 'holePunch', x: 100, y: 200, width: 100, height: 100}"
+    ],
+    "invalidValues": []
+  },
+  "placement": {
+    "attrType": "regular",
+    "types": [
+      "enum",
+      {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "string",
+            "enum": [
+              "left",
+              "center",
+              "right"
+            ]
+          },
+          "y": {
+            "type": "string",
+            "enum": [
+              "top",
+              "middle",
+              "bottom"
+            ]
+          }
+        }
+      }
+    ],
+    "values": [
+      "left",
+      "center",
+      "right",
+      "top",
+      "middle",
+      "bottom"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Predefined placement relative to the parent's dimensions. Accepts 'left', 'center', 'right', 'top', 'middle', 'bottom', or an object {x, y} for combined placement.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "left",
+          "center",
+          "right",
+          "top",
+          "middle",
+          "bottom"
+        ]
+      },
+      "object": {
+        "x": {
+          "type": "enum",
+          "values": [
+            "left",
+            "center",
+            "right"
+          ]
+        },
+        "y": {
+          "type": "enum",
+          "values": [
+            "top",
+            "middle",
+            "bottom"
+          ]
+        }
+      }
+    },
+    "possibleValues": [
+      "left",
+      "center",
+      "right",
+      "top",
+      "middle",
+      "bottom",
+      "{x: 'center', y: 'bottom'}",
+      "{x: 'right', y: 'middle'}"
+    ],
+    "invalidValues": [
+      {
+        "value": "absolute",
+        "reason": "not a valid placement value"
+      },
+      {
+        "value": "flex",
+        "reason": "not a valid placement value"
+      },
+      {
+        "value": "Centre",
+        "reason": "values are case-sensitive"
+      },
+      {
+        "value": "start",
+        "reason": "not a valid placement value"
+      }
+    ]
+  },
+  "inspector-data": {
+    "attrType": "regular",
+    "types": [
+      {
+        "type": "object"
+      }
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Attaches custom metadata to elements for debugging and automated testing, visible in the Lightning inspector. Only processed in dev mode when inspector is enabled.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "essentials/element_attributes.md"
+    ],
+    "noValidateReason": "Keys and values are user-defined debug metadata with no fixed schema. The object validator below has no property rules \u2014 it documents the object form without constraining its contents.",
+    "validate": {
+      "object": {}
+    },
+    "possibleValues": [
+      "{testId: 'my-button'}",
+      "{role: 'navigation', testId: 'nav'}"
+    ]
+  },
+  "content": {
+    "attrType": "regular",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "The text to be displayed. Can be hardcoded text, a dynamic value, or a reactive value.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "noValidateReason": "Any string is valid by design \u2014 empty string, whitespace, unicode, numbers as text. The permissive regex below documents the scalar form without imposing constraints.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a text string."
+      }
+    },
+    "possibleValues": [
+      "Hello world",
+      "Welcome",
+      ""
+    ]
+  },
+  "font": {
+    "attrType": "regular",
+    "types": [
+      "string"
+    ],
+    "defaultValue": "sans-serif",
+    "reactive": true,
+    "description": "The font family to use for text rendering.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "noValidateReason": "Font names are registered at launch time in settings.fonts and are project-specific. The plugin has no knowledge of which fonts a given app has registered. The regex below only enforces non-empty; it cannot validate against the actual registered font list.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a non-empty font family name."
+      }
+    },
+    "possibleValues": [
+      "sans-serif",
+      "lato",
+      "raleway",
+      "ComicSans"
+    ]
+  },
+  "size": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 32,
+    "reactive": true,
+    "description": "The font size of a Text element in pixels.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "positive"
+      }
+    },
+    "possibleValues": [
+      "12",
+      "16",
+      "32",
+      "48",
+      "64"
+    ],
+    "invalidValues": [
+      {
+        "value": "0",
+        "reason": "zero makes text invisible; must be greater than 0"
+      },
+      {
+        "value": "-12",
+        "reason": "negative font size not accepted"
+      },
+      {
+        "value": "large",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "1em",
+        "reason": "em units not accepted"
+      }
+    ]
+  },
+  "letterspacing": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "Letter spacing in pixels. Allows any number greater than or equal to zero.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "numeric"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "1",
+      "5",
+      "10",
+      "0.5"
+    ],
+    "invalidValues": [
+      {
+        "value": "tight",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "normal",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "align": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "left",
+      "right",
+      "center"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "The alignment of the text. Centering and right alignment require maxwidth to be set.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "left",
+          "right",
+          "center"
+        ]
+      }
+    },
+    "possibleValues": [
+      "left",
+      "right",
+      "center"
+    ],
+    "invalidValues": [
+      {
+        "value": "justify",
+        "reason": "not a valid align value"
+      },
+      {
+        "value": "start",
+        "reason": "not a valid align value"
+      },
+      {
+        "value": "end",
+        "reason": "not a valid align value"
+      },
+      {
+        "value": "Centre",
+        "reason": "values are case-sensitive"
+      }
+    ]
+  },
+  "maxwidth": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "The maximum length of a line of text in pixels. Words surpassing this length will be wrapped onto the next line.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative",
+        "integer": true
+      }
+    },
+    "possibleValues": [
+      "0",
+      "400",
+      "800",
+      "1920"
+    ],
+    "invalidValues": [
+      {
+        "value": "-100",
+        "reason": "negative value not accepted"
+      },
+      {
+        "value": "100%",
+        "reason": "percentage not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "maxlines": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Maximum number of lines that will be displayed.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative",
+        "integer": true
+      }
+    },
+    "possibleValues": [
+      "0",
+      "1",
+      "3",
+      "10"
+    ],
+    "invalidValues": [
+      {
+        "value": "-1",
+        "reason": "negative value not accepted"
+      },
+      {
+        "value": "1.5",
+        "reason": "line count must be a whole number"
+      },
+      {
+        "value": "unlimited",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "maxheight": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Maximum height of a text block in pixels. Lines exceeding this height will not be displayed.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative",
+        "integer": true
+      }
+    },
+    "possibleValues": [
+      "0",
+      "100",
+      "400",
+      "1080"
+    ],
+    "invalidValues": [
+      {
+        "value": "-100",
+        "reason": "negative value not accepted"
+      },
+      {
+        "value": "auto",
+        "reason": "non-numeric string"
+      }
+    ]
+  },
+  "lineheight": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "The spacing between lines in pixels.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "20",
+      "40",
+      "1.5"
+    ],
+    "invalidValues": [
+      {
+        "value": "-5",
+        "reason": "negative line height not accepted"
+      },
+      {
+        "value": "normal",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "1.5em",
+        "reason": "em units not accepted"
+      }
+    ]
+  },
+  "contain": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "none",
+      "width",
+      "both",
+      "height"
+    ],
+    "defaultValue": "none",
+    "reactive": true,
+    "description": "The strategy for containing text within bounds. Usually set automatically by Blits based on other specified attributes. In v2, \"height\" is also valid (auto-applied when maxheight is set).",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "none",
+          "width",
+          "both",
+          "height"
+        ]
+      }
+    },
+    "possibleValues": [
+      "none",
+      "width",
+      "both",
+      "height"
+    ],
+    "invalidValues": [
+      {
+        "value": "all",
+        "reason": "not a valid contain value"
+      },
+      {
+        "value": "auto",
+        "reason": "not a valid contain value"
+      }
+    ]
+  },
+  "textoverflow": {
+    "attrType": "regular",
+    "types": [
+      "string",
+      "enum"
+    ],
+    "values": [
+      "false"
+    ],
+    "defaultValue": "...",
+    "reactive": true,
+    "description": "The suffix added when text is cropped due to bounds limits. Defaults to '...'. Set to false or empty string for no suffix.",
+    "usedIn": [
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_text.md"
+    ],
+    "noValidateReason": "Any string suffix is valid by design \u2014 there is no wrong suffix value. The special value 'false' disables the suffix entirely. Even empty string is valid. The permissive regex below documents the scalar form without constraining it.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a string suffix or 'false' to disable."
+      }
+    },
+    "possibleValues": [
+      "...",
+      "false",
+      " read more",
+      ""
+    ]
+  },
+  "direction": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "horizontal",
+      "vertical"
+    ],
+    "defaultValue": "horizontal",
+    "reactive": true,
+    "description": "Controls the direction of layout content arrangement.",
+    "usedIn": [
+      "Layout"
+    ],
+    "docRef": [
+      "built-in/layout.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "horizontal",
+          "vertical"
+        ]
+      }
+    },
+    "possibleValues": [
+      "horizontal",
+      "vertical"
+    ],
+    "invalidValues": [
+      {
+        "value": "row",
+        "reason": "CSS flexbox value not accepted; use 'horizontal'"
+      },
+      {
+        "value": "column",
+        "reason": "CSS flexbox value not accepted; use 'vertical'"
+      },
+      {
+        "value": "ltr",
+        "reason": "not a valid direction value"
+      }
+    ]
+  },
+  "gap": {
+    "attrType": "regular",
+    "types": [
+      "number"
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "Controls how much space in pixels is added between each child Element or Component in a Layout.",
+    "usedIn": [
+      "Layout"
+    ],
+    "docRef": [
+      "built-in/layout.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative"
+      }
+    },
+    "possibleValues": [
+      "0",
+      "10",
+      "20",
+      "50"
+    ],
+    "invalidValues": [
+      {
+        "value": "-10",
+        "reason": "negative gap not accepted"
+      },
+      {
+        "value": "medium",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "10px",
+        "reason": "px suffix not accepted"
+      }
+    ]
+  },
+  "align-items": {
+    "attrType": "regular",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "start",
+      "center",
+      "end"
+    ],
+    "defaultValue": "start",
+    "reactive": true,
+    "description": "Specifies how to align children on the opposite axis of the Layout direction.",
+    "usedIn": [
+      "Layout"
+    ],
+    "docRef": [
+      "built-in/layout.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "start",
+          "center",
+          "end"
+        ]
+      }
+    },
+    "possibleValues": [
+      "start",
+      "center",
+      "end"
+    ],
+    "invalidValues": [
+      {
+        "value": "flex-start",
+        "reason": "CSS flexbox value not accepted; use 'start'"
+      },
+      {
+        "value": "flex-end",
+        "reason": "CSS flexbox value not accepted; use 'end'"
+      },
+      {
+        "value": "stretch",
+        "reason": "not a valid align-items value"
+      },
+      {
+        "value": "baseline",
+        "reason": "not a valid align-items value"
+      }
+    ]
+  },
+  "padding": {
+    "attrType": "regular",
+    "types": [
+      "number",
+      {
+        "type": "object",
+        "properties": {
+          "top": {
+            "type": "number"
+          },
+          "bottom": {
+            "type": "number"
+          },
+          "left": {
+            "type": "number"
+          },
+          "right": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        }
+      }
+    ],
+    "defaultValue": 0,
+    "reactive": true,
+    "description": "Adds spacing between the content and the edges of the Layout. Accepts a number for uniform padding or an object with top/bottom/left/right/x/y keys.",
+    "usedIn": [
+      "Layout"
+    ],
+    "docRef": [
+      "built-in/layout.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "nonNegative"
+      },
+      "object": {
+        "top": {
+          "type": "nonNegative"
+        },
+        "bottom": {
+          "type": "nonNegative"
+        },
+        "left": {
+          "type": "nonNegative"
+        },
+        "right": {
+          "type": "nonNegative"
+        },
+        "x": {
+          "type": "nonNegative"
+        },
+        "y": {
+          "type": "nonNegative"
+        }
+      }
+    },
+    "possibleValues": [
+      "0",
+      "10",
+      "20",
+      "{top: 10, bottom: 20}",
+      "{x: 20, top: 30, bottom: 10}",
+      "{left: 5, right: 5}"
+    ],
+    "invalidValues": [
+      {
+        "value": "-5",
+        "reason": "negative padding not accepted"
+      },
+      {
+        "value": "medium",
+        "reason": "non-numeric string"
+      },
+      {
+        "value": "10px",
+        "reason": "px suffix not accepted"
+      }
+    ]
+  },
+  "is": {
+    "attrType": "regular",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Dynamically instantiates a Component based on a state variable or prop value.",
+    "usedIn": [
+      "Component"
+    ],
+    "docRef": [
+      "built-in/directives.md"
+    ],
+    "noValidateReason": "The referenced component is resolved at runtime from state or props. Which components are valid depends on what the app has imported and registered \u2014 a cross-file concern not resolvable in a per-file rule. The permissive regex below documents the scalar form.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a component reference (e.g., $myComponent)."
+      }
+    },
+    "possibleValues": [
+      "$myComponent",
+      "$activeView"
+    ]
+  },
+  "ref": {
+    "attrType": "regular",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "A reference identifier for the Element or Component, accessible via this.select() in the component logic.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "built-in/directives.md",
+      "built-in/for-loop.md"
+    ],
+    "noValidateReason": "Any non-empty identifier is valid. Cross-referencing via this.$select() is a runtime concern \u2014 the plugin cannot know what refs are used downstream. The regex below enforces non-empty only.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a non-empty ref identifier."
+      }
+    },
+    "possibleValues": [
+      "myButton",
+      "heroImage",
+      "titleText"
+    ]
+  },
+  "for": {
+    "attrType": "directive",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Directive for repeating multiple instances of an Element or Component. Uses 'item in $array' or '(item, index) in $array' syntax.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "built-in/for-loop.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^(\\(\\s*\\w+\\s*,\\s*\\w+\\s*\\)|\\w+)\\s+in\\s+\\$\\w+",
+        "message": "':for' value must follow 'item in $array' or '(item, index) in $array' syntax."
+      }
+    },
+    "possibleValues": [
+      "item in $list",
+      "(item, index) in $items"
+    ],
+    "invalidValues": [
+      {
+        "value": "item of $list",
+        "reason": "'of' is not valid; use 'in'"
+      },
+      {
+        "value": "$list",
+        "reason": "missing 'item in' prefix"
+      },
+      {
+        "value": "item in list",
+        "reason": "array variable must be prefixed with $"
+      }
+    ]
+  },
+  "$shallow": {
+    "attrType": "directive",
+    "types": [
+      "string"
+    ],
+    "defaultValue": "true",
+    "reactive": false,
+    "description": "Performance modifier for ':for' loops. Controls whether child components in the loop have access to the outer scope. When omitted or 'true', the loop is shallow (faster — each item only sees its own scope). Set to 'false' to allow items to access outer scope variables.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": ["true", "false"]
+      }
+    },
+    "possibleValues": ["false"],
+    "invalidValues": []
+  },
+  "key": {
+    "attrType": "regular",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "A unique identifier for items in a for-loop, enabling efficient reuse of Element/Component instances when the array changes. Should reference a unique field (e.g., key=\"$item.id\").",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "built-in/for-loop.md"
+    ],
+    "noValidateReason": "Valid expressions depend on the shape of the iterated array items \u2014 a runtime data concern. The plugin cannot validate the key expression against the actual item type without cross-referencing state. The permissive regex below documents the scalar form.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a unique identifier expression (e.g., $item.id)."
+      }
+    },
+    "possibleValues": [
+      "$item.id",
+      "$item.name",
+      "$item.hash"
+    ]
+  },
+  "range": {
+    "attrType": "regular",
+    "types": [
+      {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "number"
+          },
+          "to": {
+            "type": "number"
+          }
+        }
+      }
+    ],
+    "defaultValue": null,
+    "reactive": true,
+    "description": "Limits a for-loop to render only a subset of items. Accepts an object {from, to} where 'from' is inclusive and 'to' is exclusive. Items outside the range are destroyed and recreated when they re-enter.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "built-in/for-loop.md"
+    ],
+    "validate": {
+      "object": {
+        "from": {
+          "type": "numeric",
+          "integer": true
+        },
+        "to": {
+          "type": "numeric",
+          "integer": true
+        }
+      }
+    },
+    "possibleValues": [
+      "{from: 0, to: 10}",
+      "{from: 5, to: 20}"
+    ],
+    "invalidValues": [
+      {
+        "value": "{from: 1.5, to: 10}",
+        "reason": "'from' must be an integer"
+      },
+      {
+        "value": "{from: 0, to: 1.5}",
+        "reason": "'to' must be an integer"
+      }
+    ]
+  },
+  "show": {
+    "attrType": "directive",
+    "types": [
+      "enum"
+    ],
+    "values": [
+      "true",
+      "false"
+    ],
+    "defaultValue": "true",
+    "reactive": true,
+    "description": "Conditionally shows or hides the Element/Component by setting alpha to 0 or restoring it.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [
+      "built-in/directives.md"
+    ],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
+    },
+    "possibleValues": [
+      "true",
+      "false"
+    ],
+    "invalidValues": [
+      {
+        "value": "yes",
+        "reason": "only 'true' or 'false' accepted"
+      },
+      {
+        "value": "1",
+        "reason": "numeric string not accepted"
+      },
+      {
+        "value": "hidden",
+        "reason": "not a valid show value"
+      },
+      {
+        "value": "visible",
+        "reason": "not a valid show value"
+      }
+    ]
+  },
+  "slot": {
+    "attrType": "directive",
+    "types": [
+      "string"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Routes an Element or Component to a named slot in the parent component. The value must match the `ref` attribute of the target `<Slot ref=\"...\">` definition in the parent's template.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [],
+    "noValidateReason": "The slot attribute accepts any non-empty string that matches the ref attribute of a <Slot> definition in the parent component. The plugin cannot statically verify that the named slot exists in the parent \u2014 that is a runtime concern.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]+$",
+        "message": "Expected a non-empty slot name matching a <Slot ref=\"...\"> definition in the parent component."
+      }
+    },
+    "possibleValues": [
+      "first",
+      "second",
+      "header",
+      "footer",
+      "content"
+    ]
+  },
+  "@loaded": {
+    "attrType": "event",
+    "types": [
+      "string",
+      "function"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Fires when an image or text element loads, providing its dimensions ({w, h}). Accepts a function reference (e.g., $handlerName) or an inline arrow function.",
+    "usedIn": [
+      "Element",
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_images.md",
+      "essentials/displaying_text.md"
+    ],
+    "noValidateReason": "Accepts a function reference ($handlerName) or inline arrow function. Whether the referenced method exists is a component-logic concern, not an attribute-value concern. The permissive regex documents the scalar form.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a function reference (e.g., $handlerName) or inline arrow function."
+      }
+    },
+    "possibleValues": [
+      "$onLoaded",
+      "$handleImageLoad"
+    ]
+  },
+  "@error": {
+    "attrType": "event",
+    "types": [
+      "string",
+      "function"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Fires when an image fails to load, passing an error message. Accepts a function reference (e.g., $handlerName) or an inline arrow function.",
+    "usedIn": [
+      "Element",
+      "Text"
+    ],
+    "docRef": [
+      "essentials/displaying_images.md"
+    ],
+    "noValidateReason": "Accepts a function reference ($handlerName) or inline arrow function. Whether the referenced method exists is a component-logic concern, not an attribute-value concern. The permissive regex documents the scalar form.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a function reference (e.g., $handlerName) or inline arrow function."
+      }
+    },
+    "possibleValues": [
+      "$onError",
+      "$handleImageError"
+    ]
+  },
+  "@updated": {
+    "attrType": "event",
+    "types": [
+      "string",
+      "function"
+    ],
+    "defaultValue": null,
+    "reactive": false,
+    "description": "Fires after each Layout children update, providing current dimensions ({w, h}). Can fire multiple times.",
+    "usedIn": [
+      "Layout"
+    ],
+    "docRef": [
+      "built-in/layout.md"
+    ],
+    "noValidateReason": "Accepts a function reference ($handlerName) or inline arrow function. Whether the referenced method exists is a component-logic concern, not an attribute-value concern. The permissive regex documents the scalar form.",
+    "validate": {
+      "scalar": {
+        "type": "regex",
+        "pattern": "^[\\s\\S]*$",
+        "message": "Expected a function reference (e.g., $handlerName) or inline arrow function."
+      }
+    },
+    "possibleValues": [
+      "$onLayoutUpdate",
+      "$handleUpdate"
+    ]
+  }
+}

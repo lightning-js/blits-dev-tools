@@ -17,7 +17,40 @@
 
 const parseTemplate = require('../parser')
 const { getTemplateInfo, indexToLoc } = require('../utils')
-const templateAttrs = require('../../data/template-attributes.json')
+const { getAttributes } = require('../attributes')
+
+// Cache validator maps per JSON object reference (one entry per Blits version)
+const _validatorCache = new Map()
+
+function getValidatorMaps(context) {
+  const attrs = getAttributes(context)
+  if (_validatorCache.has(attrs)) return _validatorCache.get(attrs)
+
+  const scalarValidators = new Map()
+  const objectValidators = new Map()
+  const objectKeyAllowed = new Map()
+  const usedInMap = new Map()
+
+  for (const [name, def] of Object.entries(attrs)) {
+    usedInMap.set(name, new Set(def.usedIn))
+    if (!def.validate) continue
+    if (def.validate.scalar) {
+      scalarValidators.set(name, buildValidator(def.validate.scalar))
+    }
+    if (def.validate.object && Object.keys(def.validate.object).length > 0) {
+      const propValidators = {}
+      for (const [key, desc] of Object.entries(def.validate.object)) {
+        propValidators[key] = buildValidator(desc)
+      }
+      objectValidators.set(name, propValidators)
+      objectKeyAllowed.set(name, Object.keys(propValidators).join(', '))
+    }
+  }
+
+  const maps = { scalarValidators, objectValidators, objectKeyAllowed, usedInMap }
+  _validatorCache.set(attrs, maps)
+  return maps
+}
 
 const NUMERIC_RE = /^-?\d+(\.\d+)?$/
 const PERCENT_RE = /^-?\d+(\.\d+)?%$/
@@ -128,27 +161,6 @@ function parseObjectValue(str) {
   return pairs
 }
 
-const scalarValidators = new Map()
-const objectValidators = new Map()
-const objectKeyAllowed = new Map()
-const usedInMap = new Map()
-
-for (const [name, def] of Object.entries(templateAttrs)) {
-  usedInMap.set(name, new Set(def.usedIn))
-  if (!def.validate) continue
-  if (def.validate.scalar) {
-    scalarValidators.set(name, buildValidator(def.validate.scalar))
-  }
-  if (def.validate.object && Object.keys(def.validate.object).length > 0) {
-    const propValidators = {}
-    for (const [key, desc] of Object.entries(def.validate.object)) {
-      propValidators[key] = buildValidator(desc)
-    }
-    objectValidators.set(name, propValidators)
-    objectKeyAllowed.set(name, Object.keys(propValidators).join(', '))
-  }
-}
-
 const BUILT_IN_TAGS = new Set(['Element', 'Text', 'Layout', 'RouterView', 'Component'])
 
 module.exports = {
@@ -172,6 +184,8 @@ module.exports = {
   },
 
   create(context) {
+    const { scalarValidators, objectValidators, objectKeyAllowed, usedInMap } = getValidatorMaps(context)
+
     return {
       CallExpression(node) {
         const info = getTemplateInfo(node)

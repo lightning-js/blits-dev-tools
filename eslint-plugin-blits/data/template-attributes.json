@@ -89,6 +89,7 @@
     "usedIn": [
       "Element",
       "Text",
+      "Layout",
       "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
@@ -114,6 +115,7 @@
     "usedIn": [
       "Element",
       "Text",
+      "Layout",
       "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
@@ -163,6 +165,7 @@
     "usedIn": [
       "Element",
       "Text",
+      "Layout",
       "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
@@ -187,6 +190,7 @@
     "usedIn": [
       "Element",
       "Text",
+      "Layout",
       "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
@@ -326,17 +330,16 @@
     ],
     "docRef": ["essentials/element_attributes.md"],
     "validate": {
-      "scalar": { "type": "positive" },
+      "scalar": { "type": "numeric" },
       "object": {
-        "x": { "type": "positive" },
-        "y": { "type": "positive" }
+        "x": { "type": "numeric" },
+        "y": { "type": "numeric" }
       }
     },
     "possibleValues": ["1", "0.5", "2", "2.3", "0.1", "{x: 1, y: 2}", "{x: 0.5, y: 1}"],
     "invalidValues": [
       { "value": "large", "reason": "non-numeric string" },
-      { "value": "2x", "reason": "x suffix not accepted" },
-      { "value": "0", "reason": "docs state value should be higher than 0" }
+      { "value": "2x", "reason": "x suffix not accepted" }
     ]
   },
   "mount": {
@@ -366,16 +369,14 @@
     ],
     "docRef": ["essentials/element_attributes.md"],
     "validate": {
-      "scalar": { "type": "range", "min": 0, "max": 1 },
+      "scalar": { "type": "numeric" },
       "object": {
-        "x": { "type": "range", "min": 0, "max": 1 },
-        "y": { "type": "range", "min": 0, "max": 1 }
+        "x": { "type": "numeric" },
+        "y": { "type": "numeric" }
       }
     },
     "possibleValues": ["0", "0.5", "1", "0.25", "{x: 0, y: 0}", "{x: 0.5, y: 0.8}", "{y: 1}"],
     "invalidValues": [
-      { "value": "1.5", "reason": "exceeds maximum of 1" },
-      { "value": "-0.1", "reason": "below minimum of 0" },
       { "value": "center", "reason": "non-numeric string" },
       { "value": "top-left", "reason": "non-numeric string" }
     ]
@@ -435,6 +436,7 @@
     "usedIn": [
       "Element",
       "Text",
+      "Layout",
       "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
@@ -462,7 +464,9 @@
     "description": "Allows content to extend beyond the element's width and height. Inverse of clipping.",
     "usedIn": [
       "Element",
-      "Text"
+      "Text",
+      "Layout",
+      "RouterView"
     ],
     "docRef": ["essentials/element_attributes.md"],
     "validate": {
@@ -766,11 +770,10 @@
     ],
     "docRef": ["essentials/displaying_text.md"],
     "validate": {
-      "scalar": { "type": "nonNegative" }
+      "scalar": { "type": "numeric" }
     },
     "possibleValues": ["0", "1", "5", "10", "0.5"],
     "invalidValues": [
-      { "value": "-1", "reason": "negative letter spacing not accepted" },
       { "value": "tight", "reason": "non-numeric string" },
       { "value": "normal", "reason": "non-numeric string" }
     ]
@@ -1160,6 +1163,31 @@
       { "value": "$list", "reason": "missing 'item in' prefix" },
       { "value": "item in list", "reason": "array variable must be prefixed with $" }
     ]
+  },
+  "$shallow": {
+    "attrType": "directive",
+    "types": [
+      "string"
+    ],
+    "defaultValue": "true",
+    "reactive": false,
+    "description": "Performance modifier for ':for' loops. Controls whether child components in the loop have access to the outer scope. When omitted or 'true', the loop is shallow (faster — each item only sees its own scope). Set to 'false' to allow items to access outer scope variables.",
+    "usedIn": [
+      "Element",
+      "Text",
+      "Layout",
+      "RouterView",
+      "Component"
+    ],
+    "docRef": [],
+    "validate": {
+      "scalar": {
+        "type": "enum",
+        "values": ["true", "false"]
+      }
+    },
+    "possibleValues": ["false"],
+    "invalidValues": []
   },
   "key": {
     "attrType": "regular",

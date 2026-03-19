@@ -179,11 +179,12 @@ describe('valid-attribute-value: contain', () => {
   })
 
   test('invalid value is reported', () => {
+    const v1 = { settings: { blits: { version: 1 } } }
     tester.run('valid-attribute-value', rule, {
       valid: [],
       invalid: [
         { code: tmpl('<Text contain="auto" />'), errors: [{ messageId: 'enumInvalid' }] },
-        { code: tmpl('<Text contain="height" />'), errors: [{ messageId: 'enumInvalid' }] },
+        { code: tmpl('<Text contain="height" />'), ...v1, errors: [{ messageId: 'enumInvalid' }] },
       ],
     })
   })
@@ -380,13 +381,15 @@ describe('valid-attribute-value: alpha', () => {
 })
 
 describe('valid-attribute-value: mount', () => {
-  test('values in range are accepted', () => {
+  test('numeric values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
         { code: tmpl('<Element mount="0" />') },
         { code: tmpl('<Element mount="1" />') },
         { code: tmpl('<Element mount="0.5" />') },
         { code: tmpl('<Element mount="0.25" />') },
+        { code: tmpl('<Element mount="1.5" />') },
+        { code: tmpl('<Element mount="-0.75" />') },
       ],
       invalid: [],
     })
@@ -413,29 +416,11 @@ describe('valid-attribute-value: mount', () => {
     })
   })
 
-  test('values above 1 are reported', () => {
-    tester.run('valid-attribute-value', rule, {
-      valid: [],
-      invalid: [
-        { code: tmpl('<Element mount="1.5" />'), errors: [{ messageId: 'outOfRange' }] },
-      ],
-    })
-  })
-
-  test('values below 0 are reported', () => {
-    tester.run('valid-attribute-value', rule, {
-      valid: [],
-      invalid: [
-        { code: tmpl('<Element mount="-0.1" />'), errors: [{ messageId: 'outOfRange' }] },
-      ],
-    })
-  })
-
   test('non-numeric values are reported', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [],
       invalid: [
-        { code: tmpl('<Element mount="center" />'), errors: [{ messageId: 'outOfRange' }] },
+        { code: tmpl('<Element mount="center" />'), errors: [{ messageId: 'notNumeric' }] },
       ],
     })
   })
@@ -682,12 +667,10 @@ describe('valid-attribute-value: positive (size)', () => {
   })
 })
 
-describe('valid-attribute-value: nonNegative (letterspacing, gap, padding, maxwidth)', () => {
+describe('valid-attribute-value: nonNegative (gap, padding, maxwidth)', () => {
   test('valid non-negative values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
       valid: [
-        { code: tmpl('<Text letterspacing="0" />') },
-        { code: tmpl('<Text letterspacing="5" />') },
         { code: tmpl('<Layout gap="20" />') },
         { code: tmpl('<Layout padding="10" />') },
         { code: tmpl('<Text maxwidth="800" />') },
@@ -701,7 +684,6 @@ describe('valid-attribute-value: nonNegative (letterspacing, gap, padding, maxwi
     tester.run('valid-attribute-value', rule, {
       valid: [],
       invalid: [
-        { code: tmpl('<Text letterspacing="-1" />'), errors: [{ messageId: 'notNonNegative' }] },
         { code: tmpl('<Layout gap="-10" />'), errors: [{ messageId: 'notNonNegative' }] },
         { code: tmpl('<Text maxwidth="-100" />'), errors: [{ messageId: 'notNonNegative' }] },
       ],
@@ -712,7 +694,6 @@ describe('valid-attribute-value: nonNegative (letterspacing, gap, padding, maxwi
     tester.run('valid-attribute-value', rule, {
       valid: [],
       invalid: [
-        { code: tmpl('<Text letterspacing="tight" />'), errors: [{ messageId: 'notNonNegative' }] },
         { code: tmpl('<Layout gap="medium" />'), errors: [{ messageId: 'notNonNegative' }] },
       ],
     })
@@ -724,6 +705,28 @@ describe('valid-attribute-value: nonNegative (letterspacing, gap, padding, maxwi
       invalid: [
         { code: tmpl('<Text maxwidth="1.5" />'), errors: [{ messageId: 'notInteger' }] },
         { code: tmpl('<Text maxlines="2.5" />'), errors: [{ messageId: 'notInteger' }] },
+      ],
+    })
+  })
+})
+
+describe('valid-attribute-value: letterspacing', () => {
+  test('numeric values are accepted, including negative', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Text letterspacing="0" />') },
+        { code: tmpl('<Text letterspacing="5" />') },
+        { code: tmpl('<Text letterspacing="-1" />') },
+      ],
+      invalid: [],
+    })
+  })
+
+  test('non-numeric values are reported', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [],
+      invalid: [
+        { code: tmpl('<Text letterspacing="tight" />'), errors: [{ messageId: 'notNumeric' }] },
       ],
     })
   })
@@ -774,9 +777,10 @@ describe('valid-attribute-value: object form — mount and pivot', () => {
 
   test('out-of-range property value is reported', () => {
     tester.run('valid-attribute-value', rule, {
-      valid: [],
+      valid: [
+        { code: tmpl('<Element mount="{x: 1.5, y: 0}" />') },
+      ],
       invalid: [
-        { code: tmpl('<Element mount="{x: 1.5, y: 0}" />'), errors: [{ messageId: 'outOfRange' }] },
         { code: tmpl('<Element pivot="{x: 0.5, y: -0.1}" />'), errors: [{ messageId: 'outOfRange' }] },
       ],
     })
@@ -794,13 +798,13 @@ describe('valid-attribute-value: object form — scale', () => {
     })
   })
 
-  test('zero or negative x/y value is reported', () => {
+  test('zero and negative x/y values are accepted', () => {
     tester.run('valid-attribute-value', rule, {
-      valid: [],
-      invalid: [
-        { code: tmpl('<Element scale="{x: 0, y: 1}" />'), errors: [{ messageId: 'notPositive' }] },
-        { code: tmpl('<Element scale="{x: 1, y: -0.5}" />'), errors: [{ messageId: 'notPositive' }] },
+      valid: [
+        { code: tmpl('<Element scale="{x: 0, y: 1}" />') },
+        { code: tmpl('<Element scale="{x: 1, y: -0.5}" />') },
       ],
+      invalid: [],
     })
   })
 })
@@ -985,7 +989,7 @@ describe('valid-attribute-value: object form — unknown keys', () => {
       invalid: [
         {
           code: tmpl('<Element mount="{x: 1.5, z: 0}" />'),
-          errors: [{ messageId: 'outOfRange' }, { messageId: 'unknownObjectKey' }],
+          errors: [{ messageId: 'unknownObjectKey' }],
         },
         {
           code: tmpl('<Element placement="{x: invalid, horizontal: center}" />'),
@@ -1021,6 +1025,71 @@ describe('valid-attribute-value: object form — unknown keys', () => {
         { code: tmpl('<Element fit="{type: cover, position: {x: 0, y: 0}}" />') },
         { code: tmpl('<Element fit="{type: cover, position: {x: 0.5, y: 0.5}}" />') },
         { code: tmpl('<Element fit="{type: contain, position: {y: 1}}" />') },
+      ],
+      invalid: [],
+    })
+  })
+})
+
+describe('valid-attribute-value: Blits v2 version-aware validation', () => {
+  const v2 = { settings: { blits: { version: 2 } } }
+  const v1 = { settings: { blits: { version: 1 } } }
+
+  test('contain accepts "height" on v2 but not v1', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Text contain="height" />'), ...v2 },
+      ],
+      invalid: [
+        { code: tmpl('<Text contain="height" />'), ...v1, errors: [{ messageId: 'enumInvalid' }] },
+      ],
+    })
+  })
+
+  test('border validates scalar and object form on v2', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element border="20" />'), ...v2 },
+        { code: tmpl('<Element border="{w: 4, color: blue}" />'), ...v2 },
+        { code: tmpl('<Element border="{top: 2, bottom: 2}" />'), ...v2 },
+      ],
+      invalid: [
+        { code: tmpl('<Element border="{unknownKey: 10}" />'), ...v2, errors: [{ messageId: 'unknownObjectKey' }] },
+        { code: tmpl('<Element border="{w: notANumber}" />'), ...v2, errors: [{ messageId: 'notNumeric' }] },
+      ],
+    })
+  })
+
+  test('rounded validates scalar and object form on v2', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element rounded="10" />'), ...v2 },
+        { code: tmpl('<Element rounded="{radius: 10}" />'), ...v2 },
+        { code: tmpl('<Element rounded="{top-left: 5, bottom-right: 5}" />'), ...v2 },
+      ],
+      invalid: [
+        { code: tmpl('<Element rounded="{unknownKey: 5}" />'), ...v2, errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('shadow validates object form on v2', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element shadow="{blur: 10}" />'), ...v2 },
+        { code: tmpl('<Element shadow="{x: 2, y: 2, blur: 8}" />'), ...v2 },
+      ],
+      invalid: [
+        { code: tmpl('<Element shadow="{unknownKey: 10}" />'), ...v2, errors: [{ messageId: 'unknownObjectKey' }] },
+      ],
+    })
+  })
+
+  test('shader is not validated (open-ended)', () => {
+    tester.run('valid-attribute-value', rule, {
+      valid: [
+        { code: tmpl('<Element shader="rhombus" />'), ...v2 },
+        { code: tmpl('<Element shader="{type: holePunch, x: 100}" />'), ...v2 },
       ],
       invalid: [],
     })

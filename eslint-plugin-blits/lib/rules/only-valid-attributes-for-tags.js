@@ -17,11 +17,18 @@
 
 const parseTemplate = require('../parser')
 const { getTemplateInfo, indexToLoc } = require('../utils')
-const templateAttrs = require('../../data/template-attributes.json')
+const { getAttributes } = require('../attributes')
 
-const attrTagMap = new Map(
-  Object.entries(templateAttrs).map(([name, def]) => [name, new Set(def.usedIn)])
-)
+// Cache attrTagMap per JSON object reference (one entry per Blits version)
+const _attrTagMapCache = new Map()
+
+function getAttrTagMap(context) {
+  const attrs = getAttributes(context)
+  if (_attrTagMapCache.has(attrs)) return _attrTagMapCache.get(attrs)
+  const map = new Map(Object.entries(attrs).map(([name, def]) => [name, new Set(def.usedIn)]))
+  _attrTagMapCache.set(attrs, map)
+  return map
+}
 
 const BUILT_IN_TAGS = new Set(['Element', 'Text', 'Layout', 'RouterView'])
 
@@ -38,6 +45,8 @@ module.exports = {
   },
 
   create(context) {
+    const attrTagMap = getAttrTagMap(context)
+
     return {
       CallExpression(node) {
         const info = getTemplateInfo(node)

@@ -165,7 +165,7 @@ describe('valid-template-syntax: attribute errors', () => {
       valid: [],
       invalid: [
         {
-          code: `Blits.Component('Foo', { template: '<Element $invalid="x" />' })`,
+          code: `Blits.Component('Foo', { template: '<Element !invalid="x" />' })`,
           errors: [
             {
               message:

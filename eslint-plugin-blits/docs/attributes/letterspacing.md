@@ -16,7 +16,7 @@ Letter spacing in pixels. Allows any number greater than or equal to zero.
 
 ## Accepted values
 
-**Number** (must be 0 or higher). Decimals are accepted.
+**Number**, including negative values. Decimals are accepted.
 
 ---
 
@@ -33,7 +33,6 @@ Letter spacing in pixels. Allows any number greater than or equal to zero.
 <Text :letterspacing="$dynamicSpacing" />
 
 <!-- invalid usage -->
-<Text letterspacing="-1" /> <!-- negative letter spacing not accepted -->
 <Text letterspacing="tight" /> <!-- non-numeric string -->
 <Text letterspacing="normal" /> <!-- non-numeric string -->
 ```

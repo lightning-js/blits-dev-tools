@@ -19,7 +19,7 @@ Sets the mount point of the Element. Accepts a single number or an object `{x, y
 
 ## Accepted values
 
-**Number** (between 0 and 1 inclusive) or an **object literal** `{x, y}` with numeric values between 0 and 1 inclusive.
+**Number** or an **object literal** `{x, y}` with numeric values. The conventional range is 0 to 1 (where 0 is the start edge and 1 is the end edge), but values outside that range are accepted.
 
 ---
 
@@ -40,8 +40,6 @@ Sets the mount point of the Element. Accepts a single number or an object `{x, y
 <Element :mount="$activeMount" />
 
 <!-- invalid usage -->
-<Element mount="1.5" /> <!-- restricted to 0-1 range -->
-<Element mount="-0.1" /> <!-- restricted to 0-1 range -->
 <Element mount="center" />
 ```
 

@@ -18,7 +18,7 @@
 const PATTERNS = {
   TAG_START: /^<\/?([a-zA-Z0-9_\-.]+)\s*/,
   TAG_END: /^\s*(\/?>)/,
-  ATTR_NAME: /^([A-Za-z0-9:.\-_@]+)/,
+  ATTR_NAME: /^([A-Za-z0-9:.\-_@$]+)/,
   ATTR_EQUALS: /^\s*=/,
   ATTR_QUOTE: /^\s*(["'])/,
   EMPTY_TAG_START: /^<>/,

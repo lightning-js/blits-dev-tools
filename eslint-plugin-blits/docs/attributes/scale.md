@@ -20,7 +20,7 @@ Scales the element. Accepts a single number for uniform scaling or an object `{x
 
 ## Accepted values
 
-**Number** (must be > 0 in the current ESLint validation schema) or an **object literal** `{x, y}` with numeric values > 0.
+**Number** or an **object literal** `{x, y}` with numeric values. The docs recommend values above 0, but Blits also accepts zero and negative values.
 
 ---
 
@@ -40,7 +40,6 @@ Scales the element. Accepts a single number for uniform scaling or an object `{x
 <Element :scale="$activeScale" />
 
 <!-- invalid usage -->
-<Element scale="0" /> <!-- must be > 0 (e.g. 0.001) -->
 <Element scale="large" /> <!-- non-numeric string -->
 <Element scale="2x" /> <!-- suffix not accepted -->
 ```

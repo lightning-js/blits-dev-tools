@@ -2,7 +2,9 @@
 
 Applies one or more shader effects using the `DynamicShader`. Accepts an array of objects, each with a type and optional props.
 
-**Attribute** · Reactive
+**Attribute** · Reactive · **Blits version:** v1 only
+
+> **Removed in Blits v2.** The `effects` attribute is not available in Blits v2. Use the `shader`, `border`, `rounded`, or `shadow` attributes instead.
 
 ---
 
