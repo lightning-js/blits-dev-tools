@@ -504,7 +504,7 @@ function parseTemplate(template = '') {
         return processError({
           type: 'InvalidAttribute',
           message:
-            'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @',
+            'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @ $',
           ranges: [{ start: startPos, end: endPos }],
         })
       }

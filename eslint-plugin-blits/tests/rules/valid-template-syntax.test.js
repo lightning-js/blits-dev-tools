@@ -169,7 +169,7 @@ describe('valid-template-syntax: attribute errors', () => {
           errors: [
             {
               message:
-                'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @',
+                'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @ $',
             },
           ],
         },
