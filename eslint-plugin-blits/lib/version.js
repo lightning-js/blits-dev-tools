@@ -18,29 +18,38 @@
 const fs = require('fs')
 const path = require('path')
 
-let _detected = null
+// Cache per directory so multi-project workspaces each get their own detection result
+const _cache = new Map()
 
-function detectVersion() {
-  if (_detected !== null) return _detected
-  try {
-    const pkgPath = path.join(process.cwd(), 'package.json')
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
-    const version =
-      pkg.dependencies?.['@lightningjs/blits'] ||
-      pkg.devDependencies?.['@lightningjs/blits']
-    _detected = version ? parseInt(version.replace(/^[^\d]*/, ''), 10) || 2 : 2
-  } catch {
-    _detected = 2
+function detectVersion(startDir) {
+  if (_cache.has(startDir)) return _cache.get(startDir)
+  let dir = startDir
+  while (true) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
+      const version = pkg.dependencies?.['@lightningjs/blits'] || pkg.devDependencies?.['@lightningjs/blits']
+      const detected = version ? parseInt(version.replace(/^[^\d]*/, ''), 10) || 2 : 2
+      _cache.set(startDir, detected)
+      return detected
+    } catch {
+      // package.json not found or unreadable at this level, go up
+    }
+    const parent = path.dirname(dir)
+    if (parent === dir) break
+    dir = parent
   }
-  return _detected
+  _cache.set(startDir, 2)
+  return 2
 }
 
 function getBlitsVersion(context) {
   const setting = context.settings?.blits?.version
   if (setting === undefined || setting === null || setting === 'detect') {
-    return detectVersion()
+    const filename = context.filename ?? context.getFilename?.() ?? ''
+    const startDir = filename ? path.dirname(filename) : process.cwd()
+    return detectVersion(startDir)
   }
   return parseInt(setting, 10) || 2
 }
 
-module.exports = { getBlitsVersion, _resetDetected: () => (_detected = null) }
+module.exports = { getBlitsVersion, _resetCache: () => _cache.clear() }

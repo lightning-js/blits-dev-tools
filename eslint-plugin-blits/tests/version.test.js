@@ -20,7 +20,7 @@ const assert = require('node:assert/strict')
 const path = require('path')
 const fs = require('fs')
 
-const { getBlitsVersion, _resetDetected } = require('../lib/version')
+const { getBlitsVersion, _resetCache } = require('../lib/version')
 
 function ctx(version) {
   if (version === undefined) return { settings: {} }
@@ -28,7 +28,7 @@ function ctx(version) {
 }
 
 describe('getBlitsVersion', () => {
-  beforeEach(() => _resetDetected())
+  beforeEach(() => _resetCache())
 
   describe('explicit settings', () => {
     test('returns 1 when set to 1', () => {
@@ -73,13 +73,13 @@ describe('getBlitsVersion', () => {
       fs.writeFileSync(path.join(tmpDir, 'package.json'), JSON.stringify(pkg))
       const origCwd = process.cwd()
       process.chdir(tmpDir)
-      _resetDetected()
+      _resetCache()
       try {
         fn()
       } finally {
         process.chdir(origCwd)
         fs.rmSync(tmpDir, { recursive: true })
-        _resetDetected()
+        _resetCache()
       }
     }
 
@@ -122,13 +122,28 @@ describe('getBlitsVersion', () => {
       const tmpDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'blits-test-'))
       const origCwd = process.cwd()
       process.chdir(tmpDir)
-      _resetDetected()
+      _resetCache()
       try {
         assert.equal(getBlitsVersion(ctx(undefined)), 2)
       } finally {
         process.chdir(origCwd)
         fs.rmSync(tmpDir, { recursive: true })
-        _resetDetected()
+        _resetCache()
+      }
+    })
+
+    test('detects version from package.json found by traversing up from the linted file', () => {
+      const tmpDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'blits-test-'))
+      const subDir = path.join(tmpDir, 'src', 'components')
+      fs.mkdirSync(subDir, { recursive: true })
+      fs.writeFileSync(path.join(tmpDir, 'package.json'), JSON.stringify({ dependencies: { '@lightningjs/blits': '^1.0.0' } }))
+      const fakeFile = path.join(subDir, 'MyComponent.js')
+      _resetCache()
+      try {
+        assert.equal(getBlitsVersion({ settings: {}, filename: fakeFile }), 1)
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true })
+        _resetCache()
       }
     })
   })
