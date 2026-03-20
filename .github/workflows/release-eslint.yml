@@ -1,0 +1,42 @@
+name: Release ESLint Plugin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'eslint-plugin-blits/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Install monorepo dependencies
+      run: npm install --workspaces
+
+    - name: Run Tests
+      run: npm run test --workspace=eslint-plugin-blits
+
+    - name: Read package.json
+      run: |
+        plugin_name=$(node -p "require('./eslint-plugin-blits/package.json').name")
+        plugin_version=$(node -p "require('./eslint-plugin-blits/package.json').version")
+        echo "PLUGIN_NAME=$plugin_name" >> $GITHUB_ENV
+        echo "PLUGIN_VERSION=$plugin_version" >> $GITHUB_ENV
+
+    - name: Create GitHub Pre Release
+      run: |
+        gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+        gh release create eslint-v${{ env.PLUGIN_VERSION }} --prerelease -t "eslint-plugin-blits v${{ env.PLUGIN_VERSION }}" -n "Version ${{ env.PLUGIN_VERSION }} of ${{ env.PLUGIN_NAME }}"
