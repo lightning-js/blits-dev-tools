@@ -1,0 +1,33 @@
+{
+  "name": "@lightningjs/prettier-plugin-blits",
+  "version": "0.1.0",
+  "author": "Ugur Aslan <ugur@uguraslan.net>",
+  "license": "Apache-2.0",
+  "description": "Prettier plugin for Blits template formatting",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test 'tests/**/*.test.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightning-js/blits-dev-tools.git",
+  "directory": "prettier-plugin-blits"
+  },
+  "bugs": {
+    "url": "https://github.com/lightning-js/blits-dev-tools/issues"
+  },
+  "homepage": "https://lightningjs.io/",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "prettier", "plugin", "blits", "template", "formatter"
+  ],
+  "category": "Prettier Plugin",
+  "peerDependencies": {
+    "prettier": ">=3.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
+}
