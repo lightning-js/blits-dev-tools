@@ -1,5 +1,14 @@
 # Change Log
 
+## v1.6.0
+
+- Improves event attribute syntax highlighting by tightening the grammar rules
+- Adds Blits v2 support for all IntelliSense template suggestions, including the new attributes introduced in Blits v2
+- Detects the Blits version used in your project so IntelliSense adapts its suggestions automatically
+- Refactors and completely reorganizes the test suite by separating tests into specific categories
+- Adds new tests and improves existing ones for better coverage and regression detection
+- Other minor fixes and improvements
+
 ## v1.5.2
 
 - Adds arrow function support for `@loaded`, `@error`, and `@updated` event attributes
