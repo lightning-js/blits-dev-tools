@@ -6,17 +6,6 @@ Full per-package history: [VS Code Extension](vscode-extension/CHANGELOG.md) · 
 
 ---
 
-## ESLint Plugin — v1.0.0
-
-- Initial release of `@lightningjs/eslint-plugin-blits`
-- `valid-template-syntax` — reports parse errors with line/column positions
-- `require-single-root-element` — errors on templates with more than one root element
-- `only-valid-attributes-for-tags` — errors on unsupported attributes for built-in tags using the Blits attribute schema
-- `valid-attribute-value` — validates static values against the schema (enums, ranges, object-form values, regex patterns)
-- `configs.recommended` — ESLint 9 flat config preset; ESLint 8 supported (rules work, no preset)
-- Blits v2 support — auto-detects version from `package.json`, loads matching attribute schema
-- `docs/attributes/` — reference pages for all 47 Blits template attributes
-
 ## VS Code Extension — v1.5.2
 
 - Adds arrow function support for `@loaded`, `@error`, and `@updated` event attributes
