@@ -1,0 +1,91 @@
+name: Post Test Result
+
+on:
+  workflow_run:
+    workflows: [Run Tests]
+    types: [completed]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Download test artifacts
+        id: download
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.event.workflow_run.id }}
+            })
+            const artifact = artifacts.data.artifacts.find(a => a.name === 'vscode-test-results')
+            if (!artifact) {
+              core.setFailed('No vscode-test-results artifact found')
+              return
+            }
+            const dl = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+              archive_format: 'zip'
+            })
+            require('fs').writeFileSync('vscode-test-results.zip', Buffer.from(dl.data))
+
+      - name: Extract artifacts
+        if: steps.download.outcome == 'success'
+        run: unzip -o vscode-test-results.zip -d vscode-test-results
+
+      - name: Post comment
+        if: steps.download.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+
+            let prNumber = parseInt(fs.readFileSync('vscode-test-results/pr-number.txt', 'utf8').trim())
+            if (!prNumber || isNaN(prNumber)) {
+              const pulls = context.payload.workflow_run.pull_requests
+              if (!pulls.length) { console.warn('No PR found, skipping comment.'); return }
+              prNumber = pulls[0].number
+            }
+
+            const result = fs.readFileSync('vscode-test-results/test-result.txt', 'utf8').trim()
+            const output = fs.readFileSync('vscode-test-results/test-output.txt', 'utf8').trim()
+
+            const passed = result === 'success'
+            const marker = '<!-- vscode-test-result -->'
+
+            let summary = ''
+            if (passed) {
+              const matches = [...output.matchAll(/(\d+) passing/g)]
+              const total = matches.reduce((sum, m) => sum + parseInt(m[1]), 0)
+              summary = total > 0 ? ` ${total} tests passed.` : ''
+            }
+
+            const esc = String.fromCharCode(27)
+            const clean = output.replace(new RegExp(esc + '\\[[0-9;]*m', 'g'), '')
+
+            const filtered = clean
+              .split('\n')
+              .filter(line => line === '' || /^\s/.test(line) || /^[🧪✅❌🎉💥]/.test(line) || /^Error:/.test(line))
+              .join('\n')
+              .replace(/\n{3,}/g, '\n\n')
+              .trim()
+
+            const body = passed
+              ? `${marker}\n✅ **VS Code Extension —${summary}**`
+              : `${marker}\n❌ **VS Code Extension tests failed.**\n\n<details><summary>Test output</summary>\n\n\`\`\`\n${filtered.slice(-3000)}\n\`\`\`\n</details>`
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            })
