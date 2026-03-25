@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Download test artifacts
@@ -67,7 +69,10 @@ jobs:
               summary = total > 0 ? ` ${total} tests passed.` : ''
             }
 
-            const filtered = output
+            const esc = String.fromCharCode(27)
+            const clean = output.replace(new RegExp(esc + '\\[[0-9;]*m', 'g'), '')
+
+            const filtered = clean
               .split('\n')
               .filter(line => line === '' || /^\s/.test(line) || /^[🧪✅❌🎉💥]/.test(line) || /^Error:/.test(line))
               .join('\n')
@@ -78,26 +83,9 @@ jobs:
               ? `${marker}\n✅ **VS Code Extension —${summary}**`
               : `${marker}\n❌ **VS Code Extension tests failed.**\n\n<details><summary>Test output</summary>\n\n\`\`\`\n${filtered.slice(-3000)}\n\`\`\`\n</details>`
 
-            const { data: comments } = await github.rest.issues.listComments({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
+              body,
             })
-
-            const existing = comments.find(c => c.body.includes(marker))
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              })
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body,
-              })
-            }

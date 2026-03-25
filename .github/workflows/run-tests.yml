@@ -28,7 +28,9 @@ jobs:
       - name: Run tests
         id: run_tests
         continue-on-error: true
-        run: xvfb-run -a npm test --workspace=vscode-extension 2>&1 | tee test-output.txt
+        run: |
+          set -o pipefail
+          xvfb-run -a npm test --workspace=vscode-extension 2>&1 | tee test-output.txt
 
       - name: Save result metadata
         run: |
@@ -43,3 +45,7 @@ jobs:
             pr-number.txt
             test-result.txt
             test-output.txt
+
+      - name: Fail if tests failed
+        if: steps.run_tests.outcome == 'failure'
+        run: exit 1
