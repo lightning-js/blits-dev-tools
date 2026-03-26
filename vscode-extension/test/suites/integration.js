@@ -34,6 +34,7 @@ const TEST_FILES = [
   'integration/templates/detection.test.js',
   'integration/core/virtual-files.test.js',
   'unit/workspace-handler.test.js',
+  'unit/template-handler.test.js',
 ]
 
 function run() {

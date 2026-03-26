@@ -8,6 +8,7 @@
 - Refactors and completely reorganizes the test suite by separating tests into specific categories
 - Adds new tests and improves existing ones for better coverage and regression detection
 - Fixes duplicate attribute suggestions for reactive (`:attr`) bindings
+- Fixes attribute suggestions incorrectly offering attributes that are already present in the tag but positioned after the cursor
 - Other minor fixes and improvements
 
 ## v1.5.2

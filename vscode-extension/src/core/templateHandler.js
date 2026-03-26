@@ -166,8 +166,37 @@ const getTagContext = (document, position) => {
     return tagInfo
   }
 
+  // Scan forward from cursor to the end of the tag so that attributes appearing
+  // after the cursor are included in deduplication (not just those before it).
+  let afterCursorText = ''
+  let tagEndFound = false
+  for (let line = currentLine; line < lines.length && !tagEndFound; line++) {
+    const lineText = lines[line]
+    const startChar = line === currentLine ? currentChar : 0
+    const segment = lineText.substring(startChar)
+
+    let inString = false
+    let quoteChar = ''
+    for (let i = 0; i < segment.length; i++) {
+      const ch = segment[i]
+      if (inString) {
+        if (ch === quoteChar) inString = false
+      } else if (ch === '"' || ch === "'") {
+        inString = true
+        quoteChar = ch
+      } else if (ch === '>') {
+        afterCursorText += segment.substring(0, i + 1)
+        tagEndFound = true
+        break
+      }
+    }
+    if (!tagEndFound) {
+      afterCursorText += segment + '\n'
+    }
+  }
+
   // Parse the tag content
-  const result = parseTagContent(tagText)
+  const result = parseTagContent(tagText + afterCursorText)
   if (result) {
     return {
       ...result,

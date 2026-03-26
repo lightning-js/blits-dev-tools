@@ -39,7 +39,7 @@ suite('Completion Provider Tests', () => {
 
     const completions = await getCompletions(jsDocument.uri, position)
 
-    assertHasCompletionsExact(completions, ['color', 'alpha', 'mount'])
+    assertHasCompletionsExact(completions, ['alpha', 'mount', 'x'])
     // v2-only attributes must not appear for a v1 project (verifies version detection)
     assertNotHasCompletionExact(completions, 'border')
     assertNotHasCompletionExact(completions, 'rounded')
@@ -60,7 +60,7 @@ suite('Completion Provider Tests', () => {
 
     const completions = await getCompletions(tsDocument.uri, position)
 
-    assertHasCompletionsExact(completions, ['color', 'alpha', 'mount'])
+    assertHasCompletionsExact(completions, ['alpha', 'mount', 'x'])
   })
 
   test('Should provide completion in .blits template section', async () => {
@@ -69,7 +69,7 @@ suite('Completion Provider Tests', () => {
 
     const completions = await getCompletions(blitsDocument.uri, position)
 
-    assertHasCompletionsExact(completions, ['color', 'alpha', 'mount'])
+    assertHasCompletionsExact(completions, ['alpha', 'mount', 'x'])
   })
 
   test('Reactive attribute already in tag is excluded from static completions', async () => {
@@ -80,7 +80,7 @@ suite('Completion Provider Tests', () => {
   })
 
   test('Reactive attribute with object value is excluded from static completions', async () => {
-    const anchor = "'#444'}" + ' w'
+    const anchor = "'#444'}\" w"
     const position = findPosition(jsDocument, anchor, anchor.length)
     assert.ok(position, 'Should find object-value deduplication anchor')
     const completions = await getCompletions(jsDocument.uri, position)

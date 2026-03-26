@@ -23,7 +23,7 @@ const { getCompletions, activateExtension, sleep, getCompletionLabels } = requir
 
 suite('TypeScript v2 Integration Tests', () => {
   let tsProjectPath
-  let buttonBlitsDocument, mainTsDocument
+  let buttonBlitsDocument, anchorBlitsDocument, mainTsDocument
 
   suiteSetup(async function () {
     this.timeout(15000)
@@ -36,9 +36,11 @@ suite('TypeScript v2 Integration Tests', () => {
     tsProjectPath = workspaceFolders[0].uri.fsPath
 
     const buttonUri = vscode.Uri.file(path.join(tsProjectPath, 'src', 'components', 'Button.blits'))
+    const anchorUri = vscode.Uri.file(path.join(tsProjectPath, 'src', 'components', 'anchor.blits'))
     const mainUri = vscode.Uri.file(path.join(tsProjectPath, 'src', 'main.ts'))
 
     buttonBlitsDocument = await vscode.workspace.openTextDocument(buttonUri)
+    anchorBlitsDocument = await vscode.workspace.openTextDocument(anchorUri)
     mainTsDocument = await vscode.workspace.openTextDocument(mainUri)
 
     await activateExtension()
@@ -58,14 +60,14 @@ suite('TypeScript v2 Integration Tests', () => {
   test('Should serve v2 attribute set for Element completions in .blits file', async function () {
     this.timeout(15000)
 
-    const text = buttonBlitsDocument.getText()
-    const attrPos = text.indexOf('    :w="$width"')
-    const position = buttonBlitsDocument.positionAt(attrPos + '    '.length)
+    const text = anchorBlitsDocument.getText()
+    const attrPos = text.indexOf('<Element b') + '<Element b'.length
+    const position = anchorBlitsDocument.positionAt(attrPos)
 
     let labels = []
     const deadline = Date.now() + 12000
     while (Date.now() < deadline) {
-      const completions = await getCompletions(buttonBlitsDocument.uri, position)
+      const completions = await getCompletions(anchorBlitsDocument.uri, position)
       if (completions && completions.items.length > 0) {
         labels = getCompletionLabels(completions)
         if (labels.includes('border')) break
