@@ -37,7 +37,7 @@
     "vscode:package": "npm run package --workspace=vscode-extension",
     "vscode:publish": "npm run publish --workspace=vscode-extension",
     "vscode:test": "npm run run-tests --workspace=vscode-extension",
-    "eslint:build": "npm run build --workspace=eslint-plugin-blits",
+    "eslint:publish": "npm publish --workspace=eslint-plugin-blits --access public",
     "prettier:dev": "npm run dev --workspace=prettier-plugin-blits"
   },
   "devDependencies": {
