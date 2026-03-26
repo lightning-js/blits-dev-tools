@@ -200,11 +200,11 @@ const parseTagContent = (text) => {
   const normalizedText = text.replace(/\n/g, ' ').replace(/\s+/g, ' ')
 
   // Extract complete attributes only
-  const attrRegex = /\s+([@\w\-:.]+)(?:=["'][^"']*["'])/g
+  const attrRegex = /\s+([@\w\-:.]+)=(?:"[^"]*"|'[^']*')/g
   let match
 
   while ((match = attrRegex.exec(normalizedText)) !== null) {
-    result.attributes.push(match[1])
+    result.attributes.push(match[1].replace(/^:/, ''))
   }
 
   // Check if we're actually inside the tag

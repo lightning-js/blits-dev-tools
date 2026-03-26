@@ -72,6 +72,28 @@ suite('Completion Provider Tests', () => {
     assertHasCompletionsExact(completions, ['color', 'alpha', 'mount'])
   })
 
+  test('Reactive attribute already in tag is excluded from static completions', async () => {
+    const position = findPosition(jsDocument, ':color="$c" w', ':color="$c" w'.length)
+    assert.ok(position, 'Should find deduplication anchor')
+    const completions = await getCompletions(jsDocument.uri, position)
+    assertNotHasCompletionExact(completions, 'color')
+  })
+
+  test('Reactive attribute with object value is excluded from static completions', async () => {
+    const anchor = "'#444'}" + ' w'
+    const position = findPosition(jsDocument, anchor, anchor.length)
+    assert.ok(position, 'Should find object-value deduplication anchor')
+    const completions = await getCompletions(jsDocument.uri, position)
+    assertNotHasCompletionExact(completions, 'color')
+  })
+
+  test('Static attribute already in tag is excluded from reactive completions', async () => {
+    const position = findPosition(jsDocument, 'color="red" :', 'color="red" '.length)
+    assert.ok(position, 'Should find deduplication anchor')
+    const completions = await getCompletions(jsDocument.uri, position)
+    assertNotHasCompletionExact(completions, ':color')
+  })
+
   test('Should provide completion in .blits script section', async () => {
     const position = findPosition(blitsDocument, 'state()', 'state()'.length)
     assert.ok(position, 'Should find state() in .blits script')

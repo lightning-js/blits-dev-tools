@@ -7,6 +7,7 @@
 - Detects the Blits version used in your project so IntelliSense adapts its suggestions automatically
 - Refactors and completely reorganizes the test suite by separating tests into specific categories
 - Adds new tests and improves existing ones for better coverage and regression detection
+- Fixes duplicate attribute suggestions for reactive (`:attr`) bindings
 - Other minor fixes and improvements
 
 ## v1.5.2
