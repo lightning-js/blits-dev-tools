@@ -177,16 +177,16 @@ async function ensureDiscoveryStarted() {
 
 // watcher for package.json changes in the workspace
 function setupProjectWatcher() {
-  // Clean up any existing watcher
   if (projectWatcher) {
     projectWatcher.dispose()
   }
 
-  // Watch for package.json changes across the workspace
+  const handleChange = debounce((uri) => handlePackageJsonChange(uri), 500)
+
   projectWatcher = vscode.workspace.createFileSystemWatcher('**/package.json')
-  projectWatcher.onDidChange((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
-  projectWatcher.onDidCreate((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
-  projectWatcher.onDidDelete((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
+  projectWatcher.onDidChange(handleChange)
+  projectWatcher.onDidCreate(handleChange)
+  projectWatcher.onDidDelete(handleChange)
 }
 
 async function handlePackageJsonChange(uri) {
@@ -201,9 +201,6 @@ async function handlePackageJsonChange(uri) {
     const isBlitsProject = pkg.dependencies && pkg.dependencies['@lightningjs/blits']
 
     if (isBlitsProject && !wasProject) {
-      // New Blits project
-      console.log(`Adding new Blits project at ${projectDir}`)
-
       blitsProjects.set(projectDir, {
         name: pkg.name || path.basename(projectDir),
         path: projectDir,
@@ -211,15 +208,19 @@ async function handlePackageJsonChange(uri) {
         hasEslintPlugin: checkForEslintPlugin(pkg),
         blitsVersion: extractBlitsVersion(pkg, projectDir),
       })
-      console.log(
-        `Blits project at ${projectDir} has prettier-plugin-blits: ${blitsProjects.get(projectDir).hasPrettierPlugin}`
-      )
-      clearFilePathCache() // Clear the file path cache to ensure reevaluation
+      clearFilePathCache()
+    } else if (isBlitsProject && wasProject) {
+      // Already registered — refresh metadata in case plugins or version changed
+      blitsProjects.set(projectDir, {
+        ...blitsProjects.get(projectDir),
+        hasPrettierPlugin: checkForPrettierPlugin(pkg),
+        hasEslintPlugin: checkForEslintPlugin(pkg),
+        blitsVersion: extractBlitsVersion(pkg, projectDir),
+      })
+      clearFilePathCache()
     } else if (!isBlitsProject && wasProject) {
-      // Removed Blits dependency
-      console.log(`Removing Blits project at ${projectDir}`)
       blitsProjects.delete(projectDir)
-      clearFilePathCache() // Clear the file path cache to ensure reevaluation
+      clearFilePathCache()
     }
   } catch (err) {
     // If we can't read/parse the file and it was a Blits project, remove it
