@@ -117,8 +117,6 @@ A rule PR that is missing any of these will not be merged.
 
 ## Pull Requests
 
-A pull request template is provided when you open a PR. Fill in the relevant sections and delete anything that doesn't apply.
-
 - Feature and fix PRs target the package's dev branch (`dev-eslint`, `dev-vscode`, or `dev-prettier`).
 - Shared repo-level changes (CI, docs, tooling) target `dev`.
 - Release PRs target `main`.
