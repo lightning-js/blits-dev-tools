@@ -1026,7 +1026,7 @@
       "number",
       "object"
     ],
-    "defaultValue": "undefined",
+    "defaultValue": null,
     "reactive": true,
     "description": "Apply an inner border to an Element. Accepts a width number or an object with keys: w, top, right, bottom, left, color.",
     "usedIn": [
@@ -1078,7 +1078,7 @@
       "array",
       "object"
     ],
-    "defaultValue": "undefined",
+    "defaultValue": null,
     "reactive": true,
     "description": "Round the corners of an Element. Accepts a single radius number, an array of four corner radii [top-left, top-right, bottom-right, bottom-left], or a per-corner object.",
     "usedIn": [
@@ -1135,7 +1135,7 @@
     "types": [
       "object"
     ],
-    "defaultValue": "undefined",
+    "defaultValue": null,
     "reactive": true,
     "description": "Apply a box shadow behind an Element. Accepts an object with keys: x, y, blur, spread, color.",
     "usedIn": [
