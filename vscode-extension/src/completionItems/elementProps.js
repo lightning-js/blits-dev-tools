@@ -18,11 +18,11 @@
 const vscode = require('vscode')
 const { getAttributesForComponent, getCompletionDetails } = require('../core/framework/attributes')
 
-const createCompletionItem = (tagName, name, isReactive = false) => {
+const createCompletionItem = (tagName, name, isReactive = false, filePath) => {
   const nameWithPrefix = isReactive ? `:${name}` : name
   const item = new vscode.CompletionItem(nameWithPrefix, vscode.CompletionItemKind.Property)
 
-  const details = getCompletionDetails(name)
+  const details = getCompletionDetails(name, filePath)
   if (details) {
     const doc = new vscode.MarkdownString()
     doc.isTrusted = true // Enable trusted rendering
@@ -84,16 +84,22 @@ const createCompletionItem = (tagName, name, isReactive = false) => {
   return item
 }
 
-const suggest = async (tagName, existingAttributes = [], onlyEventProps = false, onlyReactiveProps = false) => {
-  const attributes = getAttributesForComponent(tagName, onlyEventProps, onlyReactiveProps)
+const suggest = async (
+  tagName,
+  existingAttributes = [],
+  onlyEventProps = false,
+  onlyReactiveProps = false,
+  filePath
+) => {
+  const attributes = getAttributesForComponent(tagName, onlyEventProps, onlyReactiveProps, filePath)
   const items = []
 
   Object.keys(attributes).forEach((attrName) => {
     if (!existingAttributes.includes(attrName)) {
       if (onlyReactiveProps) {
-        items.push(createCompletionItem(tagName, attrName, true))
+        items.push(createCompletionItem(tagName, attrName, true, filePath))
       } else {
-        items.push(createCompletionItem(tagName, attrName, false))
+        items.push(createCompletionItem(tagName, attrName, false, filePath))
       }
     }
   })

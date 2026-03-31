@@ -6,7 +6,7 @@
   "author": "Ugur Aslan <ugur@uguraslan.net>",
   "license": "Apache-2",
   "icon": "./icon.png",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/lightning-js/blits-dev-tools.git",
@@ -34,15 +34,15 @@
   "main": "./out/main.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "node ./test/runTest.js",
+    "test": "npm run esbuild-base && node ./test/runTest.js",
     "run-tests": "node ./test/runTest.js",
     "build-lib-files": "node ./scripts/build-lib-files.js",
     "vscode:prepublish": "npm run esbuild-base -- --minify && npm run build-lib-files",
     "esbuild-base": "npm run build-lib-files && esbuild ./src/extension.js --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run build-lib-files && npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
   },
   "contributes": {
     "languages": [

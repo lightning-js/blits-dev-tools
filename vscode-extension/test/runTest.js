@@ -25,7 +25,7 @@ async function runTestSuite(suiteName, workspacePath) {
     const extensionDevelopmentPath = path.resolve(__dirname, '../')
 
     // The path to test runner
-    const extensionTestsPath = path.resolve(__dirname, './suite', suiteName)
+    const extensionTestsPath = path.resolve(__dirname, './suites', suiteName)
 
     const launchArgs = ['--disable-extensions']
     if (workspacePath) {
@@ -47,16 +47,25 @@ async function runTestSuite(suiteName, workspacePath) {
 
 async function main() {
   try {
-    // Run general extension tests first (no specific workspace)
-    await runTestSuite('general', null)
+    // Run integration tests (unit + integration + fixture-validation)
+    const fixturesPath = path.resolve(__dirname, 'fixtures')
+    await runTestSuite('integration', fixturesPath)
 
-    // Run TypeScript project tests
+    // Run TypeScript e2e project tests
     const tsProjectPath = path.resolve(__dirname, 'fixtures', 'typescript-project')
-    await runTestSuite('typescript', tsProjectPath)
+    await runTestSuite('e2e-typescript', tsProjectPath)
 
-    // Run JavaScript project tests
+    // Run JavaScript e2e project tests
     const jsProjectPath = path.resolve(__dirname, 'fixtures', 'javascript-project')
-    await runTestSuite('javascript', jsProjectPath)
+    await runTestSuite('e2e-javascript', jsProjectPath)
+
+    // Run JavaScript v2 e2e project tests
+    const jsV2ProjectPath = path.resolve(__dirname, 'fixtures', 'javascript-project-v2')
+    await runTestSuite('e2e-javascript-v2', jsV2ProjectPath)
+
+    // Run TypeScript v2 e2e project tests
+    const tsV2ProjectPath = path.resolve(__dirname, 'fixtures', 'typescript-project-v2')
+    await runTestSuite('e2e-typescript-v2', tsV2ProjectPath)
 
     console.log('\n🎉 All test suites completed successfully!')
   } catch (err) {

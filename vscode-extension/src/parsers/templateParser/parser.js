@@ -18,7 +18,7 @@
 const PATTERNS = {
   TAG_START: /^<\/?([a-zA-Z0-9_\-.]+)\s*/,
   TAG_END: /^\s*(\/?>)/,
-  ATTR_NAME: /^([A-Za-z0-9:.\-_@]+)/,
+  ATTR_NAME: /^([A-Za-z0-9:.\-_@$]+)/,
   ATTR_EQUALS: /^\s*=/,
   ATTR_QUOTE: /^\s*(["'])/,
   EMPTY_TAG_START: /^<>/,
@@ -504,7 +504,7 @@ function parseTemplate(template = '') {
         return processError({
           type: 'InvalidAttribute',
           message:
-            'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @',
+            'Invalid attribute name. Attribute names must contain only letters, numbers, and these special characters: : . - _ @ $',
           ranges: [{ start: startPos, end: endPos }],
         })
       }
@@ -548,7 +548,6 @@ function parseTemplate(template = '') {
   // Start parsing and return result
   parseLoop(parseEmptyTagStart)
   // response.tree = tree
-  // console.log(tree)
   return response
 }
 

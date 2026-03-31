@@ -42,6 +42,35 @@ function checkForPrettierPlugin(pkg) {
   )
 }
 
+function checkForEslintPlugin(pkg) {
+  return !!(
+    (pkg.devDependencies && pkg.devDependencies['@lightningjs/eslint-plugin-blits']) ||
+    (pkg.dependencies && pkg.dependencies['@lightningjs/eslint-plugin-blits'])
+  )
+}
+
+function extractBlitsVersion(pkg, projectDir) {
+  const raw =
+    (pkg.dependencies && pkg.dependencies['@lightningjs/blits']) ||
+    (pkg.devDependencies && pkg.devDependencies['@lightningjs/blits'])
+  if (!raw) return 2
+
+  if (raw.startsWith('file:') && projectDir) {
+    try {
+      const linkedPath = path.resolve(projectDir, raw.slice('file:'.length))
+      const linkedPkg = JSON.parse(readFileSync(path.join(linkedPath, 'package.json'), 'utf8'))
+      const version = linkedPkg.version || ''
+      const match = version.match(/^(\d+)/)
+      return match ? parseInt(match[1], 10) : 2
+    } catch {
+      return 2
+    }
+  }
+
+  const match = raw.match(/(\d+)/)
+  return match ? parseInt(match[1], 10) : 2
+}
+
 // Find all Blits projects in the workspace by scanning for package.json files
 async function discoverProjects() {
   if (discoveryPromise) {
@@ -77,6 +106,8 @@ async function discoverProjects() {
                 name: pkg.name || path.basename(folder.uri.fsPath),
                 path: folder.uri.fsPath,
                 hasPrettierPlugin: checkForPrettierPlugin(pkg),
+                hasEslintPlugin: checkForEslintPlugin(pkg),
+                blitsVersion: extractBlitsVersion(pkg, folder.uri.fsPath),
               })
               rootProjectFound = true
             }
@@ -106,6 +137,8 @@ async function discoverProjects() {
                 name: pkg.name || path.basename(projectDir),
                 path: projectDir,
                 hasPrettierPlugin: checkForPrettierPlugin(pkg),
+                hasEslintPlugin: checkForEslintPlugin(pkg),
+                blitsVersion: extractBlitsVersion(pkg, projectDir),
               })
             }
           } catch (err) {
@@ -120,8 +153,9 @@ async function discoverProjects() {
       // Setup a file watcher for package.json changes in the workspace
       setupProjectWatcher()
 
-      // Mark discovery as completed
+      // Mark discovery as completed and clear any stale cache entries from before discovery
       discoveryInitiated = true
+      filePathCache.clear()
       console.log(`Discovery complete. Found ${blitsProjects.size} Blits projects`)
 
       return blitsProjects
@@ -143,16 +177,16 @@ async function ensureDiscoveryStarted() {
 
 // watcher for package.json changes in the workspace
 function setupProjectWatcher() {
-  // Clean up any existing watcher
   if (projectWatcher) {
     projectWatcher.dispose()
   }
 
-  // Watch for package.json changes across the workspace
+  const handleChange = debounce((uri) => handlePackageJsonChange(uri), 500)
+
   projectWatcher = vscode.workspace.createFileSystemWatcher('**/package.json')
-  projectWatcher.onDidChange((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
-  projectWatcher.onDidCreate((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
-  projectWatcher.onDidDelete((uri) => debounce(() => handlePackageJsonChange(uri), 500)())
+  projectWatcher.onDidChange(handleChange)
+  projectWatcher.onDidCreate(handleChange)
+  projectWatcher.onDidDelete(handleChange)
 }
 
 async function handlePackageJsonChange(uri) {
@@ -167,23 +201,26 @@ async function handlePackageJsonChange(uri) {
     const isBlitsProject = pkg.dependencies && pkg.dependencies['@lightningjs/blits']
 
     if (isBlitsProject && !wasProject) {
-      // New Blits project
-      console.log(`Adding new Blits project at ${projectDir}`)
-
       blitsProjects.set(projectDir, {
         name: pkg.name || path.basename(projectDir),
         path: projectDir,
         hasPrettierPlugin: checkForPrettierPlugin(pkg),
+        hasEslintPlugin: checkForEslintPlugin(pkg),
+        blitsVersion: extractBlitsVersion(pkg, projectDir),
       })
-      console.log(
-        `Blits project at ${projectDir} has prettier-plugin-blits: ${blitsProjects.get(projectDir).hasPrettierPlugin}`
-      )
-      clearFilePathCache() // Clear the file path cache to ensure reevaluation
+      clearFilePathCache()
+    } else if (isBlitsProject && wasProject) {
+      // Already registered — refresh metadata in case plugins or version changed
+      blitsProjects.set(projectDir, {
+        ...blitsProjects.get(projectDir),
+        hasPrettierPlugin: checkForPrettierPlugin(pkg),
+        hasEslintPlugin: checkForEslintPlugin(pkg),
+        blitsVersion: extractBlitsVersion(pkg, projectDir),
+      })
+      clearFilePathCache()
     } else if (!isBlitsProject && wasProject) {
-      // Removed Blits dependency
-      console.log(`Removing Blits project at ${projectDir}`)
       blitsProjects.delete(projectDir)
-      clearFilePathCache() // Clear the file path cache to ensure reevaluation
+      clearFilePathCache()
     }
   } catch (err) {
     // If we can't read/parse the file and it was a Blits project, remove it
@@ -276,7 +313,6 @@ function isBlitsApp(filePath) {
 
     try {
       const result = getProjectForFile(filePath) !== null
-      console.log(`isBlitsApp result for ${filePath}: ${result}`)
       return result
     } catch (error) {
       console.error(`[WorkspaceHandler] Error checking if file is in Blits project: ${error.message}`)
@@ -289,41 +325,18 @@ function isBlitsApp(filePath) {
   return isBlits
 }
 
+function getBlitsVersion(filePath) {
+  const projectDir = filePath ? getProjectForFile(filePath) : null
+  if (!projectDir) return 2
+  const meta = blitsProjects.get(projectDir)
+  return meta ? meta.blitsVersion : 2
+}
+
 function getFrameworkAttributes(filePath) {
-  // Get the relevant project directory
-  let projectDir = null
-
-  if (filePath) {
-    projectDir = getProjectForFile(filePath)
-    if (!projectDir) {
-      return false
-    }
-  } else if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-    // fallback: use the first workspace folder
-    projectDir = vscode.workspace.workspaceFolders[0].uri.fsPath
-  } else {
-    return false
-  }
-
-  // Look for template attributes in the project's blits dependency
-  const attributesPath = path.join(
-    projectDir,
-    'node_modules',
-    '@lightningjs',
-    'blits',
-    'vscode',
-    'data',
-    'template-attributes.json'
-  )
-
-  try {
-    // Use synchronous file read for framework attributes as it's needed immediately
-    const data = existsSync(attributesPath) ? readFileSync(attributesPath, 'utf8') : null
-    return data ? JSON.parse(data) : false
-  } catch (error) {
-    console.log(`Error reading framework attributes: ${error.message}`)
-    return false
-  }
+  const version = getBlitsVersion(filePath)
+  return version >= 2
+    ? require('./framework/template-attributes.v2.json')
+    : require('./framework/template-attributes.json')
 }
 
 async function isFileInBlitsProjectAsync(filePath) {
@@ -339,10 +352,19 @@ function hasPrettierPlugin(filePath) {
   return projectInfo && projectInfo.hasPrettierPlugin === true
 }
 
+function hasEslintPlugin(filePath) {
+  const projectPath = getProjectForFile(filePath)
+  if (!projectPath) return false
+
+  const projectInfo = blitsProjects.get(projectPath)
+  return projectInfo && projectInfo.hasEslintPlugin === true
+}
+
 module.exports = {
   dispose,
   isBlitsApp,
   getFrameworkAttributes,
+  getBlitsVersion,
   getProjectForFile,
   discoverProjects,
   ensureDiscoveryStarted,
@@ -350,4 +372,5 @@ module.exports = {
   clearFilePathCache,
   isFileInBlitsProjectAsync,
   hasPrettierPlugin,
+  hasEslintPlugin,
 }
