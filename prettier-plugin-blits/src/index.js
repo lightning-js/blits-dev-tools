@@ -31,6 +31,12 @@ const options = {
     description:
       'Wrap element attributes to individual lines when the tag exceeds printWidth. Set to false to keep all attributes inline.',
   },
+  blitsTrimAttributeValues: {
+    type: 'boolean',
+    category: 'Blits',
+    default: true,
+    description: 'Trim leading/trailing whitespace from attribute values.',
+  },
   blitsNormalizeComments: {
     type: 'boolean',
     category: 'Blits',

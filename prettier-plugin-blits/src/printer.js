@@ -19,15 +19,18 @@ const { doc } = require('prettier')
 
 const { hardline, softline, line, group, indent, join, ifBreak } = doc.builders
 
-function printAttrs(attrs, wrap) {
+function printAttrs(attrs, wrap, options) {
   if (!attrs || attrs.length === 0) return []
-  return attrs.map((a) => [wrap ? line : ' ', `${a.name}="${a.value}"`])
+  return attrs.map((a) => {
+    const val = options.blitsTrimAttributeValues ? a.value.replace(/^[ \t]+|[ \t]+$/g, '') : a.value
+    return [wrap ? line : ' ', `${a.name}="${val}"`]
+  })
 }
 
 function printElement(path, options, print) {
   const node = path.getValue()
   const wrap = options.blitsWrapAttributes
-  const attrs = printAttrs(node.attrs, wrap)
+  const attrs = printAttrs(node.attrs, wrap, options)
   const hasChildren = node.children && node.children.length > 0
 
   if (node.tag === 'empty') {

@@ -102,6 +102,29 @@ describe('format: comments', () => {
   })
 })
 
+describe('format: blitsTrimAttributeValues option', () => {
+  test('true (default) — whitespace padding around value is trimmed', async () => {
+    const input = "Blits.Component('X', { template: `<Element :w=\" 354 -14 \" />` })"
+    const output = await format(input)
+    assert.ok(output.includes(':w="354 -14"'))
+  })
+
+  test('false — value is passed through unchanged', async () => {
+    const input = "Blits.Component('X', { template: `<Element :w=\" 354 -14 \" />` })"
+    const output = await format(input, { blitsTrimAttributeValues: false })
+    assert.ok(output.includes(':w=" 354 -14 "'))
+  })
+
+  test('multiline object value — internal newlines and indentation preserved', async () => {
+    const input =
+      'Blits.Component(\'X\', { template: `<Element :transition="{\n  prop: \'x\',\n  duration: 300\n}" />` })'
+    const output = await format(input)
+    assert.ok(output.includes('prop:'))
+    assert.ok(output.includes('duration:'))
+    assert.match(output, /prop:.*\n.*duration:/s)
+  })
+})
+
 describe('format: blitsNormalizeComments option', () => {
   test('missing leading space is added', async () => {
     const input = "Blits.Component('X', { template: `<!--Title --><Element />` })"
