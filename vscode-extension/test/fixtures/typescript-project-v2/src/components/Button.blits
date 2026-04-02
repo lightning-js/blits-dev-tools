@@ -1,0 +1,87 @@
+<template>
+  <Element
+    :w="$width"
+    :h="$height"
+    :color="$backgroundColor"
+    :border="$buttonBorder"
+    :rounded="$buttonRounded"
+    @click="$handleClick"
+  >
+    <Text
+      :content="$label"
+      :color="$textColor"
+      x="$textX"
+      y="$textY"
+    />
+  </Element>
+</template>
+
+<script lang="ts">
+import type { Point } from '@/utils/math';
+import { MathUtils } from '../utils/math';
+
+export interface ButtonProps {
+  label: string;
+  width?: number;
+  height?: number;
+  position?: Point;
+}
+
+export default {
+  props: ['label', 'width', 'height', 'position'] as const,
+
+  state(): {
+    isPressed: boolean;
+    clickCount: number;
+    buttonBorder: { width: number; color: string };
+    buttonRounded: number;
+  } {
+    return {
+      isPressed: false,
+      clickCount: 0,
+      buttonBorder: { width: 2, color: '#0066cc' },
+      buttonRounded: 6,
+    };
+  },
+
+  computed: {
+    backgroundColor(): string {
+      return this.isPressed ? '#0066cc' : '#007fff';
+    },
+
+    textColor(): string {
+      return '#ffffff';
+    },
+
+    textX(): number {
+      return Math.round(this.width / 2);
+    },
+
+    textY(): number {
+      return Math.round(this.height / 2);
+    },
+  },
+
+  methods: {
+    async handleClick(): Promise<void> {
+      this.isPressed = true;
+      this.clickCount++;
+
+      try {
+        const value = await MathUtils.calculateAsync(this.clickCount);
+        console.log('Calculated:', value);
+      } catch (error: unknown) {
+        console.error('Calculation failed:', error);
+      } finally {
+        setTimeout(() => {
+          this.isPressed = false;
+        }, 150);
+      }
+    },
+
+    getTypedPosition(): Point | undefined {
+      return this.position;
+    },
+  },
+};
+</script>

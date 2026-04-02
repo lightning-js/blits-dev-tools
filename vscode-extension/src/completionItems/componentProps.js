@@ -62,10 +62,10 @@ const createCompletionItems = (props, existingAttributes, tag) => {
   })
 }
 
-const suggest = async (tag, existingAttributes, document) => {
+const suggest = async (tag, existingAttributes, document, filePath) => {
   let completionItems = []
 
-  const elementCompletionItems = await elementProps.suggest('Element', existingAttributes)
+  const elementCompletionItems = await elementProps.suggest('Element', existingAttributes, false, false, filePath)
   const componentData = await componentHandler.analyzeComponentsInDocument(document)
   const component = componentData.importedComponents.find((comp) => comp.name === tag)
 

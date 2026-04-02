@@ -27,6 +27,9 @@ module.exports = Blits.Component<ComponentProps, ComponentState>('TestComponentT
         <CustomButton :label="$buttonLabel" :disabled="$isDisabled" />
       </Layout>
       <RouterView />
+      <Element :color="$c" w="10" />
+      <Element color="red" :alpha="$a" />
+      <Element :color="{top: 'transparent', bottom: '#444'}" w="10" />
     </Element>
   `,
   state(): ComponentState {

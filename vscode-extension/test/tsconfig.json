@@ -22,8 +22,7 @@
   },
   "include": [
     "**/*.js",
-    "**/*.ts",
-    "types.d.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "fixtures/**/*",

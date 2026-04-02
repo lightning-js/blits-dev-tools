@@ -1,0 +1,51 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - 'vscode-extension/**'
+
+jobs:
+  test-vscode-extension:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build extension
+        run: npm run esbuild --workspace=vscode-extension
+
+      - name: Run tests
+        id: run_tests
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          xvfb-run -a npm test --workspace=vscode-extension 2>&1 | tee test-output.txt
+
+      - name: Save result metadata
+        run: |
+          echo "${{ github.event.pull_request.number }}" > pr-number.txt
+          echo "${{ steps.run_tests.outcome }}" > test-result.txt
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-test-results
+          path: |
+            pr-number.txt
+            test-result.txt
+            test-output.txt
+
+      - name: Fail if tests failed
+        if: steps.run_tests.outcome == 'failure'
+        run: exit 1

@@ -40,6 +40,8 @@ module.exports = vscode.languages.registerCompletionItemProvider(
       const triggerChar = line[position.character - 1]
       const context = templateHandler.getTagContext(document, position)
 
+      const filePath = document.uri.fsPath
+
       if (triggerChar === '<') {
         if (!templateHandler.shouldSuggestTags(document, position)) {
           return undefined
@@ -57,16 +59,16 @@ module.exports = vscode.languages.registerCompletionItemProvider(
       // If it's a built-in component, get its specific attributes
       if (isBuiltInComponent(context.tagName)) {
         if (triggerChar === '@') {
-          return await elementProps.suggest(context.tagName, context.attributes, true)
+          return await elementProps.suggest(context.tagName, context.attributes, true, false, filePath)
         } else if (triggerChar === ':') {
-          return await elementProps.suggest(context.tagName, context.attributes, false, true)
+          return await elementProps.suggest(context.tagName, context.attributes, false, true, filePath)
         }
 
-        return await elementProps.suggest(context.tagName, context.attributes)
+        return await elementProps.suggest(context.tagName, context.attributes, false, false, filePath)
       }
 
       // For custom components, get their props + Element attributes
-      return await componentProps.suggest(context.tagName, context.attributes, document)
+      return await componentProps.suggest(context.tagName, context.attributes, document, filePath)
     },
     resolveCompletionItem(item) {
       return item
