@@ -19,6 +19,13 @@ const { doc } = require('prettier')
 
 const { hardline, softline, line, group, indent, join, ifBreak } = doc.builders
 
+function joinChildren(childNodes, childDocs) {
+  return childDocs.flatMap((doc, i) => {
+    if (i === 0) return [doc]
+    return childNodes[i].blankBefore ? [hardline, hardline, doc] : [hardline, doc]
+  })
+}
+
 function printAttrs(attrs, wrap, options) {
   if (!attrs || attrs.length === 0) return []
   return attrs.map((a) => {
@@ -35,7 +42,8 @@ function printElement(path, options, print) {
 
   if (node.tag === 'empty') {
     if (!hasChildren) return '<></>'
-    return ['<>', indent([hardline, join(hardline, path.map(print, 'children'))]), hardline, '</>']
+    const emptyChildDocs = joinChildren(node.children, path.map(print, 'children'))
+    return ['<>', indent([hardline, emptyChildDocs]), hardline, '</>']
   }
 
   if (node.selfClosing) {
@@ -45,8 +53,9 @@ function printElement(path, options, print) {
     return ['<', node.tag, attrs, ' />']
   }
 
+  const closingAngle = options.blitsBracketSameLine ? '>' : [softline, '>']
   const openTag = wrap
-    ? group(['<', node.tag, indent(attrs), softline, '>'])
+    ? group(['<', node.tag, indent(attrs), closingAngle])
     : ['<', node.tag, attrs, '>']
 
   if (!hasChildren) {
@@ -59,22 +68,18 @@ function printElement(path, options, print) {
     return [openTag, '</', node.tag, '>']
   }
 
-  return [
-    openTag,
-    indent([hardline, join(hardline, path.map(print, 'children'))]),
-    hardline,
-    '</',
-    node.tag,
-    '>',
-  ]
+  const childDocs = joinChildren(node.children, path.map(print, 'children'))
+  return [openTag, indent([hardline, childDocs]), hardline, '</', node.tag, '>']
 }
 
 function print(path, options, print) {
   const node = path.getValue()
 
   switch (node.type) {
-    case 'root':
-      return join(hardline, path.map(print, 'children'))
+    case 'root': {
+      const rootNode = path.getValue()
+      return joinChildren(rootNode.children, path.map(print, 'children'))
+    }
     case 'element':
       return printElement(path, options, print)
     case 'comment': {

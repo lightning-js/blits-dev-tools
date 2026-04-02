@@ -102,6 +102,49 @@ describe('format: comments', () => {
   })
 })
 
+describe('format: blitsBracketSameLine option', () => {
+  const longTag =
+    "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\" alpha=\"0.5\" mountX=\"0.5\" mountY=\"0.5\"><Text /></Element>` })"
+
+  test('false (default) — closing > on its own line', async () => {
+    const output = await format(longTag, { blitsBracketSameLine: false })
+    assert.match(output, /\n\s+>/)
+  })
+
+  test('true — closing > on last attribute line', async () => {
+    const output = await format(longTag, { blitsBracketSameLine: true })
+    assert.match(output, /mountY="0\.5">/)
+    assert.doesNotMatch(output, /\n\s+>/)
+  })
+})
+
+describe('format: blitsPreserveBlankLines option', () => {
+  test('blank line between siblings is preserved', async () => {
+    const input = "Blits.Component('X', { template: `<Element><Text />\n\n<Image /></Element>` })"
+    const output = await format(input)
+    assert.match(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
+  })
+
+  test('multiple blank lines between siblings collapsed to one', async () => {
+    const input = "Blits.Component('X', { template: `<Element><Text />\n\n\n\n<Image /></Element>` })"
+    const output = await format(input)
+    assert.match(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
+    assert.doesNotMatch(output, /Text \/>[\s\S]*\n\n\n[\s\S]*<Image/)
+  })
+
+  test('no blank line — siblings stay compact', async () => {
+    const input = "Blits.Component('X', { template: `<Element><Text /><Image /></Element>` })"
+    const output = await format(input)
+    assert.doesNotMatch(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
+  })
+
+  test('false — blank lines collapsed', async () => {
+    const input = "Blits.Component('X', { template: `<Element><Text />\n\n<Image /></Element>` })"
+    const output = await format(input, { blitsPreserveBlankLines: false })
+    assert.doesNotMatch(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
+  })
+})
+
 describe('format: blitsTrimAttributeValues option', () => {
   test('true (default) — whitespace padding around value is trimmed', async () => {
     const input = "Blits.Component('X', { template: `<Element :w=\" 354 -14 \" />` })"

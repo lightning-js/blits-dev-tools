@@ -31,6 +31,19 @@ const options = {
     description:
       'Wrap element attributes to individual lines when the tag exceeds printWidth. Set to false to keep all attributes inline.',
   },
+  blitsBracketSameLine: {
+    type: 'boolean',
+    category: 'Blits',
+    default: false,
+    description:
+      'Put the closing > of a multi-line opening tag on the same line as the last attribute.',
+  },
+  blitsPreserveBlankLines: {
+    type: 'boolean',
+    category: 'Blits',
+    default: true,
+    description: 'Preserve blank lines between sibling elements. Multiple consecutive blank lines are collapsed to one.',
+  },
   blitsTrimAttributeValues: {
     type: 'boolean',
     category: 'Blits',
