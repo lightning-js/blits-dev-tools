@@ -102,6 +102,32 @@ describe('format: comments', () => {
   })
 })
 
+describe('format: blitsNormalizeComments option', () => {
+  test('missing leading space is added', async () => {
+    const input = "Blits.Component('X', { template: `<!--Title --><Element />` })"
+    const output = await format(input)
+    assert.ok(output.includes('<!-- Title -->'))
+  })
+
+  test('triple-dash comment is normalized', async () => {
+    const input = "Blits.Component('X', { template: `<!--- positioning ---><Element />` })"
+    const output = await format(input)
+    assert.ok(output.includes('<!-- positioning -->'))
+  })
+
+  test('already-correct comment is unchanged', async () => {
+    const input = "Blits.Component('X', { template: `<!-- correct --><Element />` })"
+    const output = await format(input)
+    assert.ok(output.includes('<!-- correct -->'))
+  })
+
+  test('false — comment passed through raw', async () => {
+    const input = "Blits.Component('X', { template: `<!--Title --><Element />` })"
+    const output = await format(input, { blitsNormalizeComments: false })
+    assert.ok(output.includes('<!--Title -->'))
+  })
+})
+
 describe('format: string literal template', () => {
   test('single-quoted string formats inline', async () => {
     const input = "Blits.Component('X', { template: '<Element x=\"10\" />' })"

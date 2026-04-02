@@ -74,8 +74,11 @@ function print(path, options, print) {
       return join(hardline, path.map(print, 'children'))
     case 'element':
       return printElement(path, options, print)
-    case 'comment':
-      return node.text
+    case 'comment': {
+      if (!options.blitsNormalizeComments) return node.text
+      const inner = node.text.replace(/^<!--+\s*/, '').replace(/\s*--+>$/, '').trim()
+      return `<!-- ${inner} -->`
+    }
     case 'text':
       return node.value
     default:

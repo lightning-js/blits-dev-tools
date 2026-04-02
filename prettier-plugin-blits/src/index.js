@@ -31,6 +31,13 @@ const options = {
     description:
       'Wrap element attributes to individual lines when the tag exceeds printWidth. Set to false to keep all attributes inline.',
   },
+  blitsNormalizeComments: {
+    type: 'boolean',
+    category: 'Blits',
+    default: true,
+    description:
+      'Normalize comment whitespace — ensures one space after <!-- and before -->. Also collapses triple-dash comments (<!--- ---> → <!-- -->).',
+  },
   blitsSelfClosingTags: {
     type: 'boolean',
     category: 'Blits',
