@@ -47,6 +47,12 @@ function printElement(path, options, print) {
     : ['<', node.tag, attrs, '>']
 
   if (!hasChildren) {
+    if (options.blitsSelfClosingTags) {
+      if (wrap) {
+        return group(['<', node.tag, indent(attrs), ifBreak('', ' '), softline, '/>'])
+      }
+      return ['<', node.tag, attrs, ' />']
+    }
     return [openTag, '</', node.tag, '>']
   }
 

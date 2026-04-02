@@ -31,6 +31,13 @@ const options = {
     description:
       'Wrap element attributes to individual lines when the tag exceeds printWidth. Set to false to keep all attributes inline.',
   },
+  blitsSelfClosingTags: {
+    type: 'boolean',
+    category: 'Blits',
+    default: false,
+    description:
+      'Collapse empty open/close tag pairs (<Tag></Tag>) into self-closing form (<Tag />). Disabled by default to preserve developer intent.',
+  },
   blitsClosingBacktick: {
     type: 'choice',
     category: 'Blits',

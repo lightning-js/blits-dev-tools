@@ -159,6 +159,20 @@ describe('format: blitsWrapAttributes option', () => {
   })
 })
 
+describe('format: blitsSelfClosingTags option', () => {
+  const emptyTag = "Blits.Component('X', { template: `<Element w=\"100\"></Element>` })"
+
+  test('false (default) — empty open/close tag preserved', async () => {
+    const output = await format(emptyTag)
+    assert.ok(output.includes('<Element w="100"></Element>'))
+  })
+
+  test('true — empty open/close tag collapsed to self-closing', async () => {
+    const output = await format(emptyTag, { blitsSelfClosingTags: true })
+    assert.ok(output.includes('<Element w="100" />'))
+  })
+})
+
 describe('format: idempotency', () => {
   test('formatting twice gives the same result', async () => {
     const input =
