@@ -16,18 +16,15 @@
  */
 
 const workspace = require('../workspaceHandler')
-const templateAttributes = require('./template-attributes.json')
+const templateAttributesV1 = require('./template-attributes.json')
 
 // Built-in component types
 const BUILTIN_COMPONENTS = ['Element', 'Text', 'Layout', 'RouterView', 'Component']
 
-// Try to get framework attributes, fallback to hardcoded ones if not found
-const frameworkAttributes = workspace.getFrameworkAttributes()
+const getAttributes = (filePath) => workspace.getFrameworkAttributes(filePath) || templateAttributesV1
 
-// Organized attribute definitions
-const attributes = frameworkAttributes || templateAttributes
-
-const getAttributesForComponent = (componentType, onlyEventProps = false, onlyReactiveProps = false) => {
+const getAttributesForComponent = (componentType, onlyEventProps = false, onlyReactiveProps = false, filePath) => {
+  const attributes = getAttributes(filePath)
   return Object.entries(attributes).reduce((acc, [name, def]) => {
     if (def.usedIn.includes(componentType)) {
       if (onlyEventProps && def.attrType !== 'event') return acc
@@ -39,12 +36,15 @@ const getAttributesForComponent = (componentType, onlyEventProps = false, onlyRe
   }, {})
 }
 
-const getAttributeDefinition = (attributeName) => attributes[attributeName] || null
+const getAttributeDefinition = (attributeName, filePath) => {
+  const attributes = getAttributes(filePath)
+  return attributes[attributeName] || null
+}
 
 const isBuiltInComponent = (componentType) => BUILTIN_COMPONENTS.includes(componentType)
 
-const getCompletionDetails = (attributeName) => {
-  const attr = getAttributeDefinition(attributeName)
+const getCompletionDetails = (attributeName, filePath) => {
+  const attr = getAttributeDefinition(attributeName, filePath)
   if (!attr) return null
 
   return {

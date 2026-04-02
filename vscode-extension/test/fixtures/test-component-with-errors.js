@@ -26,11 +26,11 @@ module.exports = Blits.Component('TestComponentWithErrors', {
       items: [{ name: 'Item 1' }, { name: 'Item 2' }],
     }
   },
-  // Incomplete syntax for testing fallback parsing
   methods: {
     handleClick() {
-      // Missing closing brace intentionally
       console.log('test')
     },
   },
 })
+
+const _err =

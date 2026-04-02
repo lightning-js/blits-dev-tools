@@ -43,7 +43,6 @@ function updateProjectsWithOpenFiles() {
     }
   }
 
-  log(`Active projects with open files: ${projectsWithOpenFiles.size}`)
 
   // Clean up language services for projects with no open files
   for (const [projectPath, service] of projectLanguageServices.entries()) {

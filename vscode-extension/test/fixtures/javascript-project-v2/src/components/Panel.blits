@@ -1,0 +1,38 @@
+<template>
+  <Element w="$panelWidth" :h="$panelHeight" :color="$panelColor" :border="$panelBorder" :rounded="$panelRounded">
+    <Text :content="$title" x="20" y="20" />
+  </Element>
+</template>
+
+<script>
+
+import { Helpers } from '@utils/helpers'
+
+export default {
+  props: ['title', 'width', 'height'],
+
+  state() {
+    return {
+      panelColor: '#2d3748',
+      panelBorder: { width: 1, color: '#4a5568' },
+      panelRounded: 4,
+    }
+  },
+
+  computed: {
+    panelWidth() {
+      return this.width || 400
+    },
+
+    panelHeight() {
+      return this.height || 300
+    },
+  },
+
+  methods: {
+    updateTitle(newTitle) {
+      this.title = newTitle
+    },
+  },
+}
+</script>
