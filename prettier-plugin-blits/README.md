@@ -1,8 +1,6 @@
 # Prettier Plugin for Blits
 
-Formats Blits template strings in JavaScript and TypeScript files.
-
-Blits components define their UI in a `template` string inside `Blits.Component()` or `Blits.Application()`. This plugin teaches Prettier to format those templates — indenting nested elements, breaking long attribute lists across lines, and keeping short templates inline.
+Formats the `template` string inside `Blits.Component()` and `Blits.Application()` calls, in JavaScript and TypeScript files.
 
 ## Requirements
 
@@ -15,9 +13,9 @@ Blits components define their UI in a `template` string inside `Blits.Component(
 npm install --save-dev @lightningjs/prettier-plugin-blits
 ```
 
-### With a `.prettierrc` file
+### If you use a `.prettierrc`
 
-Add the plugin to your Prettier config. If you have other plugins, keep them alongside it:
+Add the plugin to your Prettier config. If you already use other plugins, just include this one in the same list:
 
 ```json
 {
@@ -25,9 +23,9 @@ Add the plugin to your Prettier config. If you have other plugins, keep them alo
 }
 ```
 
-### With `eslint-plugin-prettier`
+### If you run Prettier through ESLint
 
-If your project runs Prettier through ESLint via `eslint-plugin-prettier`, add the plugin to the inline options in your ESLint config instead:
+If your setup uses `eslint-plugin-prettier`, add the plugin to the inline Prettier options in your ESLint config:
 
 ```js
 // .eslintrc.cjs
@@ -44,13 +42,15 @@ rules: {
 }
 ```
 
-> **Note:** `eslint-plugin-prettier` v5+ is required for Prettier 3 compatibility. If you are upgrading from Prettier 2, also update `eslint-plugin-prettier` to `^5.0.0` and `eslint-config-prettier` to `^9.0.0`.
+> `eslint-plugin-prettier` v5+ is required for Prettier 3. If you are upgrading from Prettier 2, also update `eslint-plugin-prettier` to `^5.0.0` and `eslint-config-prettier` to `^9.0.0`.
 
-## Formatting rules
+## What the plugin formats
 
 ### Where it applies
 
-Only the `template` property value inside `Blits.Component()` or `Blits.Application()` calls. Everything else in your file is formatted normally by Prettier. Template literals that contain `${...}` interpolations are left untouched.
+The plugin only touches the value of the `template` property inside `Blits.Component()` or `Blits.Application()`. Everything else in the file is still handled by Prettier as usual.
+
+Template literals with `${...}` interpolations are left alone.
 
 ### Inline vs multi-line
 
@@ -60,7 +60,7 @@ Short templates that fit within `printWidth` stay on one line:
 template: `<Element x="20" y="20" />`
 ```
 
-Longer templates break to multi-line with the content indented:
+Longer templates expand to multiple lines by default, with the content indented:
 
 ```js
 template: `
@@ -72,7 +72,7 @@ template: `
 
 ### Attribute wrapping
 
-When a tag's attributes fit within `printWidth`, they stay on one line. When they don't, each attribute gets its own indented line and `/>` moves to the next line:
+When a tag and its attributes fit within `printWidth`, they stay on one line. If they do not fit, each attribute moves to its own line:
 
 ```js
 // fits on one line — stays inline
@@ -90,7 +90,7 @@ When a tag's attributes fit within `printWidth`, they stay on one line. When the
 
 ### Children
 
-Child elements are indented by `tabWidth` (default: 2) relative to their parent:
+Child elements are indented relative to their parent using your configured `tabWidth`:
 
 ```js
 template: `
@@ -104,7 +104,7 @@ template: `
 
 ### Blank lines
 
-Blank lines between sibling elements are preserved. Multiple consecutive blank lines are collapsed to one:
+Blank lines between sibling elements are preserved. If there are several in a row, they are collapsed to a single blank line:
 
 ```js
 template: `
@@ -122,7 +122,7 @@ template: `
 
 ### Comment normalization
 
-Comments are normalized to have exactly one space after `<!--` and before `-->`. Extra dashes are also collapsed:
+Comments are formatted to a consistent style: one space after `<!--`, one space before `-->`, and no extra dashes:
 
 ```js
 <!--Title -->        →  <!-- Title -->
@@ -132,18 +132,18 @@ Comments are normalized to have exactly one space after `<!--` and before `-->`.
 
 ### Attribute value trimming
 
-Accidental leading/trailing whitespace inside attribute value quotes is removed:
+Leading or trailing spaces inside quoted attribute values are removed:
 
 ```js
 :w=" 354 -14 "   →  :w="354 -14"
 w="100"          →  w="100"
 ```
 
-Multiline attribute values (e.g. `:transition="{\n  prop: 'x'\n}"`) are not affected — only space/tab padding is stripped, never newlines.
+Multiline attribute values such as `:transition="{\n  prop: 'x'\n}"` are left as they are. Only leading and trailing spaces or tabs are trimmed, never newlines.
 
 ### What is never changed
 
-- **Attribute values** — reactive bindings (`:color="$myColor"`), event handlers (`@loaded="$onLoad"`), `:for` expressions, `$variable` references, arrow functions, and `:transition` objects all pass through exactly as written
+- **Attribute values** — reactive bindings (`:color="$myColor"`), event handlers (`@loaded="$onLoad"`), `:for` expressions, `$variable` references, arrow functions, and `:transition` objects are preserved as written
 - **Attribute order** — attributes are never reordered or sorted
 
 ### Configuration
@@ -155,18 +155,18 @@ Standard Prettier options apply:
 | `printWidth` | Controls when attribute lists and nested templates wrap (default: 80) |
 | `tabWidth` | Controls indentation inside templates (default: 2) |
 
-The plugin also exposes its own formatting rules. Each rule can be enabled or disabled independently:
+The plugin adds these Blits-specific options on top:
 
 | Option | Default | Description |
 |---|---|---|
-| `blitsWrapAttributes` | `true` | Wrap element attributes to individual lines when the tag exceeds `printWidth`. Set to `false` to always keep attributes inline. |
-| `blitsClosingBacktick` | `"newline"` | Position of the closing backtick in multi-line templates. `"newline"` puts it on its own line; `"inline"` puts it at the end of the last content line. |
-| `blitsPreserveBlankLines` | `true` | Preserve blank lines between sibling elements. Multiple consecutive blank lines are collapsed to one. |
-| `blitsNormalizeComments` | `true` | Normalize comment whitespace — ensures one space after `<!--` and before `-->`, and collapses extra dashes. |
-| `blitsTrimAttributeValues` | `true` | Trim leading/trailing spaces and tabs from attribute values. Never removes newlines, so multiline values are safe. |
-| `blitsClosingBracketSameLine` | `false` | Put the closing `>` of a multi-line opening tag on the same line as the last attribute. |
-| `blitsSelfClosingTags` | `false` | Collapse empty open/close tag pairs (`<Tag></Tag>`) into self-closing form (`<Tag />`). Disabled by default — `<Tag></Tag>` signals intent to add children. |
-| `blitsCollapseSingleElement` | `false` | Allow a single-root-element template to be collapsed to one line when it fits within `printWidth`. Disabled by default — multi-line templates preserve the developer's formatting intent. |
+| `blitsWrapAttributes` | `true` | Wrap attributes onto separate lines when the tag exceeds `printWidth`. Set to `false` to keep attributes inline. |
+| `blitsClosingBacktick` | `"newline"` | Controls where the closing backtick goes in multi-line templates. `"newline"` puts it on its own line, while `"inline"` keeps it at the end of the final content line. |
+| `blitsPreserveBlankLines` | `true` | Keeps blank lines between sibling elements. Consecutive blank lines are collapsed to one. |
+| `blitsNormalizeComments` | `true` | Normalizes comment spacing by enforcing one space after `<!--` and before `-->`, and by collapsing extra dashes. |
+| `blitsTrimAttributeValues` | `true` | Trims leading and trailing spaces or tabs inside attribute values. Newlines are preserved, so multiline values stay safe. |
+| `blitsClosingBracketSameLine` | `false` | Places the closing `>` of a multi-line opening tag on the same line as the last attribute. |
+| `blitsSelfClosingTags` | `false` | Converts empty open/close tag pairs like `<Tag></Tag>` into `<Tag />`. This is off by default because `<Tag></Tag>` can also communicate intent. |
+| `blitsCollapseSingleElement` | `false` | Allows a single-root-element template to collapse to one line when it fits within `printWidth`. This is off by default so existing multi-line intent is preserved. |
 
 **`blitsClosingBacktick: "newline"` (default):**
 ```js
