@@ -28,14 +28,14 @@ const formatTs = (code, opts = {}) =>
 
 describe('format: self-closing elements', () => {
   test('short tag stays on one line', async () => {
-    const input = "Blits.Component('X', { template: `<Element x=\"10\" y=\"20\" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element x="10" y="20" />` })'
     const output = await format(input)
     assert.ok(output.includes('<Element x="10" y="20" />'))
   })
 
   test('long tag breaks attributes across lines', async () => {
     const input =
-      "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\" alpha=\"0.5\" mountX=\"0.5\" mountY=\"0.5\" />` })"
+      'Blits.Component(\'X\', { template: `<Element color="red" w="1920" h="1080" alpha="0.5" mountX="0.5" mountY="0.5" />` })'
     const output = await format(input)
     assert.ok(output.includes('color="red"'))
     // when broken, /> appears on its own line with no attribute on the same line
@@ -54,8 +54,7 @@ describe('format: nested elements', () => {
   })
 
   test('deeply nested', async () => {
-    const input =
-      "Blits.Component('X', { template: `<Element><Layout><Text content=\"hello\" /></Layout></Element>` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element><Layout><Text content="hello" /></Layout></Element>` })'
     const output = await format(input)
     assert.ok(output.includes('<Layout>'))
     assert.ok(output.includes('</Layout>'))
@@ -65,20 +64,19 @@ describe('format: nested elements', () => {
 
 describe('format: reactive and event attributes', () => {
   test('reactive binding preserved', async () => {
-    const input = "Blits.Component('X', { template: `<Element :color=\"$myColor\" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element :color="$myColor" />` })'
     const output = await format(input)
     assert.ok(output.includes(':color="$myColor"'))
   })
 
   test('event handler preserved', async () => {
-    const input = "Blits.Component('X', { template: `<Element @loaded=\"$onLoaded\" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element @loaded="$onLoaded" />` })'
     const output = await format(input)
     assert.ok(output.includes('@loaded="$onLoaded"'))
   })
 
   test(':for with key preserved', async () => {
-    const input =
-      "Blits.Component('X', { template: `<Element :for=\"item in $items\" :key=\"item.id\" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element :for="item in $items" :key="item.id" />` })'
     const output = await format(input)
     assert.ok(output.includes(':for="item in $items"'))
     assert.ok(output.includes(':key="item.id"'))
@@ -104,7 +102,7 @@ describe('format: comments', () => {
 
 describe('format: blitsClosingBracketSameLine option', () => {
   const longTag =
-    "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\" alpha=\"0.5\" mountX=\"0.5\" mountY=\"0.5\"><Text /></Element>` })"
+    'Blits.Component(\'X\', { template: `<Element color="red" w="1920" h="1080" alpha="0.5" mountX="0.5" mountY="0.5"><Text /></Element>` })'
 
   test('false (default) — closing > on its own line', async () => {
     const output = await format(longTag, { blitsClosingBracketSameLine: false })
@@ -119,14 +117,14 @@ describe('format: blitsClosingBracketSameLine option', () => {
 
   test('false — already multiline input, closing > stays on its own line', async () => {
     const multilineTag =
-      "Blits.Component('X', { template: `\n  <Element\n    color=\"red\"\n    w=\"1920\"\n    h=\"1080\"\n    alpha=\"0.5\"\n    mountX=\"0.5\"\n    mountY=\"0.5\"\n  >\n    <Text />\n  </Element>\n` })"
+      'Blits.Component(\'X\', { template: `\n  <Element\n    color="red"\n    w="1920"\n    h="1080"\n    alpha="0.5"\n    mountX="0.5"\n    mountY="0.5"\n  >\n    <Text />\n  </Element>\n` })'
     const output = await format(multilineTag, { blitsClosingBracketSameLine: false })
     assert.match(output, /mountY="0\.5"\n\s+>/)
   })
 
   test('true — already multiline input, closing > moves to last attribute line', async () => {
     const multilineTag =
-      "Blits.Component('X', { template: `\n  <Element\n    color=\"red\"\n    w=\"1920\"\n    h=\"1080\"\n    alpha=\"0.5\"\n    mountX=\"0.5\"\n    mountY=\"0.5\"\n  >\n    <Text />\n  </Element>\n` })"
+      'Blits.Component(\'X\', { template: `\n  <Element\n    color="red"\n    w="1920"\n    h="1080"\n    alpha="0.5"\n    mountX="0.5"\n    mountY="0.5"\n  >\n    <Text />\n  </Element>\n` })'
     const output = await format(multilineTag, { blitsClosingBracketSameLine: true })
     assert.match(output, /mountY="0\.5">/)
     assert.doesNotMatch(output, /mountY="0\.5"\n/)
@@ -138,7 +136,7 @@ describe('format: blitsClosingBracketSameLine option', () => {
   })
 
   test('inline tag unaffected — short tag stays on one line', async () => {
-    const shortTag = "Blits.Component('X', { template: `<Element w=\"100\"><Text /></Element>` })"
+    const shortTag = 'Blits.Component(\'X\', { template: `<Element w="100"><Text /></Element>` })'
     const output = await format(shortTag, { blitsClosingBracketSameLine: true })
     assert.match(output, /<Element w="100">/)
   })
@@ -179,20 +177,20 @@ describe('format: blitsPreserveBlankLines option', () => {
 
 describe('format: blitsTrimAttributeValues option', () => {
   test('true (default) — whitespace padding around value is trimmed', async () => {
-    const input = "Blits.Component('X', { template: `<Element :w=\" 354 -14 \" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element :w=" 354 -14 " />` })'
     const output = await format(input)
     assert.ok(output.includes(':w="354 -14"'))
   })
 
   test('false — value is passed through unchanged', async () => {
-    const input = "Blits.Component('X', { template: `<Element :w=\" 354 -14 \" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element :w=" 354 -14 " />` })'
     const output = await format(input, { blitsTrimAttributeValues: false })
     assert.ok(output.includes(':w=" 354 -14 "'))
   })
 
   test('multiline object value — internal newlines and indentation preserved', async () => {
     const input =
-      'Blits.Component(\'X\', { template: `<Element :transition="{\n  prop: \'x\',\n  duration: 300\n}" />` })'
+      "Blits.Component('X', { template: `<Element :transition=\"{\n  prop: 'x',\n  duration: 300\n}\" />` })"
     const output = await format(input)
     assert.ok(output.includes('prop:'))
     assert.ok(output.includes('duration:'))
@@ -219,6 +217,13 @@ describe('format: blitsNormalizeComments option', () => {
     assert.ok(output.includes('<!-- correct -->'))
   })
 
+  test('empty comment normalizes to single space on each side', async () => {
+    const input = "Blits.Component('X', { template: `<!-- --><Element />` })"
+    const output = await format(input)
+    assert.ok(output.includes('<!-- -->'))
+    assert.ok(!output.includes('<!--  -->'))
+  })
+
   test('false — comment passed through raw', async () => {
     const input = "Blits.Component('X', { template: `<!--Title --><Element />` })"
     const output = await format(input, { blitsNormalizeComments: false })
@@ -228,7 +233,8 @@ describe('format: blitsNormalizeComments option', () => {
 
 describe('format: text content', () => {
   test('inline text content stays inline', async () => {
-    const input = "Blits.Component('X', { template: `<Text x=\"400\" y=\"400\" alpha=\"0.2\">Text with alpha applied directly</Text>` })"
+    const input =
+      'Blits.Component(\'X\', { template: `<Text x="400" y="400" alpha="0.2">Text with alpha applied directly</Text>` })'
     const output = await format(input)
     assert.ok(output.includes('<Text x="400" y="400" alpha="0.2">Text with alpha applied directly</Text>'))
   })
@@ -256,7 +262,7 @@ describe('format: string literal template', () => {
 
 describe('format: TypeScript parser', () => {
   test('formats template in .ts file', async () => {
-    const input = "Blits.Component('X', { template: `<Element x=\"10\" y=\"20\" />` })"
+    const input = 'Blits.Component(\'X\', { template: `<Element x="10" y="20" />` })'
     const output = await formatTs(input)
     assert.ok(output.includes('<Element x="10" y="20" />'))
   })
@@ -264,14 +270,14 @@ describe('format: TypeScript parser', () => {
 
 describe('format: Blits.Application', () => {
   test('formats template inside Blits.Application', async () => {
-    const input = "Blits.Application({ template: `<Element />` })"
+    const input = 'Blits.Application({ template: `<Element />` })'
     const output = await format(input)
     assert.ok(output.includes('<Element />'))
   })
 })
 
 describe('format: blitsClosingBacktick option', () => {
-  const nested = "Blits.Component('X', { template: `<Element><Text content=\"hello\" /></Element>` })"
+  const nested = 'Blits.Component(\'X\', { template: `<Element><Text content="hello" /></Element>` })'
 
   test('newline (default) — closing backtick on its own line', async () => {
     const output = await format(nested, { blitsClosingBacktick: 'newline' })
@@ -280,7 +286,7 @@ describe('format: blitsClosingBacktick option', () => {
 
   test('inline — closing backtick at end of last content line', async () => {
     const output = await format(nested, { blitsClosingBacktick: 'inline' })
-    assert.match(output, />\`/)
+    assert.match(output, />`/)
     assert.doesNotMatch(output, /\n`/)
   })
 })
@@ -288,7 +294,7 @@ describe('format: blitsClosingBacktick option', () => {
 describe('format: blitsWrapAttributes option', () => {
   // template long enough to exceed printWidth when indented
   const longTag =
-    "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\" alpha=\"0.5\" mountX=\"0.5\" mountY=\"0.5\" />` })"
+    'Blits.Component(\'X\', { template: `<Element color="red" w="1920" h="1080" alpha="0.5" mountX="0.5" mountY="0.5" />` })'
 
   test('false — attributes stay on one line regardless of printWidth', async () => {
     const output = await format(longTag, { blitsWrapAttributes: false })
@@ -304,7 +310,7 @@ describe('format: blitsWrapAttributes option', () => {
 })
 
 describe('format: blitsSelfClosingTags option', () => {
-  const emptyTag = "Blits.Component('X', { template: `<Element w=\"100\"></Element>` })"
+  const emptyTag = 'Blits.Component(\'X\', { template: `<Element w="100"></Element>` })'
 
   test('false (default) — empty open/close tag preserved', async () => {
     const output = await format(emptyTag)
@@ -320,7 +326,7 @@ describe('format: blitsSelfClosingTags option', () => {
 describe('format: idempotency', () => {
   test('formatting twice gives the same result', async () => {
     const input =
-      "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\"><Text content=\"hello\" /></Element>` })"
+      'Blits.Component(\'X\', { template: `<Element color="red" w="1920" h="1080"><Text content="hello" /></Element>` })'
     const first = await format(input)
     const second = await format(first)
     assert.equal(first, second)
@@ -329,7 +335,7 @@ describe('format: idempotency', () => {
 
 describe('format: non-template strings not touched', () => {
   test('plain object template is not formatted as Blits', async () => {
-    const input = "const obj = { template: `<Element />` }"
+    const input = 'const obj = { template: `<Element />` }'
     // should not throw — default printer handles it
     const output = await format(input)
     assert.equal(typeof output, 'string')
@@ -337,24 +343,59 @@ describe('format: non-template strings not touched', () => {
   })
 })
 
+describe('format: multi-line template preservation', () => {
+  test('multi-line template stays multi-line by default', async () => {
+    const input = 'Blits.Component(\'X\', { template: `\n  <Element w="100" />\n` })'
+    const output = await format(input)
+    assert.match(output, /`\n\s+<Element/)
+  })
+
+  test('single-line template stays single-line by default', async () => {
+    const input = 'Blits.Component(\'X\', { template: `<Element w="100" />` })'
+    const output = await format(input)
+    assert.doesNotMatch(output, /`\n/)
+    assert.ok(output.includes('<Element w="100" />'))
+  })
+
+  test('blitsCollapseSingleElement: true — multi-line template collapsed when it fits in printWidth', async () => {
+    const input = 'Blits.Component(\'X\', { template: `\n  <Element w="100" />\n` })'
+    const output = await format(input, { blitsCollapseSingleElement: true })
+    assert.doesNotMatch(output, /`\n\s+<Element/)
+    assert.ok(output.includes('<Element w="100" />'))
+  })
+
+  test('blitsCollapseSingleElement: true — does not collapse when template exceeds printWidth', async () => {
+    const input =
+      'Blits.Component(\'X\', { template: `\n  <Element color="red" w="1920" h="1080" alpha="0.5" mountX="0.5" mountY="0.5" />\n` })'
+    const output = await format(input, { blitsCollapseSingleElement: true })
+    assert.match(output, /`\n/)
+  })
+
+  test('single-quoted string template unaffected by blitsCollapseSingleElement', async () => {
+    const input = "Blits.Component('X', { template: '<Element w=\"100\" />' })"
+    const output = await format(input, { blitsCollapseSingleElement: true })
+    assert.ok(output.includes('<Element w="100" />'))
+    assert.doesNotMatch(output, /`/)
+  })
+})
+
 describe('format: escape sequences in attribute values', () => {
   test('\\n in attribute value is preserved as two characters, not a literal newline', async () => {
     const input = "Blits.Component('X', { template: `<Element :content=\"$status.join('\\n')\" />` })"
     const output = await format(input)
-    assert.ok(output.includes(":content=\"$status.join('\\n')\""), 'escape sequence must be preserved')
+    assert.ok(output.includes(':content="$status.join(\'\\n\')"'), 'escape sequence must be preserved')
     assert.doesNotMatch(output, /:content="[^"]*\n[^"]*"/, 'literal newline must not appear inside attribute value')
   })
 
   test('\\t in attribute value is preserved as two characters', async () => {
     const input = "Blits.Component('X', { template: `<Element :content=\"'label:\\t' + $value\" />` })"
     const output = await format(input)
-    assert.ok(output.includes(":content=\"'label:\\t' + $value\""), 'tab escape sequence must be preserved')
+    assert.ok(output.includes(':content="\'label:\\t\' + $value"'), 'tab escape sequence must be preserved')
     assert.doesNotMatch(output, /:content="[^"]*\t[^"]*"/, 'literal tab must not appear inside attribute value')
   })
 
   test('multiple escape sequences in same attribute are all preserved', async () => {
-    const input =
-      "Blits.Component('X', { template: `<Element :content=\"'line1:\\n' + 'line2:\\n' + $val\" />` })"
+    const input = "Blits.Component('X', { template: `<Element :content=\"'line1:\\n' + 'line2:\\n' + $val\" />` })"
     const output = await format(input)
     assert.ok(output.includes(":content=\"'line1:\\n' + 'line2:\\n' + $val\""))
     assert.doesNotMatch(output, /:content="[^"]*\n[^"]*"/)

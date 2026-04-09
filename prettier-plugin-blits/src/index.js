@@ -35,14 +35,14 @@ const options = {
     type: 'boolean',
     category: 'Blits',
     default: false,
-    description:
-      'Put the closing > of a multi-line opening tag on the same line as the last attribute.',
+    description: 'Put the closing > of a multi-line opening tag on the same line as the last attribute.',
   },
   blitsPreserveBlankLines: {
     type: 'boolean',
     category: 'Blits',
     default: true,
-    description: 'Preserve blank lines between sibling elements. Multiple consecutive blank lines are collapsed to one.',
+    description:
+      'Preserve blank lines between sibling elements. Multiple consecutive blank lines are collapsed to one.',
   },
   blitsTrimAttributeValues: {
     type: 'boolean',
@@ -63,6 +63,13 @@ const options = {
     default: false,
     description:
       'Collapse empty open/close tag pairs (<Tag></Tag>) into self-closing form (<Tag />). Disabled by default to preserve developer intent.',
+  },
+  blitsCollapseSingleElement: {
+    type: 'boolean',
+    category: 'Blits',
+    default: false,
+    description:
+      "When enabled, a single-root-element template that fits within printWidth is collapsed to a single-line backtick template. Disabled by default to preserve the developer's multi-line formatting intent.",
   },
   blitsClosingBacktick: {
     type: 'choice',

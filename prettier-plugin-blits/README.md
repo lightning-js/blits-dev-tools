@@ -132,7 +132,7 @@ Comments are normalized to have exactly one space after `<!--` and before `-->`.
 
 ### Attribute value trimming
 
-Accidental leading/trailing whitespace inside attribute value quotes is removed. The value itself is never modified:
+Accidental leading/trailing whitespace inside attribute value quotes is removed:
 
 ```js
 :w=" 354 -14 "   →  :w="354 -14"
@@ -166,6 +166,7 @@ The plugin also exposes its own formatting rules. Each rule can be enabled or di
 | `blitsTrimAttributeValues` | `true` | Trim leading/trailing spaces and tabs from attribute values. Never removes newlines, so multiline values are safe. |
 | `blitsClosingBracketSameLine` | `false` | Put the closing `>` of a multi-line opening tag on the same line as the last attribute. |
 | `blitsSelfClosingTags` | `false` | Collapse empty open/close tag pairs (`<Tag></Tag>`) into self-closing form (`<Tag />`). Disabled by default — `<Tag></Tag>` signals intent to add children. |
+| `blitsCollapseSingleElement` | `false` | Allow a single-root-element template to be collapsed to one line when it fits within `printWidth`. Disabled by default — multi-line templates preserve the developer's formatting intent. |
 
 **`blitsClosingBacktick: "newline"` (default):**
 ```js
@@ -205,6 +206,14 @@ template: `
 </Element>
 ```
 
-## License
+**`blitsCollapseSingleElement: false` (default) — multi-line preserved:**
+```js
+template: `
+  <Element w="100" h="200" />
+`,
+```
 
-Apache 2.0 — see [LICENSE](../LICENSE)
+**`blitsCollapseSingleElement: true` — collapsed when fits in printWidth:**
+```js
+template: `<Element w="100" h="200" />`,
+```

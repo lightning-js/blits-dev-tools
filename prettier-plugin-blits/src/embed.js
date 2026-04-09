@@ -22,8 +22,7 @@ const { hardline, softline, indent, group } = doc.builders
 function isBlitsTemplate(path) {
   const node = path.getValue()
   const isTemplateLiteral = node.type === 'TemplateLiteral'
-  const isSingleQuotedLiteral =
-    node.type === 'Literal' && typeof node.value === 'string' && node.raw?.startsWith("'")
+  const isSingleQuotedLiteral = node.type === 'Literal' && typeof node.value === 'string' && node.raw?.startsWith("'")
 
   if (!isTemplateLiteral && !isSingleQuotedLiteral) return false
 
@@ -72,6 +71,14 @@ function embed(path, options) {
     }
 
     if (node.type === 'TemplateLiteral') {
+      const isMultiLine = text.startsWith('\n') || text.startsWith('\r\n')
+      const collapseAllowed = options.blitsCollapseSingleElement === true
+
+      if (isMultiLine && !collapseAllowed) {
+        const closingBacktick = options.blitsClosingBacktick === 'inline' ? '`' : [hardline, '`']
+        return ['`', indent([hardline, formattedDoc]), closingBacktick]
+      }
+
       const closingBacktick = options.blitsClosingBacktick === 'inline' ? '`' : [softline, '`']
       return group(['`', indent([softline, formattedDoc]), closingBacktick])
     } else {

@@ -54,9 +54,7 @@ function printElement(path, options, print) {
   }
 
   const closingAngle = options.blitsClosingBracketSameLine ? '>' : [softline, '>']
-  const openTag = wrap
-    ? group(['<', node.tag, indent(attrs), closingAngle])
-    : ['<', node.tag, attrs, '>']
+  const openTag = wrap ? group(['<', node.tag, indent(attrs), closingAngle]) : ['<', node.tag, attrs, '>']
 
   if (!hasChildren) {
     if (options.blitsSelfClosingTags) {
@@ -88,8 +86,11 @@ function print(path, options, print) {
       return printElement(path, options, print)
     case 'comment': {
       if (!options.blitsNormalizeComments) return node.text
-      const inner = node.text.replace(/^<!--+\s*/, '').replace(/\s*--+>$/, '').trim()
-      return `<!-- ${inner} -->`
+      const inner = node.text
+        .replace(/^<!--+\s*/, '')
+        .replace(/\s*--+>$/, '')
+        .trim()
+      return inner ? `<!-- ${inner} -->` : '<!-- -->'
     }
     case 'text':
       return node.value
