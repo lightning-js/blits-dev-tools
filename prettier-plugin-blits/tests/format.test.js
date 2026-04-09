@@ -102,19 +102,45 @@ describe('format: comments', () => {
   })
 })
 
-describe('format: blitsBracketSameLine option', () => {
+describe('format: blitsClosingBracketSameLine option', () => {
   const longTag =
     "Blits.Component('X', { template: `<Element color=\"red\" w=\"1920\" h=\"1080\" alpha=\"0.5\" mountX=\"0.5\" mountY=\"0.5\"><Text /></Element>` })"
 
   test('false (default) — closing > on its own line', async () => {
-    const output = await format(longTag, { blitsBracketSameLine: false })
-    assert.match(output, /\n\s+>/)
+    const output = await format(longTag, { blitsClosingBracketSameLine: false })
+    assert.match(output, /mountY="0\.5"\n\s+>/)
   })
 
   test('true — closing > on last attribute line', async () => {
-    const output = await format(longTag, { blitsBracketSameLine: true })
+    const output = await format(longTag, { blitsClosingBracketSameLine: true })
     assert.match(output, /mountY="0\.5">/)
-    assert.doesNotMatch(output, /\n\s+>/)
+    assert.doesNotMatch(output, /mountY="0\.5"\n/)
+  })
+
+  test('false — already multiline input, closing > stays on its own line', async () => {
+    const multilineTag =
+      "Blits.Component('X', { template: `\n  <Element\n    color=\"red\"\n    w=\"1920\"\n    h=\"1080\"\n    alpha=\"0.5\"\n    mountX=\"0.5\"\n    mountY=\"0.5\"\n  >\n    <Text />\n  </Element>\n` })"
+    const output = await format(multilineTag, { blitsClosingBracketSameLine: false })
+    assert.match(output, /mountY="0\.5"\n\s+>/)
+  })
+
+  test('true — already multiline input, closing > moves to last attribute line', async () => {
+    const multilineTag =
+      "Blits.Component('X', { template: `\n  <Element\n    color=\"red\"\n    w=\"1920\"\n    h=\"1080\"\n    alpha=\"0.5\"\n    mountX=\"0.5\"\n    mountY=\"0.5\"\n  >\n    <Text />\n  </Element>\n` })"
+    const output = await format(multilineTag, { blitsClosingBracketSameLine: true })
+    assert.match(output, /mountY="0\.5">/)
+    assert.doesNotMatch(output, /mountY="0\.5"\n/)
+  })
+
+  test('self-closing tags unaffected', async () => {
+    const output = await format(longTag, { blitsClosingBracketSameLine: true })
+    assert.match(output, /<Text \/>/)
+  })
+
+  test('inline tag unaffected — short tag stays on one line', async () => {
+    const shortTag = "Blits.Component('X', { template: `<Element w=\"100\"><Text /></Element>` })"
+    const output = await format(shortTag, { blitsClosingBracketSameLine: true })
+    assert.match(output, /<Element w="100">/)
   })
 })
 
@@ -130,6 +156,12 @@ describe('format: blitsPreserveBlankLines option', () => {
     const output = await format(input)
     assert.match(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
     assert.doesNotMatch(output, /Text \/>[\s\S]*\n\n\n[\s\S]*<Image/)
+  })
+
+  test('whitespace-only line between siblings treated as blank', async () => {
+    const input = "Blits.Component('X', { template: `<Element><Text />\n   \n<Image /></Element>` })"
+    const output = await format(input)
+    assert.match(output, /Text \/>[\s\S]*\n\n[\s\S]*<Image/)
   })
 
   test('no blank line — siblings stay compact', async () => {
@@ -191,6 +223,26 @@ describe('format: blitsNormalizeComments option', () => {
     const input = "Blits.Component('X', { template: `<!--Title --><Element />` })"
     const output = await format(input, { blitsNormalizeComments: false })
     assert.ok(output.includes('<!--Title -->'))
+  })
+})
+
+describe('format: text content', () => {
+  test('inline text content stays inline', async () => {
+    const input = "Blits.Component('X', { template: `<Text x=\"400\" y=\"400\" alpha=\"0.2\">Text with alpha applied directly</Text>` })"
+    const output = await format(input)
+    assert.ok(output.includes('<Text x="400" y="400" alpha="0.2">Text with alpha applied directly</Text>'))
+  })
+
+  test('multiline text content is preserved exactly', async () => {
+    const input = "Blits.Component('X', { template: `<Text>\n  Line one\n  Line two\n</Text>` })"
+    const output = await format(input)
+    assert.ok(output.includes('<Text>\n  Line one\n  Line two\n</Text>'))
+  })
+
+  test('text content with internal spacing is not touched', async () => {
+    const input = "Blits.Component('X', { template: `<Text>  spaced   content  </Text>` })"
+    const output = await format(input)
+    assert.ok(output.includes('<Text>  spaced   content  </Text>'))
   })
 })
 
@@ -282,5 +334,29 @@ describe('format: non-template strings not touched', () => {
     const output = await format(input)
     assert.equal(typeof output, 'string')
     assert.ok(output.length > 0)
+  })
+})
+
+describe('format: escape sequences in attribute values', () => {
+  test('\\n in attribute value is preserved as two characters, not a literal newline', async () => {
+    const input = "Blits.Component('X', { template: `<Element :content=\"$status.join('\\n')\" />` })"
+    const output = await format(input)
+    assert.ok(output.includes(":content=\"$status.join('\\n')\""), 'escape sequence must be preserved')
+    assert.doesNotMatch(output, /:content="[^"]*\n[^"]*"/, 'literal newline must not appear inside attribute value')
+  })
+
+  test('\\t in attribute value is preserved as two characters', async () => {
+    const input = "Blits.Component('X', { template: `<Element :content=\"'label:\\t' + $value\" />` })"
+    const output = await format(input)
+    assert.ok(output.includes(":content=\"'label:\\t' + $value\""), 'tab escape sequence must be preserved')
+    assert.doesNotMatch(output, /:content="[^"]*\t[^"]*"/, 'literal tab must not appear inside attribute value')
+  })
+
+  test('multiple escape sequences in same attribute are all preserved', async () => {
+    const input =
+      "Blits.Component('X', { template: `<Element :content=\"'line1:\\n' + 'line2:\\n' + $val\" />` })"
+    const output = await format(input)
+    assert.ok(output.includes(":content=\"'line1:\\n' + 'line2:\\n' + $val\""))
+    assert.doesNotMatch(output, /:content="[^"]*\n[^"]*"/)
   })
 })

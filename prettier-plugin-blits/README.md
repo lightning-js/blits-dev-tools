@@ -102,11 +102,49 @@ template: `
 `
 ```
 
+### Blank lines
+
+Blank lines between sibling elements are preserved. Multiple consecutive blank lines are collapsed to one:
+
+```js
+template: `
+  <Element>
+    <!-- Header -->
+    <Text content="$title" />
+    <Image src="$poster" />
+
+    <!-- Controls -->
+    <Button label="Play" />
+    <Button label="More Info" />
+  </Element>
+`
+```
+
+### Comment normalization
+
+Comments are normalized to have exactly one space after `<!--` and before `-->`. Extra dashes are also collapsed:
+
+```js
+<!--Title -->        →  <!-- Title -->
+<!--- section --->   →  <!-- section -->
+<!-- correct -->     →  <!-- correct -->
+```
+
+### Attribute value trimming
+
+Accidental leading/trailing whitespace inside attribute value quotes is removed. The value itself is never modified:
+
+```js
+:w=" 354 -14 "   →  :w="354 -14"
+w="100"          →  w="100"
+```
+
+Multiline attribute values (e.g. `:transition="{\n  prop: 'x'\n}"`) are not affected — only space/tab padding is stripped, never newlines.
+
 ### What is never changed
 
 - **Attribute values** — reactive bindings (`:color="$myColor"`), event handlers (`@loaded="$onLoad"`), `:for` expressions, `$variable` references, arrow functions, and `:transition` objects all pass through exactly as written
 - **Attribute order** — attributes are never reordered or sorted
-- **Comments** — HTML comments (`<!-- ... -->`) are preserved as-is
 
 ### Configuration
 
@@ -123,6 +161,11 @@ The plugin also exposes its own formatting rules. Each rule can be enabled or di
 |---|---|---|
 | `blitsWrapAttributes` | `true` | Wrap element attributes to individual lines when the tag exceeds `printWidth`. Set to `false` to always keep attributes inline. |
 | `blitsClosingBacktick` | `"newline"` | Position of the closing backtick in multi-line templates. `"newline"` puts it on its own line; `"inline"` puts it at the end of the last content line. |
+| `blitsPreserveBlankLines` | `true` | Preserve blank lines between sibling elements. Multiple consecutive blank lines are collapsed to one. |
+| `blitsNormalizeComments` | `true` | Normalize comment whitespace — ensures one space after `<!--` and before `-->`, and collapses extra dashes. |
+| `blitsTrimAttributeValues` | `true` | Trim leading/trailing spaces and tabs from attribute values. Never removes newlines, so multiline values are safe. |
+| `blitsClosingBracketSameLine` | `false` | Put the closing `>` of a multi-line opening tag on the same line as the last attribute. |
+| `blitsSelfClosingTags` | `false` | Collapse empty open/close tag pairs (`<Tag></Tag>`) into self-closing form (`<Tag />`). Disabled by default — `<Tag></Tag>` signals intent to add children. |
 
 **`blitsClosingBacktick: "newline"` (default):**
 ```js
@@ -139,6 +182,27 @@ template: `
   <Element>
     <Text content="hello" />
   </Element>`
+```
+
+**`blitsClosingBracketSameLine: false` (default):**
+```js
+<Element
+  w="1920"
+  h="1080"
+  color="#fff"
+>
+  <Text content="hello" />
+</Element>
+```
+
+**`blitsClosingBracketSameLine: true`:**
+```js
+<Element
+  w="1920"
+  h="1080"
+  color="#fff">
+  <Text content="hello" />
+</Element>
 ```
 
 ## License

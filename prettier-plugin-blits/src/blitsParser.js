@@ -19,7 +19,7 @@
 // Kept as a local copy to avoid a cross-package runtime dependency
 const parseTemplate = require('./parser.cjs')
 
-function buildTree(flatTree, text) {
+function buildTree(flatTree, text, preserveBlankLines = true) {
   const nodes = Object.values(flatTree)
   const stack = []
   const roots = []
@@ -54,7 +54,7 @@ function buildTree(flatTree, text) {
       if (node.content && node.content.node) {
         hierarchicalNode.children.push({
           type: 'text',
-          value: node.content.node,
+          value: text ? text.slice(node.content.start, node.content.end) : node.content.node,
           start: node.content.start,
           end: node.content.end,
         })
@@ -69,7 +69,7 @@ function buildTree(flatTree, text) {
 
     const targetArray = stack.length === 0 ? roots : stack[stack.length - 1].children
     const prev = targetArray[targetArray.length - 1]
-    if (prev && prev.end != null && text && text.slice(prev.end, node.start).includes('\n\n')) {
+    if (preserveBlankLines && prev && prev.end != null && /\n[ \t]*\n/.test(text.slice(prev.end, node.start))) {
       hierarchicalNode.blankBefore = true
     }
     targetArray.push(hierarchicalNode)
@@ -94,8 +94,7 @@ function parse(text, options) {
   if (!result.status || !result.tree) {
     throw new Error(result.error?.info ?? 'Failed to parse Blits template')
   }
-  const sourceText = options?.blitsPreserveBlankLines !== false ? text : null
-  const roots = buildTree(result.tree, sourceText)
+  const roots = buildTree(result.tree, text, options?.blitsPreserveBlankLines !== false)
   return { type: 'root', children: roots, start: 0, end: text.length }
 }
 

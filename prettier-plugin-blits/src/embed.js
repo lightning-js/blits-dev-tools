@@ -60,7 +60,7 @@ function embed(path, options) {
       return undefined
     }
 
-    const text = node.type === 'TemplateLiteral' ? node.quasis[0].value.cooked : node.value
+    const text = node.type === 'TemplateLiteral' ? node.quasis[0].value.raw : node.value
 
     if (!text || text.trim() === '') return undefined
 

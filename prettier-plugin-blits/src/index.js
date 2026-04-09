@@ -31,7 +31,7 @@ const options = {
     description:
       'Wrap element attributes to individual lines when the tag exceeds printWidth. Set to false to keep all attributes inline.',
   },
-  blitsBracketSameLine: {
+  blitsClosingBracketSameLine: {
     type: 'boolean',
     category: 'Blits',
     default: false,

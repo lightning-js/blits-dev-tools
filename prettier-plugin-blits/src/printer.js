@@ -53,7 +53,7 @@ function printElement(path, options, print) {
     return ['<', node.tag, attrs, ' />']
   }
 
-  const closingAngle = options.blitsBracketSameLine ? '>' : [softline, '>']
+  const closingAngle = options.blitsClosingBracketSameLine ? '>' : [softline, '>']
   const openTag = wrap
     ? group(['<', node.tag, indent(attrs), closingAngle])
     : ['<', node.tag, attrs, '>']
@@ -66,6 +66,10 @@ function printElement(path, options, print) {
       return ['<', node.tag, attrs, ' />']
     }
     return [openTag, '</', node.tag, '>']
+  }
+
+  if (node.children.length === 1 && node.children[0].type === 'text') {
+    return [openTag, node.children[0].value, '</', node.tag, '>']
   }
 
   const childDocs = joinChildren(node.children, path.map(print, 'children'))
