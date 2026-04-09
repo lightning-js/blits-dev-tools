@@ -6,6 +6,7 @@
   "description": "Prettier plugin for Blits template formatting",
   "main": "src/index.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "node --test 'tests/**/*.test.js'"
   },
   "repository": {

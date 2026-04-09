@@ -49,7 +49,7 @@ function isBlitsTemplate(path) {
   )
 }
 
-function embed(path, options) {
+function embed(path, _options) {
   if (!isBlitsTemplate(path)) return undefined
 
   return async (textToDoc, print, path, options) => {

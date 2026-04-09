@@ -17,7 +17,7 @@
 
 const { doc } = require('prettier')
 
-const { hardline, softline, line, group, indent, join, ifBreak } = doc.builders
+const { hardline, softline, line, group, indent, ifBreak } = doc.builders
 
 function joinChildren(childNodes, childDocs) {
   return childDocs.flatMap((doc, i) => {
