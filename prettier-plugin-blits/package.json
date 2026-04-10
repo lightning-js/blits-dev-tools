@@ -5,6 +5,11 @@
   "license": "Apache-2.0",
   "description": "Prettier plugin for Blits template formatting",
   "main": "src/index.js",
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "lint": "eslint .",
     "test": "node --test 'tests/**/*.test.js'"
@@ -19,7 +24,7 @@
   },
   "homepage": "https://lightningjs.io/",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "keywords": [
     "prettier", "plugin", "blits", "template", "formatter"

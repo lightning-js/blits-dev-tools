@@ -19,7 +19,10 @@ Add the plugin to your Prettier config. If you already use other plugins, just i
 
 ```json
 {
-  "plugins": ["@lightningjs/prettier-plugin-blits"]
+  "plugins": ["@lightningjs/prettier-plugin-blits"],
+  "blitsWrapAttributes": true,
+  "blitsClosingBacktick": "newline",
+  "blitsPreserveBlankLines": true
 }
 ```
 
@@ -37,12 +40,40 @@ rules: {
       semi: false,
       // ... your other prettier options
       plugins: ['@lightningjs/prettier-plugin-blits'],
+      // you can change plugin options like this
+      blitsWrapAttributes: true,
+      blitsClosingBacktick: 'newline',
+      blitsPreserveBlankLines: true,
     },
   ],
 }
 ```
 
 > `eslint-plugin-prettier` v5+ is required for Prettier 3. If you are upgrading from Prettier 2, also update `eslint-plugin-prettier` to `^5.0.0` and `eslint-config-prettier` to `^9.0.0`.
+
+### If you use a `prettier.config.js`
+
+```js
+export default {
+  plugins: ['@lightningjs/prettier-plugin-blits'],
+  // you can change plugin options like this
+  blitsWrapAttributes: true,
+  blitsClosingBacktick: 'newline',
+  blitsPreserveBlankLines: true,
+}
+```
+
+For CommonJS projects:
+
+```js
+module.exports = {
+  plugins: ['@lightningjs/prettier-plugin-blits'],
+  // you can change plugin options like this
+  blitsWrapAttributes: true,
+  blitsClosingBacktick: 'newline',
+  blitsPreserveBlankLines: true,
+}
+```
 
 ## What the plugin formats
 
