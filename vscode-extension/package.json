@@ -228,7 +228,7 @@
     "@babel/parser": "^7.26.2",
     "@babel/preset-typescript": "^7.26.0",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.108",
+    "@types/node": "^26.4.1",
     "@types/vscode": "^1.81.0",
     "@vscode/test-electron": "^2.3.4",
     "@vscode/vsce": "^3.7.1",
