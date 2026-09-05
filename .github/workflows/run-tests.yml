@@ -38,7 +38,7 @@ jobs:
           echo "${{ steps.run_tests.outcome }}" > test-result.txt
 
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vscode-test-results
           path: |
