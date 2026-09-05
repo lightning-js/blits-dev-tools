@@ -225,7 +225,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/parser": "^7.26.2",
+    "@babel/parser": "^8.0.4",
     "@babel/preset-typescript": "^7.26.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^16.18.108",
