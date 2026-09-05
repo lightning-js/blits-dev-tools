@@ -233,7 +233,7 @@
     "@vscode/test-electron": "^2.3.4",
     "@vscode/vsce": "^3.7.1",
     "esbuild": "^0.25.0",
-    "glob": "^10.3.3",
+    "glob": "^13.0.6",
     "mocha": "^10.7.3"
   }
 }
